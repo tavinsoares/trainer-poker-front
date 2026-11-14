@@ -21,7 +21,7 @@ const dadosComForaDoRange: RangesData = {
 // esta lista não muda quando outras famílias entram no sorteio.
 const soRfi: RangesData = { ...dados, spots: dados.spots.filter((s) => s.family === 'rfi' && s.villain.type === 'regular') }
 
-describe('sorteio do RFI contra regular', () => {
+describe('sorteio', () => {
   // Valores de referência lidos no JSON por um script à parte: os cinco RFI contra regular
   // vêm na ordem UTG, HJ, CO, BTN, SB, e cada um tem 1326 combos (nenhuma mão fora do range).
   it('com rng 0 sorteia a primeira combinação do primeiro spot: AA de espadas e copas no UTG', () => {
@@ -139,11 +139,11 @@ describe('sorteio do RFI contra regular', () => {
     }
   })
 
-  it('sorteia todos os 65 spots contra regular, de todas as famílias, e nenhum contra fish', () => {
-    const sorteados = new Set(amostra(20_000, 6).map((p) => p.spot.id))
-    const esperados = dados.spots.filter((s) => s.villain.type === 'regular').map((s) => s.id)
-    expect(esperados).toHaveLength(65)
-    expect([...sorteados].sort()).toEqual([...esperados].sort())
+  it('sorteia os 127 spots da v1, contra regular e contra fish', () => {
+    const sorteados = new Set(amostra(40_000, 6).map((p) => p.spot.id))
+    expect(sorteados.size).toBe(127)
+    expect([...sorteados].sort()).toEqual(dados.spots.map((s) => s.id).sort())
+    expect([...new Set(amostra(2000, 6).map((p) => p.spot.villain.type))].sort()).toEqual(['fish', 'regular'])
   })
 
   it('nunca sorteia mão fora do range', () => {

@@ -6,7 +6,7 @@ import { dados, perguntaDe } from './auxiliares.ts'
 // Roda contra o ranges.json real. As perguntas vêm do sorteio, com o rng roteirizado.
 const pergunta = perguntaDe
 
-describe('avaliação do RFI contra regular', () => {
+describe('avaliação', () => {
   // Conferidos na planilha (aba RFI UTG): AA abre e K8s é fold.
   it('dá correto quando a ação escolhida é a da planilha, e traz a ação certa e a escolhida', () => {
     expect(avaliar(dados, pergunta('rfi-utg-regular', 'AA'), 'raise')).toMatchObject({

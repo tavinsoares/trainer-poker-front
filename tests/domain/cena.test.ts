@@ -175,3 +175,70 @@ describe('cena de enfrentar agressão', () => {
     expect([...new Set(violacoes)]).toEqual([])
   })
 })
+
+describe('cena contra fish', () => {
+  // Os tamanhos que a planilha traz para o fish valem como estão; os que faltam vêm do spot
+  // equivalente contra regular e ficam marcados como estimados.
+  it('traz o selo do fish, e o RFI contra fish não tem posição de vilão', () => {
+    const p = cena('rfi-btn-fish')
+    expect(p.spot.villain).toEqual({ type: 'fish', position: null })
+    expect(p.pot).toBe(1.5)
+    expect(p.toCall).toBeNull()
+    // A planilha não dá o open do Hero contra fish: vem do RFI regular do BTN (2,5bb), estimado.
+    expect(p.options.find((o) => o.action === 'raise')).toEqual({ action: 'raise', label: 'Open', size: 2.5, estimated: true })
+    expect(p.seats.map((s) => [s.position, s.state])).toEqual([
+      ['UTG', 'folded'], ['HJ', 'folded'], ['CO', 'folded'], ['BTN', 'hero'], ['SB', 'waiting'], ['BB', 'waiting'],
+    ])
+  })
+
+  it('usa o open do fish que a planilha traz (2,5bb do UTG) sem marca, e estima o 3bet do Hero (6,5bb do regular)', () => {
+    const p = cena('3bet-co-vs-utg-fish')
+    expect(p.history).toEqual([{ position: 'UTG', action: 'open', size: 2.5, estimated: false }])
+    expect(p).toMatchObject({ pot: 4, toCall: 2.5 })
+    expect(p.options.find((o) => o.action === 'raise')).toEqual({ action: 'raise', label: '3bet', size: 6.5, estimated: true })
+  })
+
+  it('estima o open do UTG (2bb do regular) quando a planilha não o traz para o fish, e marca o assento', () => {
+    const p = cena('3bet-btn-vs-utg-fish')
+    expect(p.history).toEqual([{ position: 'UTG', action: 'open', size: 2, estimated: true }])
+    expect(seat(p, 'UTG')).toEqual({ position: 'UTG', state: 'acted', action: 'open', size: 2, estimated: true })
+    expect(p).toMatchObject({ pot: 3.5, toCall: 2 })
+    expect(p.options.find((o) => o.action === 'raise')).toMatchObject({ size: 7.5, estimated: true })
+  })
+
+  it('um spot do UTG contra fish, sem nenhum tamanho próprio, tem todos os tamanhos estimados', () => {
+    const p = cena('vs-3bet-utg-vs-bb-fish')
+    expect(p.history).toEqual([
+      { position: 'UTG', action: 'open', size: 2, estimated: true },
+      { position: 'BB', action: '3bet', size: 12, estimated: true },
+    ])
+    expect(p).toMatchObject({ pot: 14.5, toCall: 10 })
+    expect(p.options.find((o) => o.action === 'raise')).toEqual({ action: 'raise', label: '4bet', size: 22, estimated: true })
+  })
+
+  it('segue os botões da família: vs 4bet contra fish oferece fold, call e jam, mesmo sem nenhuma mão de call', () => {
+    const spot = dados.spots.find((s) => s.id === 'vs-4bet-bb-vs-btn-fish')!
+    expect(spot.hands.some((h) => h.action === 'call')).toBe(false)
+    expect(cena('vs-4bet-bb-vs-btn-fish').options.map((o) => o.action)).toEqual(['fold', 'call', 'jam'])
+  })
+
+  it('as 127 abas da v1 geram perguntas completas, em todas as mãos que chegam ao spot', () => {
+    expect(dados.spots).toHaveLength(127)
+    const violacoes = dados.spots.flatMap((s) =>
+      s.hands.filter((h) => h.action !== 'out_of_range').flatMap((h) => {
+        const p = perguntaDe(s.id, h.hand)
+        const rfi = s.family === 'rfi'
+        return [
+          ...(p.spot.villain.type === s.villain.type ? [] : ['selo do vilão errado']),
+          ...(p.seats.length === 6 && p.seats.filter((x) => x.state === 'hero').length === 1 ? [] : ['assentos inválidos']),
+          ...(Number.isFinite(p.pot) && p.pot >= 1.5 ? [] : ['pote inválido']),
+          ...(rfi ? (p.toCall === null ? [] : ['RFI com valor a pagar']) : p.toCall !== null && p.toCall > 0 ? [] : ['sem valor a pagar']),
+          ...(p.history.every((b) => Number.isFinite(b.size) && b.size > 0) ? [] : ['aposta sem tamanho']),
+          ...(p.options.every((o) => (o.action === 'raise' || o.action === 'jam') === (o.size !== undefined)) ? [] : ['tamanho só no raise e no jam']),
+          ...(s.villain.type === 'regular' && JSON.stringify(p).includes('"estimated":true') ? ['estimado contra regular'] : []),
+        ].map((m) => `${s.id}: ${m} (mão ${h.hand})`)
+      }),
+    )
+    expect([...new Set(violacoes)]).toEqual([])
+  })
+})

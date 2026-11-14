@@ -40,8 +40,7 @@ function escolherCombinacao(maos: Hand[], rng: Rng): { mao: Hand; indice: number
 }
 
 export function sortearPergunta(dados: RangesData, rng: Rng): Question {
-  const elegiveis = dados.spots.filter((s) => s.villain.type === 'regular')
-  const spot = elegiveis[Math.floor(rng() * elegiveis.length)]
+  const spot = dados.spots[Math.floor(rng() * dados.spots.length)]
   if (!spot) throw new Error('não há spot para sortear')
 
   // As mãos fora do range nunca entram.

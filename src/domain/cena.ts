@@ -19,11 +19,23 @@ interface Tamanho {
   estimated: boolean
 }
 
-/** Lê um tamanho do spot. Falta de tamanho é um erro que nomeia o spot e o campo. */
-const medir = (spot: Spot, campo: string, ler: (s: Sizings) => number | undefined): Tamanho => {
-  const size = ler(spot.sizings)
-  if (size === undefined) throw new Error(`${spot.id}: falta o tamanho "${campo}"`)
-  return { size, estimated: false }
+type Medir = (campo: string, ler: (s: Sizings) => number | undefined) => Tamanho
+
+/**
+ * Lê um tamanho do spot. A planilha não traz todos os tamanhos contra fish: o que falta vem do
+ * spot equivalente contra regular (mesma família, Hero e posição do vilão) e fica marcado como
+ * estimado. Sem tamanho nem equivalente, é um erro que nomeia o spot e o campo.
+ */
+const medidor = (dados: RangesData, spot: Spot): Medir => {
+  const equivalente =
+    spot.villain.type === 'fish' ? dados.spots.find((s) => s.id === spot.id.replace(/-fish$/, '-regular')) : undefined
+  return (campo, ler) => {
+    const proprio = ler(spot.sizings)
+    if (proprio !== undefined) return { size: proprio, estimated: false }
+    const emprestado = equivalente && ler(equivalente.sizings)
+    if (emprestado !== undefined) return { size: emprestado, estimated: true }
+    throw new Error(`${spot.id}: falta o tamanho "${campo}"`)
+  }
 }
 
 const aposta = (position: Position, action: Bet['action'], { size, estimated }: Tamanho): Bet => ({
@@ -43,16 +55,16 @@ interface Descricao {
 }
 
 /** O que muda de família para família: as apostas, e quais botões fazem sentido. */
-function descrever(spot: Spot): Descricao {
+function descrever(spot: Spot, medir: Medir): Descricao {
   const { family } = spot
   const hero = spot.hero
   const vilao = spot.villain.position
   if (family === 'rfi') {
-    return { history: [], call: false, raise: { label: 'Open', tamanho: medir(spot, 'open', (s) => s.open) }, jam: false }
+    return { history: [], call: false, raise: { label: 'Open', tamanho: medir('open', (s) => s.open) }, jam: false }
   }
   if (!vilao) throw new Error(`${spot.id}: falta a posição do vilão`)
-  const openDoVilao = () => aposta(vilao, 'open', medir(spot, `open do ${vilao}`, (s) => s.vsOpen[vilao]))
-  const openDoHero = () => aposta(hero, 'open', medir(spot, 'open do Hero', (s) => s.open))
+  const openDoVilao = () => aposta(vilao, 'open', medir(`open do ${vilao}`, (s) => s.vsOpen[vilao]))
+  const openDoHero = () => aposta(hero, 'open', medir('open do Hero', (s) => s.open))
 
   switch (family) {
     case '3bet':
@@ -60,22 +72,22 @@ function descrever(spot: Spot): Descricao {
       return {
         history: [openDoVilao()],
         call: true,
-        raise: { label: '3bet', tamanho: medir(spot, '3bet do Hero', (s) => s.threeBet) },
+        raise: { label: '3bet', tamanho: medir('3bet do Hero', (s) => s.threeBet) },
         jam: false,
       }
     case 'vs-3bet':
       return {
-        history: [openDoHero(), aposta(vilao, '3bet', medir(spot, `3bet do ${vilao}`, (s) => s.vs3bet[vilao]))],
+        history: [openDoHero(), aposta(vilao, '3bet', medir(`3bet do ${vilao}`, (s) => s.vs3bet[vilao]))],
         call: true,
-        raise: { label: '4bet', tamanho: medir(spot, '4bet do Hero', (s) => s.fourBet) },
+        raise: { label: '4bet', tamanho: medir('4bet do Hero', (s) => s.fourBet) },
         jam: spot.hands.some((h) => h.action === 'jam'),
       }
     case 'vs-4bet':
       return {
         history: [
           openDoVilao(),
-          aposta(hero, '3bet', medir(spot, '3bet do Hero', (s) => s.threeBet)),
-          aposta(vilao, '4bet', medir(spot, '4bet enfrentado', (s) => s.vs4bet)),
+          aposta(hero, '3bet', medir('3bet do Hero', (s) => s.threeBet)),
+          aposta(vilao, '4bet', medir('4bet enfrentado', (s) => s.vs4bet)),
         ],
         call: true,
         jam: true,
@@ -100,8 +112,8 @@ function botoes({ call, raise, jam }: Descricao): ActionOption[] {
   return options
 }
 
-export function montarCena(_dados: RangesData, spot: Spot): Cena {
-  const descricao = descrever(spot)
+export function montarCena(dados: RangesData, spot: Spot): Cena {
+  const descricao = descrever(spot, medidor(dados, spot))
   const { history } = descricao
   const primeiraDecisao = ['rfi', '3bet', 'bb-defense'].includes(spot.family)
 
