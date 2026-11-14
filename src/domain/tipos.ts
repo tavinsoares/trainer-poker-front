@@ -76,6 +76,10 @@ export interface Verdict {
    */
   edgeHand: boolean
   villainType: VillainType
+  /** Título do feedback, por template ("A5s é 3bet neste spot"). */
+  title: string
+  /** Corpo do feedback, por template: o que o aluno escolheu, a ação certa e o EV quando existe. */
+  body: string
 }
 
 export interface Question {

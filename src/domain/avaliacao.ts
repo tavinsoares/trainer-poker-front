@@ -1,4 +1,5 @@
 import type { RangesData } from '../data/ranges-types.ts'
+import { escreverFeedback } from './texto.ts'
 import type { AnswerableAction, Question, Verdict } from './tipos.ts'
 
 /** Pontuação binária: correta quando a ação escolhida é a da mão no spot, erro em qualquer outro caso. */
@@ -12,7 +13,7 @@ export function avaliar(dados: RangesData, pergunta: Question, escolhida: Answer
   }
   const ev = mao.action === 'fold' ? null : mao.ev
   const deixouNaMesa = escolhida === 'fold' && mao.action !== 'fold' && spot.villain.type === 'regular' && ev !== null && ev > 0
-  return {
+  const resultado = {
     correct: escolhida === mao.action,
     correctAction: mao.action,
     chosenAction: escolhida,
@@ -21,4 +22,5 @@ export function avaliar(dados: RangesData, pergunta: Question, escolhida: Answer
     edgeHand: spot.villain.type === 'regular' && mao.action !== 'fold' && mao.ev === null,
     villainType: spot.villain.type,
   }
+  return { ...resultado, ...escreverFeedback(pergunta, resultado) }
 }
