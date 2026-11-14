@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import type { Position, RangesData } from '../../src/data/ranges-types.ts'
+import type { Action, Hand, Position, RangesData, Spot } from '../../src/data/ranges-types.ts'
 
 // Seam único desta spec: o JSON gerado pelo conversor. O conversor é uma
 // caixa-preta; aqui só se confere o que o app vai consumir.
@@ -10,7 +10,7 @@ const dados: RangesData = JSON.parse(
 )
 
 const POSICOES: Position[] = ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB']
-const ACOES = ['fold', 'call', 'raise', 'jam', 'out_of_range']
+const ACOES: Action[] = ['fold', 'call', 'raise', 'jam', 'out_of_range']
 
 // Mãos canônicas na ordem da matriz: A, K, Q... 2, linha por linha, com pares na
 // diagonal, suited acima (AKs) e offsuit abaixo (AKo).
@@ -23,9 +23,11 @@ const MAOS_NA_ORDEM = RANKS.split('').flatMap((linha, i) =>
 )
 const COMBOS = (mao: string) => (mao.length === 2 ? 6 : mao.endsWith('s') ? 4 : 12)
 
+const rfiContraRegular = dados.spots.filter((s) => s.family === 'rfi' && s.villain.type === 'regular')
+
 const spotPorHero = (hero: Position) => {
-  const spot = dados.spots.find((s) => s.hero === hero)
-  if (!spot) throw new Error(`spot de RFI do ${hero} não existe`)
+  const spot = rfiContraRegular.find((s) => s.hero === hero)
+  if (!spot) throw new Error(`spot de RFI contra regular do ${hero} não existe`)
   return spot
 }
 const mao = (hero: Position, nome: string) => {
@@ -44,15 +46,44 @@ describe('procedência', () => {
   })
 })
 
+describe('estrutura do JSON', () => {
+  it('dá a cada spot um identificador único', () => {
+    const repetidos = dados.spots.map((s) => s.id).filter((id, i, todos) => todos.indexOf(id) !== i)
+    expect(repetidos).toEqual([])
+  })
+
+  it('traz todas as chaves de cada spot, legenda e mão, com o tipo certo', () => {
+    const violacoes: string[] = []
+    const confere = (onde: string, objeto: object, esperado: Record<string, string>) => {
+      for (const [chave, tipo] of Object.entries(esperado)) {
+        const valor = (objeto as Record<string, unknown>)[chave]
+        const real = valor === null ? 'null' : Array.isArray(valor) ? 'array' : typeof valor
+        if (!(chave in objeto) || !tipo.split('|').includes(real)) {
+          violacoes.push(`${onde}: a chave "${chave}" deveria ser ${tipo}, mas é ${chave in objeto ? real : 'ausente'}`)
+        }
+      }
+    }
+    for (const s of dados.spots) {
+      confere(s.id, s, {
+        id: 'string', family: 'string', hero: 'string', villain: 'object', sourceSheet: 'string',
+        sizings: 'object', legend: 'array', hands: 'array',
+      })
+      confere(`${s.id} (vilão)`, s.villain, { type: 'string', position: 'string|null' })
+      confere(`${s.id} (sizings)`, s.sizings, { vs3bet: 'object', vsOpen: 'object' })
+      s.legend.forEach((l, i) => confere(`${s.id} (legenda ${i})`, l, { label: 'string', action: 'string', percent: 'number' }))
+      s.hands.forEach((h) => confere(`${s.id} (mão ${h.hand})`, h, { hand: 'string', action: 'string', label: 'string', combos: 'number', ev: 'number|null' }))
+    }
+    expect(violacoes).toEqual([])
+  })
+})
+
 describe('RFI contra regular', () => {
-  it('tem os cinco spots, um por posição que abre, sem duplicatas', () => {
-    const rfi = dados.spots.filter((s) => s.family === 'rfi' && s.villain.type === 'regular')
-    expect(rfi.map((s) => s.hero)).toEqual(['UTG', 'HJ', 'CO', 'BTN', 'SB'])
-    expect(new Set(dados.spots.map((s) => s.id)).size).toBe(dados.spots.length)
+  it('tem os cinco spots, um por posição que abre', () => {
+    expect(rfiContraRegular.map((s) => s.hero)).toEqual(['UTG', 'HJ', 'CO', 'BTN', 'SB'])
   })
 
   it('traz a aba de origem, e o MP da planilha aparece como HJ', () => {
-    const porHero = Object.fromEntries(dados.spots.map((s) => [s.hero, s.sourceSheet]))
+    const porHero = Object.fromEntries(rfiContraRegular.map((s) => [s.hero, s.sourceSheet]))
     expect(porHero).toEqual({
       UTG: 'RFI UTG',
       HJ: 'RFI MP',
@@ -68,15 +99,23 @@ describe('RFI contra regular', () => {
   })
 
   it('não tem posição de vilão no RFI', () => {
-    expect(dados.spots.map((s) => s.villain.position)).toEqual([null, null, null, null, null])
+    expect(rfiContraRegular.map((s) => s.villain.position)).toEqual([null, null, null, null, null])
   })
 })
 
 describe('mãos de cada spot', () => {
   it('tem exatamente as 169 mãos canônicas, na ordem da matriz, sem faltas nem repetições', () => {
-    const violacoes = dados.spots
-      .filter((s) => s.hands.map((h) => h.hand).join() !== MAOS_NA_ORDEM.join())
-      .map((s) => `${s.id}: mãos diferentes das 169 canônicas (tem ${s.hands.length})`)
+    const violacoes = dados.spots.flatMap((s) => {
+      const nomes = s.hands.map((h) => h.hand)
+      const faltam = MAOS_NA_ORDEM.filter((m) => !nomes.includes(m))
+      const sobram = nomes.filter((m, i) => !MAOS_NA_ORDEM.includes(m) || nomes.indexOf(m) !== i)
+      const foraDeOrdem = faltam.length === 0 && sobram.length === 0 && nomes.join() !== MAOS_NA_ORDEM.join()
+      return [
+        ...(faltam.length ? [`${s.id}: faltam as mãos ${faltam.join(', ')}`] : []),
+        ...(sobram.length ? [`${s.id}: mãos inválidas ou repetidas: ${sobram.join(', ')}`] : []),
+        ...(foraDeOrdem ? [`${s.id}: as 169 mãos estão fora da ordem da matriz`] : []),
+      ]
+    })
     expect(violacoes).toEqual([])
   })
 
@@ -97,6 +136,38 @@ describe('mãos de cada spot', () => {
     expect(mao('UTG', 'K8s')).toMatchObject({ action: 'fold', label: 'FOLD' })
   })
 
+  // Mãos conferidas uma a uma direto na planilha (cor da célula e EV), em cada aba.
+  // Trocar a ação ou o EV de duas mãos do mesmo spot é pego aqui, e não pelas contagens.
+  it.each([
+    ['UTG', 'AKs', 'raise', 1.4],
+    ['UTG', 'KK', 'raise', 5.61],
+    ['UTG', 'T9s', 'raise', 0],
+    ['UTG', '72o', 'fold', null],
+    ['UTG', '22', 'raise', null],
+    ['HJ', 'AKs', 'raise', 1.89],
+    ['HJ', 'KK', 'raise', 6.38],
+    ['HJ', 'T9s', 'raise', 0.05],
+    ['HJ', '72o', 'fold', null],
+    ['HJ', '22', 'raise', null],
+    ['CO', 'AKs', 'raise', 2.51],
+    ['CO', 'KK', 'raise', 7.11],
+    ['CO', 'T9s', 'raise', 0.08],
+    ['CO', '72o', 'fold', null],
+    ['CO', '22', 'raise', null],
+    ['BTN', 'AKs', 'raise', 3.18],
+    ['BTN', 'KK', 'raise', 7.84],
+    ['BTN', 'T9s', 'raise', 0.27],
+    ['BTN', '72o', 'fold', null],
+    ['BTN', '22', 'raise', 0.01],
+    ['SB', 'AKs', 'raise', 2.77],
+    ['SB', 'KK', 'raise', 5.71],
+    ['SB', 'T9s', 'raise', 0.41],
+    ['SB', '72o', 'fold', null],
+    ['SB', '22', 'raise', 0.13],
+  ] as const)('no RFI do %s, %s é %s com EV %s', (hero, nome, acao, ev) => {
+    expect(mao(hero, nome)).toMatchObject({ action: acao, ev })
+  })
+
   // Contagem de mãos salmão (RFI) de cada aba, contada à mão na planilha.
   it.each([
     ['UTG', 47],
@@ -114,7 +185,7 @@ const TOLERANCIA_PP = 0.1
 const TOTAL_COMBOS = 1326
 
 const percentual = (combos: number) => (100 * combos) / TOTAL_COMBOS
-const combosDe = (spot: (typeof dados.spots)[number], filtro: (h: (typeof dados.spots)[number]['hands'][number]) => boolean) =>
+const combosDe = (spot: Spot, filtro: (h: Hand) => boolean) =>
   spot.hands.filter(filtro).reduce((soma, h) => soma + h.combos, 0)
 
 describe('legenda', () => {

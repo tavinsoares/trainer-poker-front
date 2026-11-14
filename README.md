@@ -42,7 +42,9 @@ npm run convert:data                    # planilha -> data/ranges.json
 npm run validate:data                   # confere as invariantes do JSON
 ```
 
-Ordem: converter e depois validar. O `data/ranges.json` é commitado, então o build do site não depende de Python nem da planilha. Para outro arquivo ou data: `python tools/convert_ranges.py <planilha.xlsx> --imported-at AAAA-MM-DD`. A saída é determinística: duas execuções sobre a mesma planilha só diferem na data de importação. Se a planilha trouxer uma cor, um rótulo de legenda ou uma matriz que o conversor não conhece, ele falha com uma mensagem que cita a aba, em vez de adivinhar.
+Ordem: converter e depois validar. O `data/ranges.json` é commitado, então o build do site não depende de Python nem da planilha. Para outro arquivo, saída ou data: `python tools/convert_ranges.py <planilha.xlsx> --output <saida.json> --imported-at AAAA-MM-DD`. A saída é determinística: duas execuções sobre a mesma planilha só diferem na data de importação.
+
+Nas abas que já trata, o conversor falha com uma mensagem que cita a aba, em vez de adivinhar, quando encontra uma cor que não está na legenda, um rótulo de legenda desconhecido, duas entradas de legenda com a mesma cor, uma legenda ausente, uma mão fora da posição da matriz, conteúdo além da matriz 13×13 ou um EV que não é número. As abas que o conversor ainda não trata (hoje, tudo o que não é RFI) são ignoradas, e o resumo final diz quantas são.
 
 ## Convenções
 

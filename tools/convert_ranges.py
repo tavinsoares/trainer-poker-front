@@ -2,7 +2,7 @@
 
 Uso (a partir da raiz do projeto do front-end):
 
-    python tools/convert_ranges.py [planilha.xlsx] [--imported-at AAAA-MM-DD]
+    python tools/convert_ranges.py [planilha.xlsx] [--output saida.json] [--imported-at AAAA-MM-DD]
 
 O app nunca lê a planilha em tempo de execução: ele só lê o JSON gerado.
 """
@@ -12,12 +12,14 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import posixpath
 import re
 import sys
 import zipfile
 from datetime import date
 from pathlib import Path
+from typing import NamedTuple
 from xml.etree import ElementTree as ET
 
 import openpyxl
@@ -77,9 +79,24 @@ SIZING_VS_3BET = re.compile(rf"^vs\s+3B\s+{_POSITION}\s+{_SIZE}$", re.IGNORECASE
 SIZING_VS_OPEN = re.compile(rf"^vs\s+RFI\s+{_POSITION}\s+{_SIZE}$", re.IGNORECASE)
 
 
-def _size(text: str) -> float | int:
-    value = float(text.replace(",", "."))
+def parse_decimal(text: str) -> float | int:
+    """Número com vírgula ou ponto decimal. Inteiros voltam como int (2, e não 2.0).
+
+    Levanta ValueError se o texto não for um número finito.
+    """
+    value = float(text.strip().replace(",", "."))
+    if not math.isfinite(value):
+        raise ValueError(text)
     return int(value) if value.is_integer() else value
+
+
+class SizingShape(NamedTuple):
+    """Uma forma da barra lateral que descreve um tamanho de aposta."""
+
+    column: int
+    kind: str  # "open", "vs3bet" ou "vsOpen"
+    position: str | None
+    size: float | int
 
 
 class DrawingReader:
@@ -135,7 +152,7 @@ def read_sizings(drawings: DrawingReader, sheet_name: str) -> dict:
     A barra lateral tem uma coluna para o vilão regular e, em algumas abas, outra para o
     fish. A do regular é a que contém o "RFI Xbb" do próprio Hero; a outra é ignorada.
     """
-    parsed = []  # (coluna, tipo, posição ou None, tamanho)
+    parsed: list[SizingShape] = []
     for column, text in drawings.shapes(sheet_name):
         for kind, pattern in (("open", SIZING_OPEN), ("vs3bet", SIZING_VS_3BET), ("vsOpen", SIZING_VS_OPEN)):
             match = pattern.match(text)
@@ -144,17 +161,17 @@ def read_sizings(drawings: DrawingReader, sheet_name: str) -> dict:
             if column is None:
                 raise ConversionError(f"aba '{sheet_name}': a forma '{text}' não tem posição na aba")
             if kind == "open":
-                parsed.append((column, kind, None, _size(match.group(1))))
+                parsed.append(SizingShape(column, kind, None, parse_decimal(match.group(1))))
             else:
                 position = normalize_position(match.group(1).upper())
-                parsed.append((column, kind, position, _size(match.group(2))))
+                parsed.append(SizingShape(column, kind, position, parse_decimal(match.group(2))))
 
-    open_shapes = [item for item in parsed if item[1] == "open"]
+    open_shapes = [shape for shape in parsed if shape.kind == "open"]
     if len(open_shapes) != 1:
         raise ConversionError(
             f"aba '{sheet_name}': esperava uma forma 'RFI Xbb' (open do Hero), achei {len(open_shapes)}"
         )
-    regular_column, _, _, open_size = open_shapes[0]
+    regular_column, open_size = open_shapes[0].column, open_shapes[0].size
 
     sizings: dict = {"open": open_size, "vs3bet": {}, "vsOpen": {}}
     for column, kind, position, size in parsed:
@@ -222,10 +239,15 @@ def read_legend(sheet) -> dict[str, dict]:
                 raise ConversionError(
                     f"aba '{sheet.title}': rótulo de legenda desconhecido '{label}' em {cell.coordinate}"
                 )
+            if key in legend:
+                raise ConversionError(
+                    f"aba '{sheet.title}': duas entradas de legenda com a mesma cor "
+                    f"('{legend[key]['label']}' e '{label}')"
+                )
             legend[key] = {
                 "label": label,
                 "action": LABEL_ACTIONS[label],
-                "percent": float(match.group(2).replace(",", ".")),
+                "percent": float(parse_decimal(match.group(2))),
             }
     if not legend:
         raise ConversionError(f"aba '{sheet.title}': legenda não encontrada")
@@ -239,18 +261,26 @@ def read_ev(sheet, cell) -> float | int | None:
     if raw is None or (isinstance(raw, str) and not raw.strip()):
         return None
     try:
-        value = float(str(raw).strip().replace(",", "."))
+        return parse_decimal(str(raw))
     except ValueError:
         raise ConversionError(
             f"aba '{sheet.title}': EV não numérico {raw!r} na célula {ev_cell.coordinate}"
         ) from None
-    if value != value or value in (float("inf"), float("-inf")):
-        raise ConversionError(f"aba '{sheet.title}': EV inválido {raw!r} na célula {ev_cell.coordinate}")
-    return int(value) if value.is_integer() else value
+
+
+def check_grid_bounds(sheet) -> None:
+    """Falha se houver conteúdo logo abaixo da 13ª linha da matriz (matriz maior que 13x13)."""
+    for row in sheet.iter_rows(min_row=GRID_FIRST_ROW + GRID_SIZE, min_col=GRID_FIRST_COL, max_col=GRID_LAST_COL):
+        for cell in row:
+            if cell.value is not None and str(cell.value).strip():
+                raise ConversionError(
+                    f"aba '{sheet.title}': a matriz deveria ter 13x13, mas há conteúdo em {cell.coordinate}"
+                )
 
 
 def read_hands(sheet, legend: dict[str, dict]) -> list[dict]:
     """Lê as 169 mãos da matriz, na ordem da matriz (linha por linha)."""
+    check_grid_bounds(sheet)
     hands = []
     for row in range(GRID_SIZE):
         for col in range(GRID_SIZE):
@@ -302,14 +332,17 @@ def sha256_of(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def convert(source: Path, imported_at: str) -> dict:
+def convert(source: Path, imported_at: str) -> tuple[dict, list[str]]:
+    """Converte a planilha. Devolve o JSON e os nomes das abas ainda não tratadas."""
     workbook = openpyxl.load_workbook(source)
     drawings = DrawingReader(source)
     spots = []
+    skipped = []
     try:
         for sheet_name in workbook.sheetnames:
             identity = classify_sheet(sheet_name)
             if identity is None:
+                skipped.append(sheet_name)
                 continue
             sheet = workbook[sheet_name]
             legend = read_legend(sheet)
@@ -323,7 +356,7 @@ def convert(source: Path, imported_at: str) -> dict:
             )
     finally:
         drawings.close()
-    return {
+    data = {
         "manifest": {
             "source": SOURCE_NAME,
             "importedAt": imported_at,
@@ -332,6 +365,7 @@ def convert(source: Path, imported_at: str) -> dict:
         },
         "spots": spots,
     }
+    return data, skipped
 
 
 def write_json(data: dict, output: Path) -> None:
@@ -353,7 +387,7 @@ def main(argv: list[str]) -> int:
         print(f"Planilha não encontrada: {args.source}", file=sys.stderr)
         return 2
     try:
-        data = convert(args.source, args.imported_at)
+        data, skipped = convert(args.source, args.imported_at)
     except ConversionError as error:
         print(f"Erro de conversão: {error}", file=sys.stderr)
         return 1
@@ -361,6 +395,7 @@ def main(argv: list[str]) -> int:
     write_json(data, args.output)
     print(f"sha256 da planilha: {data['manifest']['sourceSha256']}")
     print(f"{len(data['spots'])} spots escritos em {args.output}")
+    print(f"{len(skipped)} abas ainda não tratadas (virão nos próximos tickets da spec 1)")
     return 0
 
 
