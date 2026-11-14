@@ -1,13 +1,22 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import type { Action, Hand, Position, RangesData, Spot, SpotFamily } from '../../src/data/ranges-types.ts'
+import type {
+  Action,
+  Hand,
+  InventoryReport,
+  Position,
+  RangesData,
+  Spot,
+  SpotFamily,
+} from '../../src/data/ranges-types.ts'
 
 // Seam único desta spec: o JSON gerado pelo conversor. O conversor é uma
 // caixa-preta; aqui só se confere o que o app vai consumir.
-const dados: RangesData = JSON.parse(
-  readFileSync(resolve(import.meta.dirname, '..', '..', 'data', 'ranges.json'), 'utf-8'),
-)
+const lerJson = <T>(arquivo: string): T =>
+  JSON.parse(readFileSync(resolve(import.meta.dirname, '..', '..', 'data', arquivo), 'utf-8'))
+const dados = lerJson<RangesData>('ranges.json')
+const relatorio = lerJson<InventoryReport>('ranges.report.json')
 
 const POSICOES: Position[] = ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB']
 const ACOES: Action[] = ['fold', 'call', 'raise', 'jam', 'out_of_range']
@@ -1296,5 +1305,79 @@ describe('contra fish: sizings', () => {
   it('mostra o fish com tamanhos distintos do regular no mesmo Hero', () => {
     expect(spotDaAba('BBvUTG').sizings.vsOpen.UTG).toBe(2)
     expect(spotDaAba('BBvUTG F').sizings.vsOpen.UTG).toBe(2.5)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Inventário completo (ticket 7): nenhuma das 332 abas some sem registro.
+
+const TOTAL_DE_ABAS = 332
+
+describe('inventário das abas', () => {
+  it('soma as 332 abas da planilha: as que viraram spot mais as que ficaram de fora', () => {
+    expect(relatorio.totalSheets).toBe(TOTAL_DE_ABAS)
+    expect(relatorio.imported.length + relatorio.excluded.length).toBe(TOTAL_DE_ABAS)
+    expect(relatorio.imported).toHaveLength(127)
+    expect(relatorio.excluded).toHaveLength(205)
+  })
+
+  it('não repete aba, nem entre as importadas e as excluídas', () => {
+    const todas = [...relatorio.imported, ...relatorio.excluded.map((e) => e.sheet)]
+    const repetidas = todas.filter((aba, i) => todas.indexOf(aba) !== i)
+    expect(repetidas).toEqual([])
+  })
+
+  it('importa exatamente as abas que viraram spot no JSON, e nenhum spot vem de aba excluída', () => {
+    expect([...relatorio.imported].sort()).toEqual(dados.spots.map((s) => s.sourceSheet).sort())
+    const excluidas = new Set(relatorio.excluded.map((e) => e.sheet))
+    expect(dados.spots.filter((s) => excluidas.has(s.sourceSheet)).map((s) => s.id)).toEqual([])
+  })
+
+  // Contagens por motivo, feitas por um script à parte a partir dos nomes das abas.
+  it.each([
+    ['3-handed', 6],
+    ['heads-up', 5],
+    ['squeeze', 50],
+    ['cold 4bet', 120],
+    ['variante de tamanho de aposta', 24],
+  ] as const)('exclui %s em %i abas', (motivo, esperado) => {
+    expect(relatorio.excluded.filter((e) => e.reason === motivo)).toHaveLength(esperado)
+  })
+
+  it('dá a cada aba excluída um motivo coerente com o nome dela', () => {
+    const coerente = (aba: string, motivo: string) => {
+      switch (motivo) {
+        case '3-handed': return /^3H /.test(aba)
+        case 'heads-up': return /^HU /.test(aba)
+        case 'squeeze': return aba.includes('SQZ')
+        case 'cold 4bet': return aba.includes('C4B')
+        case 'variante de tamanho de aposta': return / \d+(\.\d+)?$/.test(aba)
+        default: return false
+      }
+    }
+    const violacoes = relatorio.excluded
+      .filter((e) => !coerente(e.sheet, e.reason))
+      .map((e) => `a aba "${e.sheet}" tem o motivo "${e.reason}"`)
+    expect(violacoes).toEqual([])
+  })
+
+  // As variantes de tamanho são as abas de um spot da v1 com um número no fim do nome.
+  it('lista as 24 variantes de tamanho de aposta, cada uma de um spot que a v1 já tem', () => {
+    const variantes = relatorio.excluded.filter((e) => e.reason === 'variante de tamanho de aposta').map((e) => e.sheet)
+    expect(variantes).toEqual([
+      'BBvUTG 2.5', 'BBv4B UTG 2.5', 'BBvHJ 2.5', 'BBv4B HJ 2.5', 'BBvCO 2.5', 'BBv4B CO 2.5',
+      'BBvBTN 2', 'BBv4B BTN 2', '3B HJvUTG 2.5', 'HJv4B UTG 2.5', '3B COvUTG 2.5', 'COv4B UTG 2.5',
+      '3B COvHJ 2.5', 'COv4B HJ 2.5', 'COv3B SB 10', 'COv3B SB 10.1', 'COv3B BB 11', 'COv3B BB 11.1',
+      'BTNv3B SB 10', 'BTNv3B SB 10.1', 'BTNv3B BB 11', 'BTNv3B BB 11.1', 'SBv3B BB 9', 'SBv3B BB 9.1',
+    ])
+    const importadas = new Set(relatorio.imported)
+    const semBase = variantes.filter((aba) => !importadas.has(aba.replace(/ \d+(\.\d+)?$/, '')))
+    expect(semBase).toEqual([])
+  })
+
+  it('lista as abas de 3-handed e de heads-up', () => {
+    const por = (motivo: string) => relatorio.excluded.filter((e) => e.reason === motivo).map((e) => e.sheet)
+    expect(por('3-handed')).toEqual(['3H UTG', '3H HJ', '3H CO', '3H BTN', '3H SB', '3H BB'])
+    expect(por('heads-up')).toEqual(['HU SB 1', 'HU BB 1', 'HU SB 1.1', 'HU BB 1.1', 'HU SB 1.2'])
   })
 })

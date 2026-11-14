@@ -86,3 +86,23 @@ export interface RangesData {
   manifest: Manifest
   spots: Spot[]
 }
+
+/** Por que uma aba da planilha não virou spot na v1. */
+export type ExclusionReason =
+  | '3-handed'
+  | 'heads-up'
+  | 'squeeze'
+  | 'cold 4bet'
+  | 'variante de tamanho de aposta'
+
+/**
+ * Inventário das abas da planilha, gerado junto com o JSON de ranges. O app não o lê: serve a
+ * quem mantém a planilha, para saber o que ficou de fora da v1 e por quê.
+ */
+export interface InventoryReport {
+  totalSheets: number
+  /** Abas que viraram spot, na ordem da planilha. */
+  imported: string[]
+  /** Abas que ficaram de fora, na ordem da planilha. */
+  excluded: { sheet: string; reason: ExclusionReason }[]
+}

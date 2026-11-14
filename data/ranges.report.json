@@ -1,0 +1,954 @@
+{
+  "totalSheets": 332,
+  "imported": [
+    "RFI UTG",
+    "RFI MP",
+    "RFI CO",
+    "RFI BTN",
+    "RFI SB",
+    "3B HJvUTG",
+    "3B COvUTG",
+    "3B BTNvUTG",
+    "3B SBvUTG",
+    "BBvUTG",
+    "3B COvHJ",
+    "3B BTNvHJ",
+    "3B SBvHJ",
+    "BBvHJ",
+    "3B BTNvCO",
+    "3B SBvCO",
+    "BBvCO",
+    "3B SBvBTN",
+    "BBvBTN",
+    "BBvSB",
+    "UTGv3B HJ",
+    "UTGv3B CO",
+    "UTGv3B BTN",
+    "UTGv3B SB",
+    "UTGv3B BB",
+    "MPv3B CO",
+    "MPv3B BTN",
+    "MPv3B SB",
+    "MPv3B BB",
+    "COv3B BTN",
+    "COv3B SB",
+    "COv3B BB",
+    "BTNv3B SB",
+    "BTNv3B BB",
+    "SBv3B BB",
+    "HJv4B UTG",
+    "COv4B UTG",
+    "COv4B HJ",
+    "BTNv4B UTG",
+    "BTNv4B HJ",
+    "BTNv4B CO",
+    "SBv4B UTG",
+    "SBv4B HJ",
+    "SBv4B CO",
+    "SBv4B BTN",
+    "BBv4B UTG",
+    "BBv4B HJ",
+    "BBv4B CO",
+    "BBv4B BTN",
+    "BBv4B SB",
+    "UTGvJAM HJ",
+    "UTGvJAM CO",
+    "UTGvJAM BTN",
+    "UTGvJAM SB",
+    "UTGvJAM BB",
+    "HJvJAM CO",
+    "HJvJAM BTN",
+    "HJvJAM SB",
+    "HJvJAM BB",
+    "COvJAM BTN",
+    "COvJAM SB",
+    "COvJAM BB",
+    "BTNvJAM SB",
+    "BTNvJAM BB",
+    "SBvJAM BB",
+    "HJvUTG F",
+    "HJv4B UTG F",
+    "COvUTG F",
+    "COv4B UTG F",
+    "BTNvUTG F",
+    "BTNv4B UTG F",
+    "COvHJ F",
+    "COv4B HJ F",
+    "BTNvHJ F",
+    "BTNv4B HJ F",
+    "BTNvCO F",
+    "BTNv4B CO F",
+    "BBvUTG F",
+    "BBv4B UTG F",
+    "BBvHJ F",
+    "BBv4B HJ F",
+    "BBvCO F",
+    "BBv4B CO F",
+    "BBvBTN F",
+    "BBv4B BTN F",
+    "BBvSB F",
+    "BBv4B SB F",
+    "SBvUTG F",
+    "SBv4B UTG F",
+    "SBvHJ F",
+    "SBv4B HJ F",
+    "SBvCO F",
+    "SBv4B CO F",
+    "SBvBTN F",
+    "SBv4B BTN F",
+    "UTGvHJ F",
+    "UTGvJAM HJ F",
+    "UTGvCO F",
+    "UTGvJAM CO F",
+    "UTGvBTN F",
+    "UTGvJAM BTN F",
+    "UTGvSB F",
+    "UTGvJAM SB F",
+    "UTGvBB F",
+    "UTGvJAM BB F",
+    "HJvCO F",
+    "HJvJAM CO F",
+    "HJvBTN F",
+    "HJvJAM BTN F",
+    "HJvSB F",
+    "HJvJAM SB F",
+    "HJvBB F",
+    "HJvJAM BB F",
+    "COvBTN F",
+    "COvJAM BTN F",
+    "COvSB F",
+    "COvJAM SB F",
+    "COvBB F",
+    "COvJAM BB F",
+    "BTNvSB F",
+    "BTNvJAM SB F",
+    "BTNvBB F",
+    "BTNvJAM BB F",
+    "SBvBB F",
+    "SBvJAM BB F",
+    "OR BTNvF",
+    "OR SBvF"
+  ],
+  "excluded": [
+    {
+      "sheet": "BBvUTG 2.5",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "BBv4B UTG 2.5",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "BBvHJ 2.5",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "BBv4B HJ 2.5",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "BBvCO 2.5",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "BBv4B CO 2.5",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "BBvBTN 2",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "BBv4B BTN 2",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "3H UTG",
+      "reason": "3-handed"
+    },
+    {
+      "sheet": "3H HJ",
+      "reason": "3-handed"
+    },
+    {
+      "sheet": "3H CO",
+      "reason": "3-handed"
+    },
+    {
+      "sheet": "3H BTN",
+      "reason": "3-handed"
+    },
+    {
+      "sheet": "3H SB",
+      "reason": "3-handed"
+    },
+    {
+      "sheet": "3H BB",
+      "reason": "3-handed"
+    },
+    {
+      "sheet": "BB SQZ 1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB SQZ 1.1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB SQZ 1.2",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB SQZ 2",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB SQZ 2.1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB SQZ 2.2",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB SQZ 3",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB SQZ 3.1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB SQZ 3.2",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB SQZ 4",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB SQZ 4.1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB SQZ 4.2",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB SQZ 5",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB SQZ 5.1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB SQZ 5.2",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB SQZ 6",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB SQZ 6.1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB SQZ 6.2",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB SQZ 7",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB SQZ 7.1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB SQZ 7.2",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BB C4B 1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 1.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 1.2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 2.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 2.2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 3",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 3.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 3.2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 4",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 4.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 4.2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 5",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 5.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 5.2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 6",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 6.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 6.2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 7",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 7.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 7.2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 8",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 8.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 8.2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 9",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 9.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 9.2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 10",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 10.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BB C4B 10.2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB SQZ 1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "SB SQZ 1.1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "SB SQZ 1.2",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "SB SQZ 2",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "SB SQZ 2.1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "SB SQZ 2.2",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "SB SQZ 3",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "SB SQZ 3.1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "SB SQZ 3.2",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "SB vC4B 1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB vC4B 1.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB vC4B 2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB vC4B 2.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB vC4B 3",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB vC4B 3.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB vC4B 4",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB vC4B 4.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB C4B 1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB C4B 1.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB C4B 1.2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB C4B 2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB C4B 2.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB C4B 2.2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB C4B 3",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB C4B 3.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB C4B 3.2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB C4B 4",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB C4B 4.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB C4B 4.2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB C4B 5",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB C4B 5.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB C4B 5.2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB C4B 6",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB C4B 6.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "SB C4B 6.2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN vC4B 1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN vC4B 1.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN vC4B 2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN vC4B 2.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN vC4B 3",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN vC4B 3.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN vC4B 4",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN vC4B 4.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN vC4B 5",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN vC4B 5.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN vC4B 6",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN vC4B 6.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN vC4B 7",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN C4B 1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN C4B 1.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN C4B 1.2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN C4B 2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN C4B 2.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN C4B 2.2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN C4B 3",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN C4B 3.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN C4B 3.2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "BTN vSQZ",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "BTN vSQZ.",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "CO vC4B 1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "CO vC4B 1.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "CO vC4B 2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "CO vC4B 2.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "CO vC4B 3",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "CO vC4B 3.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "CO vC4B 4",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "CO vC4B 4.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "CO vC4B 5",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "CO vC4B 5.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "CO vC4B 6",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "CO vC4B 6.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "CO vC4B 7",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "CO vC4B 8",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "CO vC4B 9",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "CO C4B",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "CO C4B.",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "CO C4B..",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "CO vSQZ 1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "CO vSQZ 1.1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "CO vSQZ 2",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "CO vSQZ 2.2",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "CO vSQZ 3",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "CO vSQZ 3.1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "HJ vC4B 1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "HJ vC4B 1.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "HJ vC4B 2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "HJ vC4B 2.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "HJ vC4B 3",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "HJ vC4B 3.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "HJ vC4B 4",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "HJ vC4B 4.1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "HJ vC4B 5",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "HJ vC4B 6",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "HJ vC4B 7",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "HJ vC4B 8",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "HJ vC4B 9",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "HJ vC4B 10",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "HJ vSQZ 1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "HJ vSQZ 1.1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "HJ vSQZ 2",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "HJ vSQZ 2.1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "HJ vSQZ 3",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "HJ vSQZ 3.1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "UTG vC4B 1",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "UTG vC4B 2",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "UTG vC4B 3",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "UTG vC4B 4",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "UTG vC4B 5",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "UTG vC4B 6",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "UTG vC4B 7",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "UTG vC4B 8",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "UTG vC4B 9",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "UTG vC4B 10",
+      "reason": "cold 4bet"
+    },
+    {
+      "sheet": "UTG vSQZ 1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "UTG vSQZ 1.1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "UTG vSQZ 2",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "UTG vSQZ 2.1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "UTG vSQZ 3",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "UTG vSQZ 3.1",
+      "reason": "squeeze"
+    },
+    {
+      "sheet": "HU SB 1",
+      "reason": "heads-up"
+    },
+    {
+      "sheet": "HU BB 1",
+      "reason": "heads-up"
+    },
+    {
+      "sheet": "HU SB 1.1",
+      "reason": "heads-up"
+    },
+    {
+      "sheet": "HU BB 1.1",
+      "reason": "heads-up"
+    },
+    {
+      "sheet": "HU SB 1.2",
+      "reason": "heads-up"
+    },
+    {
+      "sheet": "3B HJvUTG 2.5",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "HJv4B UTG 2.5",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "3B COvUTG 2.5",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "COv4B UTG 2.5",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "3B COvHJ 2.5",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "COv4B HJ 2.5",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "COv3B SB 10",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "COv3B SB 10.1",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "COv3B BB 11",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "COv3B BB 11.1",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "BTNv3B SB 10",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "BTNv3B SB 10.1",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "BTNv3B BB 11",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "BTNv3B BB 11.1",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "SBv3B BB 9",
+      "reason": "variante de tamanho de aposta"
+    },
+    {
+      "sheet": "SBv3B BB 9.1",
+      "reason": "variante de tamanho de aposta"
+    }
+  ]
+}

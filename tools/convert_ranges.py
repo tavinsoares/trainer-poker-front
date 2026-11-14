@@ -17,6 +17,7 @@ import posixpath
 import re
 import sys
 import zipfile
+from collections import Counter
 from datetime import date
 from pathlib import Path
 from typing import NamedTuple
@@ -31,6 +32,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 # O meta-repo guarda a planilha em docs/context, dois níveis acima do projeto.
 DEFAULT_SOURCE = PROJECT_ROOT.parent.parent / "docs" / "context" / "Ranges Simplificados Metagame.xlsx"
 DEFAULT_OUTPUT = PROJECT_ROOT / "data" / "ranges.json"
+DEFAULT_REPORT = PROJECT_ROOT / "data" / "ranges.report.json"
 
 # A planilha chama o HJ de MP.
 POSITION_ALIASES = {"MP": "HJ"}
@@ -477,6 +479,26 @@ def classify_sheet(sheet_name: str) -> dict | None:
     return None
 
 
+def classify_exclusion(sheet_name: str) -> str | None:
+    """Motivo pelo qual uma aba que não é spot da v1 fica de fora, ou None se o nome é desconhecido.
+
+    Um nome desconhecido faz a conversão falhar: nenhuma aba some sem registro.
+    """
+    if sheet_name.startswith("3H "):
+        return "3-handed"
+    if sheet_name.startswith("HU "):
+        return "heads-up"
+    if "SQZ" in sheet_name:
+        return "squeeze"
+    if "C4B" in sheet_name:
+        return "cold 4bet"
+    # Variante de tamanho de aposta: o nome de um spot da v1 com um número no fim ("BBvUTG 2.5").
+    base = re.fullmatch(r"(.+) \d+(?:\.\d+)?", sheet_name)
+    if base and classify_sheet(base.group(1)):
+        return "variante de tamanho de aposta"
+    return None
+
+
 def _identity(
     family: str, hero: str, villain_position: str | None, sheet_name: str, villain_type: str = "regular"
 ) -> dict:
@@ -497,19 +519,25 @@ def sha256_of(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def convert(source: Path, imported_at: str) -> tuple[dict, list[str]]:
-    """Converte a planilha. Devolve o JSON e os nomes das abas ainda não tratadas."""
+def convert(source: Path, imported_at: str) -> tuple[dict, dict]:
+    """Converte a planilha. Devolve o JSON de ranges e o inventário de todas as abas."""
     workbook = openpyxl.load_workbook(source)
     drawings = DrawingReader(source)
     spots = []
-    skipped = []
+    excluded = []
     fish_identities = []
     fish_sizings_by_hero: dict[str, dict] = {}
     try:
         for sheet_name in workbook.sheetnames:
             identity = classify_sheet(sheet_name)
             if identity is None:
-                skipped.append(sheet_name)
+                reason = classify_exclusion(sheet_name)
+                if reason is None:
+                    raise ConversionError(
+                        f"aba '{sheet_name}': não é um spot da v1 nem uma exclusão conhecida "
+                        "(3-handed, heads-up, squeeze, cold 4bet ou variante de tamanho de aposta)"
+                    )
+                excluded.append({"sheet": sheet_name, "reason": reason})
             elif identity["villain"]["type"] == "fish":
                 fish_identities.append(identity)  # depois, quando os tamanhos de fish dos Heróis estiverem juntos
             else:
@@ -552,7 +580,13 @@ def convert(source: Path, imported_at: str) -> tuple[dict, list[str]]:
         },
         "spots": spots,
     }
-    return data, skipped
+    imported_sheets = {spot["sourceSheet"] for spot in spots}
+    report = {
+        "totalSheets": len(workbook.sheetnames),
+        "imported": [name for name in workbook.sheetnames if name in imported_sheets],
+        "excluded": excluded,
+    }
+    return data, report
 
 
 def write_json(data: dict, output: Path) -> None:
@@ -567,6 +601,9 @@ def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("source", nargs="?", type=Path, default=DEFAULT_SOURCE, help="caminho da planilha")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT, help="caminho do JSON de saída")
+    parser.add_argument(
+        "--report", type=Path, help="caminho do relatório das abas (padrão: ao lado do JSON, com .report.json)"
+    )
     parser.add_argument("--imported-at", default=date.today().isoformat(), help="data de importação (AAAA-MM-DD)")
     args = parser.parse_args(argv)
 
@@ -574,15 +611,20 @@ def main(argv: list[str]) -> int:
         print(f"Planilha não encontrada: {args.source}", file=sys.stderr)
         return 2
     try:
-        data, skipped = convert(args.source, args.imported_at)
+        data, report = convert(args.source, args.imported_at)
     except ConversionError as error:
         print(f"Erro de conversão: {error}", file=sys.stderr)
         return 1
 
+    report_path = args.report or args.output.with_name(args.output.stem + ".report.json")
     write_json(data, args.output)
+    write_json(report, report_path)
     print(f"sha256 da planilha: {data['manifest']['sourceSha256']}")
     print(f"{len(data['spots'])} spots escritos em {args.output}")
-    print(f"{len(skipped)} abas ainda não tratadas (virão nos próximos tickets da spec 1)")
+    by_reason = Counter(item["reason"] for item in report["excluded"])
+    print(f"{len(report['excluded'])} de {report['totalSheets']} abas ficaram de fora da v1 (relatório em {report_path}):")
+    for reason, count in by_reason.most_common():
+        print(f"  {count:3d}  {reason}")
     return 0
 
 
