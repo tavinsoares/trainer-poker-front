@@ -84,3 +84,94 @@ describe('cena do 3bet contra um open e da defesa do BB', () => {
     expect([...new Set(violacoes)]).toEqual([])
   })
 })
+
+describe('cena de enfrentar agressão', () => {
+  it('vs 3bet, UTGv3B BB: o UTG abriu 2bb e o BB deu 3bet de 12bb; pote de 14,5bb, 10bb a pagar e 4bet de 22bb', () => {
+    const p = cena('vs-3bet-utg-vs-bb-regular')
+    expect(p).toMatchObject({ pot: 14.5, toCall: 10 })
+    expect(p.history).toEqual([
+      { position: 'UTG', action: 'open', size: 2, estimated: false },
+      { position: 'BB', action: '3bet', size: 12, estimated: false },
+    ])
+    expect(p.options).toEqual([
+      { action: 'fold', label: 'Fold' },
+      { action: 'call', label: 'Call' },
+      { action: 'raise', label: '4bet', size: 22 },
+    ])
+    // Quem não participa da mão aparece como foldou, e o BB mostra o 3bet.
+    expect(p.seats).toEqual([
+      { position: 'UTG', state: 'hero' },
+      { position: 'HJ', state: 'folded' },
+      { position: 'CO', state: 'folded' },
+      { position: 'BTN', state: 'folded' },
+      { position: 'SB', state: 'folded' },
+      { position: 'BB', state: 'acted', action: '3bet', size: 12, estimated: false },
+    ])
+  })
+
+  it('vs 4bet, BBv4B BTN: open de 2,5bb, 3bet de 13bb e 4bet de 27bb; pote de 40,5bb, 14bb a pagar, jam no botão', () => {
+    const p = cena('vs-4bet-bb-vs-btn-regular')
+    expect(p).toMatchObject({ pot: 40.5, toCall: 14 })
+    expect(p.history).toEqual([
+      { position: 'BTN', action: 'open', size: 2.5, estimated: false },
+      { position: 'BB', action: '3bet', size: 13, estimated: false },
+      { position: 'BTN', action: '4bet', size: 27, estimated: false },
+    ])
+    expect(p.options).toEqual([
+      { action: 'fold', label: 'Fold' },
+      { action: 'call', label: 'Call' },
+      { action: 'jam', label: 'Jam', size: 100 },
+    ])
+    // O BTN mostra a última aposta (o 4bet), e o SB, que não participa, foldou.
+    expect(seat(p, 'BTN')).toEqual({ position: 'BTN', state: 'acted', action: '4bet', size: 27, estimated: false })
+    expect(seat(p, 'SB')).toEqual({ position: 'SB', state: 'folded' })
+  })
+
+  it('vs jam, BTNvJAM BB: o BTN abriu 2,5bb e o BB deu jam de 100bb; pote de 103bb, 97,5bb a pagar, só fold e call', () => {
+    const p = cena('vs-jam-btn-vs-bb-regular')
+    expect(p).toMatchObject({ pot: 103, toCall: 97.5 })
+    expect(p.history).toEqual([
+      { position: 'BTN', action: 'open', size: 2.5, estimated: false },
+      { position: 'BB', action: 'jam', size: 100, estimated: false },
+    ])
+    expect(p.options).toEqual([
+      { action: 'fold', label: 'Fold' },
+      { action: 'call', label: 'Call' },
+    ])
+  })
+
+  // O jam só é oferecido no vs 3bet quando alguma mão do spot é jam: só o MPv3B CO. O SBv3B BB tem
+  // JAM na legenda, mas nenhuma mão com essa cor (duas inconsistências conhecidas da planilha).
+  it('vs 3bet oferece o jam só no HJ contra o 3bet do CO, o único spot com mãos de jam', () => {
+    const comJam = dados.spots.filter((s) => s.family === 'vs-3bet' && s.villain.type === 'regular')
+      .filter((s) => perguntaDe(s.id, s.hands.find((h) => h.action !== 'out_of_range')!.hand).options.some((o) => o.action === 'jam'))
+      .map((s) => s.id)
+    expect(comJam).toEqual(['vs-3bet-hj-vs-co-regular'])
+    expect(cena('vs-3bet-hj-vs-co-regular').options).toEqual([
+      { action: 'fold', label: 'Fold' },
+      { action: 'call', label: 'Call' },
+      { action: 'raise', label: '4bet', size: 19 },
+      { action: 'jam', label: 'Jam', size: 100 },
+    ])
+  })
+
+  it('os 45 spots de vs 3bet, vs 4bet e vs jam geram perguntas completas, em todas as mãos que chegam ao spot', () => {
+    const familias = ['vs-3bet', 'vs-4bet', 'vs-jam']
+    const spots = dados.spots.filter((s) => familias.includes(s.family) && s.villain.type === 'regular')
+    expect(spots).toHaveLength(45)
+    const violacoes = spots.flatMap((s) =>
+      s.hands.filter((h) => h.action !== 'out_of_range').flatMap((h) => {
+        const p = perguntaDe(s.id, h.hand)
+        const ultima = p.history[p.history.length - 1]
+        return [
+          ...(p.seats.filter((x) => x.state === 'hero').length === 1 ? [] : ['não há um Hero só']),
+          ...(p.seats.every((x) => x.state !== 'waiting') ? [] : ['há assento aguardando']),
+          ...(ultima?.position === s.villain.position ? [] : ['a última aposta não é do vilão']),
+          ...(Number.isFinite(p.pot) && p.pot > 0 && p.toCall !== null && p.toCall > 0 ? [] : ['pote ou valor a pagar inválido']),
+          ...(p.options.every((o) => (o.action === 'raise' || o.action === 'jam') === (o.size !== undefined)) ? [] : ['tamanho só no raise e no jam']),
+        ].map((m) => `${s.id}: ${m} (mão ${h.hand})`)
+      }),
+    )
+    expect([...new Set(violacoes)]).toEqual([])
+  })
+})

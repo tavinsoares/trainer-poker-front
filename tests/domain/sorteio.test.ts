@@ -139,13 +139,11 @@ describe('sorteio do RFI contra regular', () => {
     }
   })
 
-  it('sorteia os spots de RFI, 3bet e defesa do BB contra regular (20 spots), e nada além', () => {
-    const spots = new Set(amostra(5000, 6).map((p) => p.spot.id))
-    const esperados = dados.spots
-      .filter((s) => ['rfi', '3bet', 'bb-defense'].includes(s.family) && s.villain.type === 'regular')
-      .map((s) => s.id)
-    expect(esperados).toHaveLength(20)
-    expect([...spots].sort()).toEqual([...esperados].sort())
+  it('sorteia todos os 65 spots contra regular, de todas as famílias, e nenhum contra fish', () => {
+    const sorteados = new Set(amostra(20_000, 6).map((p) => p.spot.id))
+    const esperados = dados.spots.filter((s) => s.villain.type === 'regular').map((s) => s.id)
+    expect(esperados).toHaveLength(65)
+    expect([...sorteados].sort()).toEqual([...esperados].sort())
   })
 
   it('nunca sorteia mão fora do range', () => {

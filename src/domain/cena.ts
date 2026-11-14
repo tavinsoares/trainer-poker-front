@@ -33,34 +33,76 @@ const aposta = (position: Position, action: Bet['action'], { size, estimated }: 
   estimated,
 })
 
-/** As apostas até a vez do Hero e o tamanho do raise dele, por família. */
-function jogadas(spot: Spot): { history: Bet[]; raise: Tamanho } {
-  const vilao = spot.villain.position
-  if (spot.family === 'rfi') return { history: [], raise: medir(spot, 'open', (s) => s.open) }
-  if (spot.family === '3bet' || spot.family === 'bb-defense') {
-    if (!vilao) throw new Error(`${spot.id}: falta a posição do vilão`)
-    return {
-      history: [aposta(vilao, 'open', medir(spot, `open do ${vilao}`, (s) => s.vsOpen[vilao]))],
-      raise: medir(spot, '3bet do Hero', (s) => s.threeBet),
-    }
-  }
-  throw new Error(`${spot.id}: a família ${spot.family} ainda não tem cena`)
+interface Descricao {
+  /** As apostas até a vez do Hero, em ordem. */
+  history: Bet[]
+  call: boolean
+  /** O raise do Hero (open, 3bet ou 4bet), com o rótulo e o tamanho. */
+  raise?: { label: string; tamanho: Tamanho }
+  jam: boolean
 }
 
-function botoes(spot: Spot, raise: Tamanho): ActionOption[] {
-  const fold: ActionOption = { action: 'fold', label: 'Fold' }
-  const call: ActionOption = { action: 'call', label: 'Call' }
-  const raiseOption: ActionOption = {
-    action: 'raise',
-    label: spot.family === 'rfi' ? 'Open' : '3bet',
-    size: raise.size,
+/** O que muda de família para família: as apostas, e quais botões fazem sentido. */
+function descrever(spot: Spot): Descricao {
+  const { family } = spot
+  const hero = spot.hero
+  const vilao = spot.villain.position
+  if (family === 'rfi') {
+    return { history: [], call: false, raise: { label: 'Open', tamanho: medir(spot, 'open', (s) => s.open) }, jam: false }
   }
-  if (raise.estimated) raiseOption.estimated = true
-  return spot.family === 'rfi' ? [fold, raiseOption] : [fold, call, raiseOption]
+  if (!vilao) throw new Error(`${spot.id}: falta a posição do vilão`)
+  const openDoVilao = () => aposta(vilao, 'open', medir(spot, `open do ${vilao}`, (s) => s.vsOpen[vilao]))
+  const openDoHero = () => aposta(hero, 'open', medir(spot, 'open do Hero', (s) => s.open))
+
+  switch (family) {
+    case '3bet':
+    case 'bb-defense':
+      return {
+        history: [openDoVilao()],
+        call: true,
+        raise: { label: '3bet', tamanho: medir(spot, '3bet do Hero', (s) => s.threeBet) },
+        jam: false,
+      }
+    case 'vs-3bet':
+      return {
+        history: [openDoHero(), aposta(vilao, '3bet', medir(spot, `3bet do ${vilao}`, (s) => s.vs3bet[vilao]))],
+        call: true,
+        raise: { label: '4bet', tamanho: medir(spot, '4bet do Hero', (s) => s.fourBet) },
+        jam: spot.hands.some((h) => h.action === 'jam'),
+      }
+    case 'vs-4bet':
+      return {
+        history: [
+          openDoVilao(),
+          aposta(hero, '3bet', medir(spot, '3bet do Hero', (s) => s.threeBet)),
+          aposta(vilao, '4bet', medir(spot, '4bet enfrentado', (s) => s.vs4bet)),
+        ],
+        call: true,
+        jam: true,
+      }
+    case 'vs-jam':
+      return {
+        history: [openDoHero(), aposta(vilao, 'jam', { size: STACK, estimated: false })],
+        call: true,
+        jam: false,
+      }
+  }
+}
+
+function botoes({ call, raise, jam }: Descricao): ActionOption[] {
+  const options: ActionOption[] = [{ action: 'fold', label: 'Fold' }]
+  if (call) options.push({ action: 'call', label: 'Call' })
+  if (raise) {
+    const { size, estimated } = raise.tamanho
+    options.push({ action: 'raise', label: raise.label, size, ...(estimated ? { estimated } : {}) })
+  }
+  if (jam) options.push({ action: 'jam', label: 'Jam', size: STACK })
+  return options
 }
 
 export function montarCena(_dados: RangesData, spot: Spot): Cena {
-  const { history, raise } = jogadas(spot)
+  const descricao = descrever(spot)
+  const { history } = descricao
   const primeiraDecisao = ['rfi', '3bet', 'bb-defense'].includes(spot.family)
 
   const ultima = (posicao: Position) => [...history].reverse().find((b) => b.position === posicao)
@@ -78,5 +120,5 @@ export function montarCena(_dados: RangesData, spot: Spot): Cena {
   const dosOutros = Math.max(...POSICOES.filter((p) => p !== spot.hero).map(investido))
   const toCall = spot.family === 'rfi' ? null : arredondar(dosOutros - investido(spot.hero))
 
-  return { stack: STACK, pot, toCall, history, seats, options: botoes(spot, raise) }
+  return { stack: STACK, pot, toCall, history, seats, options: botoes(descricao) }
 }
