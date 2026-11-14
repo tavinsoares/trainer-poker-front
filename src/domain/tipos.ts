@@ -1,12 +1,22 @@
 // Tipos do domínio de spots (spec 2). Puro TypeScript: sem Vue, sem Pinia.
 
-import type { Action, Position, Spot } from '../data/ranges-types.ts'
+import type { Action, Position, Spot, SpotFamily, VillainType } from '../data/ranges-types.ts'
 
 /** Ação que o aluno pode escolher: as canônicas, menos "fora do range", que nunca é pergunta. */
 export type AnswerableAction = Exclude<Action, 'out_of_range'>
 
 /** Fonte de aleatoriedade injetada: devolve um número de 0 (inclusive) a 1 (exclusive). */
 export type Rng = () => number
+
+/**
+ * Filtros do sorteio. Vilão: Regular, Fish ou Ambos (padrão). Tipo de spot e posição do Hero:
+ * conjuntos, e conjunto vazio significa "todos".
+ */
+export interface Filtros {
+  vilao: VillainType | 'ambos'
+  familias: SpotFamily[]
+  posicoes: Position[]
+}
 
 /** Naipes: espadas, copas, ouros e paus. */
 export type Suit = 's' | 'h' | 'd' | 'c'

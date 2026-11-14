@@ -1,6 +1,6 @@
-import type { Hand, RangesData } from '../data/ranges-types.ts'
+import type { Hand, RangesData, Spot, VillainType } from '../data/ranges-types.ts'
 import { montarCena } from './cena.ts'
-import type { Card, Question, Rng, Suit } from './tipos.ts'
+import type { Card, Filtros, Question, Rng, Suit } from './tipos.ts'
 
 const NAIPES: Suit[] = ['s', 'h', 'd', 'c']
 
@@ -39,9 +39,28 @@ function escolherCombinacao(maos: Hand[], rng: Rng): { mao: Hand; indice: number
   throw new Error('o spot não tem mãos sorteáveis')
 }
 
-export function sortearPergunta(dados: RangesData, rng: Rng): Question {
-  const spot = dados.spots[Math.floor(rng() * dados.spots.length)]
-  if (!spot) throw new Error('não há spot para sortear')
+/**
+ * Escolhe o spot entre os que passam nos filtros. Em Ambos, regular e fish têm o mesmo peso:
+ * sorteia-se o tipo (50% cada, entre os tipos que ainda têm spot) e depois um spot uniforme dentro
+ * do tipo. Sem nenhum spot, devolve `undefined`.
+ */
+function escolherSpot(dados: RangesData, rng: Rng, { vilao = 'ambos', familias = [], posicoes = [] }: Partial<Filtros>) {
+  const candidatos = dados.spots.filter(
+    (s) => (familias.length === 0 || familias.includes(s.family)) && (posicoes.length === 0 || posicoes.includes(s.hero)),
+  )
+  const tipos: VillainType[] = (['regular', 'fish'] as const).filter(
+    (t) => (vilao === 'ambos' || vilao === t) && candidatos.some((s) => s.villain.type === t),
+  )
+  if (tipos.length === 0) return undefined
+  const tipo = tipos.length === 1 ? tipos[0]! : tipos[Math.floor(rng() * tipos.length)]!
+  const doTipo: Spot[] = candidatos.filter((s) => s.villain.type === tipo)
+  return doTipo[Math.floor(rng() * doTipo.length)]
+}
+
+/** Sorteia uma pergunta, ou devolve `null` quando nenhum spot passa nos filtros. */
+export function sortearPergunta(dados: RangesData, rng: Rng, filtros: Partial<Filtros> = {}): Question | null {
+  const spot = escolherSpot(dados, rng, filtros)
+  if (!spot) return null
 
   // As mãos fora do range nunca entram.
   const { mao, indice } = escolherCombinacao(

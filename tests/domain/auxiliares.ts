@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import type { RangesData } from '../../src/data/ranges-types.ts'
 import { sortearPergunta } from '../../src/domain/sorteio.ts'
-import type { Question } from '../../src/domain/tipos.ts'
+import type { Filtros, Question } from '../../src/domain/tipos.ts'
 
 // Ajudantes das suítes do domínio (spec 2). O JSON real é a base de todos os testes.
 export const dados: RangesData = JSON.parse(
@@ -19,9 +19,16 @@ export const prng = (semente: number) => () => {
   return ((t ^ (t >>> 14)) >>> 0) / 4294967296
 }
 
+/** O sorteio sem o caso "nenhum spot", para os testes em que sempre há spot. */
+export const sortear = (base: RangesData, rng: () => number, filtros: Partial<Filtros> = {}): Question => {
+  const pergunta = sortearPergunta(base, rng, filtros)
+  if (!pergunta) throw new Error('o sorteio devolveu "nenhum spot"')
+  return pergunta
+}
+
 export const amostra = (n: number, semente: number, base: RangesData = dados) => {
   const rng = prng(semente)
-  return Array.from({ length: n }, () => sortearPergunta(base, rng))
+  return Array.from({ length: n }, () => sortear(base, rng))
 }
 
 /**
@@ -41,5 +48,5 @@ export const perguntaDe = (spotId: string, mao: string, base: RangesData = dados
   const roteiro = [0, (antes + 0.5) / total]
   let chamada = 0
   const rng = () => roteiro[Math.min(chamada++, roteiro.length - 1)]!
-  return sortearPergunta({ ...base, spots: [spot, ...(contraparte ? [contraparte] : [])] }, rng)
+  return sortear({ ...base, spots: [spot, ...(contraparte ? [contraparte] : [])] }, rng, { vilao: spot.villain.type })
 }
