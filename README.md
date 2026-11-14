@@ -17,6 +17,7 @@ Vite, Vue 3 (Composition API, `<script setup>`), TypeScript estrito, Pinia e Vit
 | `npm run build` | Checa os tipos e gera o site estático. |
 | `npm run preview` | Serve o build de `npm run build` localmente. |
 | `npm run typecheck` | Só checa os tipos. |
+| `npm run convert:data` | Regenera o JSON de `data/` a partir da planilha do Metagame. |
 | `npm run validate:data` | Roda só a suíte de validação dos dados. |
 | `npm test` | Roda toda a suíte do Vitest. |
 
@@ -29,7 +30,19 @@ Vite, Vue 3 (Composition API, `<script setup>`), TypeScript estrito, Pinia e Vit
 | `tools/` | Conversor da planilha (Python), fora do código do app. |
 | `tests/` | Testes do Vitest. `tests/data/` valida os JSONs gerados. |
 
-O app nunca lê a planilha em tempo de execução. Ele só lê o JSON de `data/`.
+O app nunca lê a planilha em tempo de execução. Ele só lê o JSON de `data/`. Os tipos desse JSON estão em `src/data/ranges-types.ts`.
+
+## Dados: converter e validar
+
+A planilha fica no meta-repo (`docs/context/`), fora deste repositório. O conversor a procura nesse caminho, ou em outro passado como argumento.
+
+```
+pip install -r tools/requirements.txt   # uma vez (Python 3 e openpyxl)
+npm run convert:data                    # planilha -> data/ranges.json
+npm run validate:data                   # confere as invariantes do JSON
+```
+
+Ordem: converter e depois validar. O `data/ranges.json` é commitado, então o build do site não depende de Python nem da planilha. Para outro arquivo ou data: `python tools/convert_ranges.py <planilha.xlsx> --imported-at AAAA-MM-DD`. A saída é determinística: duas execuções sobre a mesma planilha só diferem na data de importação. Se a planilha trouxer uma cor, um rótulo de legenda ou uma matriz que o conversor não conhece, ele falha com uma mensagem que cita a aba, em vez de adivinhar.
 
 ## Convenções
 

@@ -1,0 +1,6104 @@
+{
+  "manifest": {
+    "source": "Metagame · Ranges Simplificados",
+    "importedAt": "2026-11-14",
+    "schemaVersion": 1,
+    "sourceSha256": "972e475e54a35c4c7fc5d879b01061b5079dffc942349423d7bf8f943e66e928"
+  },
+  "spots": [
+    {
+      "id": "rfi-utg-regular",
+      "family": "rfi",
+      "hero": "UTG",
+      "villain": {
+        "type": "regular",
+        "position": null
+      },
+      "sourceSheet": "RFI UTG",
+      "sizings": {
+        "open": 2,
+        "vs3bet": {
+          "HJ": 6.5,
+          "CO": 6.5,
+          "BTN": 7.5,
+          "SB": 10,
+          "BB": 12
+        },
+        "vsOpen": {}
+      },
+      "legend": [
+        {
+          "label": "RFI",
+          "action": "raise",
+          "percent": 19.5
+        },
+        {
+          "label": "FOLD",
+          "action": "fold",
+          "percent": 80.5
+        }
+      ],
+      "hands": [
+        {
+          "hand": "AA",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 10.32
+        },
+        {
+          "hand": "AKs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 1.4
+        },
+        {
+          "hand": "AQs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.67
+        },
+        {
+          "hand": "AJs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.36
+        },
+        {
+          "hand": "ATs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.16
+        },
+        {
+          "hand": "A9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.09
+        },
+        {
+          "hand": "A8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.07
+        },
+        {
+          "hand": "A7s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.05
+        },
+        {
+          "hand": "A6s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.04
+        },
+        {
+          "hand": "A5s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.06
+        },
+        {
+          "hand": "A4s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.04
+        },
+        {
+          "hand": "A3s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.02
+        },
+        {
+          "hand": "A2s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "AKo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.59
+        },
+        {
+          "hand": "KK",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 5.61
+        },
+        {
+          "hand": "KQs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.34
+        },
+        {
+          "hand": "KJs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.18
+        },
+        {
+          "hand": "KTs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.1
+        },
+        {
+          "hand": "K9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.03
+        },
+        {
+          "hand": "K8s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "K7s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "K6s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "K5s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "K4s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "K3s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "K2s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "AQo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.13
+        },
+        {
+          "hand": "KQo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.05
+        },
+        {
+          "hand": "QQ",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 2.38
+        },
+        {
+          "hand": "QJs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.09
+        },
+        {
+          "hand": "QTs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.09
+        },
+        {
+          "hand": "Q9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.03
+        },
+        {
+          "hand": "Q8s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "Q7s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "Q6s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "Q5s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "Q4s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "Q3s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "Q2s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "AJo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.06
+        },
+        {
+          "hand": "KJo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0
+        },
+        {
+          "hand": "QJo",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "JJ",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.99
+        },
+        {
+          "hand": "JTs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.08
+        },
+        {
+          "hand": "J9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.01
+        },
+        {
+          "hand": "J8s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "J7s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "J6s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "J5s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "J4s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "J3s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "J2s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "ATo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.04
+        },
+        {
+          "hand": "KTo",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "QTo",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "JTo",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "TT",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.34
+        },
+        {
+          "hand": "T9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0
+        },
+        {
+          "hand": "T8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T7s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T6s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T5s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T4s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T3s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T2s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A9o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K9o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q9o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J9o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T9o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "99",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.16
+        },
+        {
+          "hand": "98s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "97s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "96s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "95s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "94s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "93s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "92s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A8o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K8o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q8o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J8o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T8o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "98o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "88",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.1
+        },
+        {
+          "hand": "87s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "86s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "85s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "84s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "83s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "82s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "97o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "87o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "77",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.06
+        },
+        {
+          "hand": "76s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "75s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "74s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "73s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "72s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "96o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "86o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "76o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "66",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.03
+        },
+        {
+          "hand": "65s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "64s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "63s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "62s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "95o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "85o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "75o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "65o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "55",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": null
+        },
+        {
+          "hand": "54s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "53s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "52s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "94o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "84o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "74o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "64o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "54o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "44",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": null
+        },
+        {
+          "hand": "43s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "42s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "93o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "83o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "73o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "63o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "53o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "43o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "33",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": null
+        },
+        {
+          "hand": "32s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "92o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "82o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "72o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "62o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "52o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "42o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "32o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "22",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": null
+        }
+      ]
+    },
+    {
+      "id": "rfi-hj-regular",
+      "family": "rfi",
+      "hero": "HJ",
+      "villain": {
+        "type": "regular",
+        "position": null
+      },
+      "sourceSheet": "RFI MP",
+      "sizings": {
+        "open": 2,
+        "vs3bet": {
+          "CO": 6.5,
+          "BTN": 7.5,
+          "SB": 11,
+          "BB": 12.3
+        },
+        "vsOpen": {
+          "UTG": 2
+        }
+      },
+      "legend": [
+        {
+          "label": "RFI",
+          "action": "raise",
+          "percent": 23.4
+        },
+        {
+          "label": "FOLD",
+          "action": "fold",
+          "percent": 76.6
+        }
+      ],
+      "hands": [
+        {
+          "hand": "AA",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 10.59
+        },
+        {
+          "hand": "AKs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 1.89
+        },
+        {
+          "hand": "AQs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.84
+        },
+        {
+          "hand": "AJs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.51
+        },
+        {
+          "hand": "ATs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.26
+        },
+        {
+          "hand": "A9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.13
+        },
+        {
+          "hand": "A8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.12
+        },
+        {
+          "hand": "A7s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.1
+        },
+        {
+          "hand": "A6s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.09
+        },
+        {
+          "hand": "A5s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.1
+        },
+        {
+          "hand": "A4s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.08
+        },
+        {
+          "hand": "A3s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.06
+        },
+        {
+          "hand": "A2s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.06
+        },
+        {
+          "hand": "AKo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 1.07
+        },
+        {
+          "hand": "KK",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 6.38
+        },
+        {
+          "hand": "KQs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.46
+        },
+        {
+          "hand": "KJs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.33
+        },
+        {
+          "hand": "KTs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.14
+        },
+        {
+          "hand": "K9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.07
+        },
+        {
+          "hand": "K8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.03
+        },
+        {
+          "hand": "K7s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.03
+        },
+        {
+          "hand": "K6s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.02
+        },
+        {
+          "hand": "K5s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.02
+        },
+        {
+          "hand": "K4s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "K3s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "K2s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "AQo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.21
+        },
+        {
+          "hand": "KQo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.08
+        },
+        {
+          "hand": "QQ",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 3.13
+        },
+        {
+          "hand": "QJs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.13
+        },
+        {
+          "hand": "QTs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.11
+        },
+        {
+          "hand": "Q9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.06
+        },
+        {
+          "hand": "Q8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.01
+        },
+        {
+          "hand": "Q7s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "Q6s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "Q5s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "Q4s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "Q3s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "Q2s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "AJo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.12
+        },
+        {
+          "hand": "KJo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.03
+        },
+        {
+          "hand": "QJo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.02
+        },
+        {
+          "hand": "JJ",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 1.46
+        },
+        {
+          "hand": "JTs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.1
+        },
+        {
+          "hand": "J9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.05
+        },
+        {
+          "hand": "J8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.01
+        },
+        {
+          "hand": "J7s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "J6s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "J5s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "J4s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "J3s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "J2s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "ATo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.08
+        },
+        {
+          "hand": "KTo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "QTo",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "JTo",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "TT",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.59
+        },
+        {
+          "hand": "T9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.05
+        },
+        {
+          "hand": "T8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.01
+        },
+        {
+          "hand": "T7s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T6s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T5s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T4s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T3s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T2s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A9o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": 0
+        },
+        {
+          "hand": "K9o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q9o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J9o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T9o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "99",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.24
+        },
+        {
+          "hand": "98s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.01
+        },
+        {
+          "hand": "97s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "96s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "95s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "94s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "93s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "92s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A8o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K8o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q8o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J8o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T8o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "98o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "88",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.16
+        },
+        {
+          "hand": "87s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "86s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "85s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "84s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "83s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "82s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "97o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "87o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "77",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.12
+        },
+        {
+          "hand": "76s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "75s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "74s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "73s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "72s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "96o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "86o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "76o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "66",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.07
+        },
+        {
+          "hand": "65s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "64s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "63s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "62s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "95o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "85o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "75o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "65o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "55",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.04
+        },
+        {
+          "hand": "54s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "53s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "52s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "94o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "84o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "74o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "64o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "54o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "44",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": null
+        },
+        {
+          "hand": "43s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "42s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "93o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "83o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "73o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "63o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "53o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "43o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "33",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": null
+        },
+        {
+          "hand": "32s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "92o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "82o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "72o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "62o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "52o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "42o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "32o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "22",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": null
+        }
+      ]
+    },
+    {
+      "id": "rfi-co-regular",
+      "family": "rfi",
+      "hero": "CO",
+      "villain": {
+        "type": "regular",
+        "position": null
+      },
+      "sourceSheet": "RFI CO",
+      "sizings": {
+        "open": 2.3,
+        "vs3bet": {
+          "BTN": 7.5,
+          "SB": 11.5,
+          "BB": 13.5
+        },
+        "vsOpen": {
+          "UTG": 2,
+          "HJ": 2
+        }
+      },
+      "legend": [
+        {
+          "label": "RFI",
+          "action": "raise",
+          "percent": 29.7
+        },
+        {
+          "label": "FOLD",
+          "action": "fold",
+          "percent": 70.3
+        }
+      ],
+      "hands": [
+        {
+          "hand": "AA",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 10.58
+        },
+        {
+          "hand": "AKs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 2.51
+        },
+        {
+          "hand": "AQs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 1.14
+        },
+        {
+          "hand": "AJs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.79
+        },
+        {
+          "hand": "ATs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.45
+        },
+        {
+          "hand": "A9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.17
+        },
+        {
+          "hand": "A8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.13
+        },
+        {
+          "hand": "A7s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.12
+        },
+        {
+          "hand": "A6s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.1
+        },
+        {
+          "hand": "A5s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.11
+        },
+        {
+          "hand": "A4s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.1
+        },
+        {
+          "hand": "A3s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.09
+        },
+        {
+          "hand": "A2s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.07
+        },
+        {
+          "hand": "AKo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 1.73
+        },
+        {
+          "hand": "KK",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 7.11
+        },
+        {
+          "hand": "KQs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.68
+        },
+        {
+          "hand": "KJs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.53
+        },
+        {
+          "hand": "KTs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.32
+        },
+        {
+          "hand": "K9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.1
+        },
+        {
+          "hand": "K8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.06
+        },
+        {
+          "hand": "K7s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.06
+        },
+        {
+          "hand": "K6s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.05
+        },
+        {
+          "hand": "K5s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.04
+        },
+        {
+          "hand": "K4s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.03
+        },
+        {
+          "hand": "K3s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": 0.02
+        },
+        {
+          "hand": "K2s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "AQo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.45
+        },
+        {
+          "hand": "KQo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.15
+        },
+        {
+          "hand": "QQ",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 4.31
+        },
+        {
+          "hand": "QJs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.24
+        },
+        {
+          "hand": "QTs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.16
+        },
+        {
+          "hand": "Q9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.09
+        },
+        {
+          "hand": "Q8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.04
+        },
+        {
+          "hand": "Q7s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.02
+        },
+        {
+          "hand": "Q6s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.01
+        },
+        {
+          "hand": "Q5s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.01
+        },
+        {
+          "hand": "Q4s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "Q3s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "Q2s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "AJo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.2
+        },
+        {
+          "hand": "KJo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.12
+        },
+        {
+          "hand": "QJo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.09
+        },
+        {
+          "hand": "JJ",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 2.26
+        },
+        {
+          "hand": "JTs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.19
+        },
+        {
+          "hand": "J9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.08
+        },
+        {
+          "hand": "J8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.04
+        },
+        {
+          "hand": "J7s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.01
+        },
+        {
+          "hand": "J6s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "J5s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "J4s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "J3s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "J2s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "ATo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.14
+        },
+        {
+          "hand": "KTo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.06
+        },
+        {
+          "hand": "QTo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.05
+        },
+        {
+          "hand": "JTo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.05
+        },
+        {
+          "hand": "TT",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 1.05
+        },
+        {
+          "hand": "T9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.08
+        },
+        {
+          "hand": "T8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.04
+        },
+        {
+          "hand": "T7s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0
+        },
+        {
+          "hand": "T6s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T5s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T4s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T3s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T2s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A9o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.05
+        },
+        {
+          "hand": "K9o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q9o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J9o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T9o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "99",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.42
+        },
+        {
+          "hand": "98s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.04
+        },
+        {
+          "hand": "97s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.01
+        },
+        {
+          "hand": "96s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "95s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "94s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "93s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "92s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A8o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.01
+        },
+        {
+          "hand": "K8o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q8o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J8o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T8o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "98o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "88",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.21
+        },
+        {
+          "hand": "87s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.01
+        },
+        {
+          "hand": "86s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "85s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "84s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "83s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "82s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "97o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "87o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "77",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.14
+        },
+        {
+          "hand": "76s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "75s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "74s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "73s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "72s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "96o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "86o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "76o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "66",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.1
+        },
+        {
+          "hand": "65s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "64s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "63s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "62s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "95o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "85o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "75o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "65o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "55",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.06
+        },
+        {
+          "hand": "54s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "53s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "52s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "94o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "84o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "74o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "64o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "54o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "44",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.01
+        },
+        {
+          "hand": "43s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "42s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "93o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "83o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "73o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "63o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "53o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "43o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "33",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": null
+        },
+        {
+          "hand": "32s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "92o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "82o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "72o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "62o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "52o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "42o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "32o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "22",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": null
+        }
+      ]
+    },
+    {
+      "id": "rfi-btn-regular",
+      "family": "rfi",
+      "hero": "BTN",
+      "villain": {
+        "type": "regular",
+        "position": null
+      },
+      "sourceSheet": "RFI BTN",
+      "sizings": {
+        "open": 2.5,
+        "vs3bet": {
+          "SB": 12,
+          "BB": 13
+        },
+        "vsOpen": {
+          "UTG": 2,
+          "HJ": 2,
+          "CO": 2.3
+        }
+      },
+      "legend": [
+        {
+          "label": "RFI",
+          "action": "raise",
+          "percent": 42.5
+        },
+        {
+          "label": "FOLD",
+          "action": "fold",
+          "percent": 57.5
+        }
+      ],
+      "hands": [
+        {
+          "hand": "AA",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 10.7
+        },
+        {
+          "hand": "AKs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 3.18
+        },
+        {
+          "hand": "AQs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 1.75
+        },
+        {
+          "hand": "AJs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 1.23
+        },
+        {
+          "hand": "ATs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.97
+        },
+        {
+          "hand": "A9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.44
+        },
+        {
+          "hand": "A8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.28
+        },
+        {
+          "hand": "A7s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.22
+        },
+        {
+          "hand": "A6s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.19
+        },
+        {
+          "hand": "A5s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.23
+        },
+        {
+          "hand": "A4s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.17
+        },
+        {
+          "hand": "A3s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.16
+        },
+        {
+          "hand": "A2s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.14
+        },
+        {
+          "hand": "AKo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 2.38
+        },
+        {
+          "hand": "KK",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 7.84
+        },
+        {
+          "hand": "KQs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 1.04
+        },
+        {
+          "hand": "KJs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.9
+        },
+        {
+          "hand": "KTs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.73
+        },
+        {
+          "hand": "K9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.25
+        },
+        {
+          "hand": "K8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.14
+        },
+        {
+          "hand": "K7s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.14
+        },
+        {
+          "hand": "K6s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.12
+        },
+        {
+          "hand": "K5s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.11
+        },
+        {
+          "hand": "K4s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.09
+        },
+        {
+          "hand": "K3s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.07
+        },
+        {
+          "hand": "K2s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.05
+        },
+        {
+          "hand": "AQo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.91
+        },
+        {
+          "hand": "KQo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.32
+        },
+        {
+          "hand": "QQ",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 5.53
+        },
+        {
+          "hand": "QJs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.65
+        },
+        {
+          "hand": "QTs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.58
+        },
+        {
+          "hand": "Q9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.17
+        },
+        {
+          "hand": "Q8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.12
+        },
+        {
+          "hand": "Q7s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.08
+        },
+        {
+          "hand": "Q6s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.07
+        },
+        {
+          "hand": "Q5s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.05
+        },
+        {
+          "hand": "Q4s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.03
+        },
+        {
+          "hand": "Q3s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.02
+        },
+        {
+          "hand": "Q2s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "AJo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.42
+        },
+        {
+          "hand": "KJo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.22
+        },
+        {
+          "hand": "QJo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.19
+        },
+        {
+          "hand": "JJ",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 3.65
+        },
+        {
+          "hand": "JTs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.61
+        },
+        {
+          "hand": "J9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.21
+        },
+        {
+          "hand": "J8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.11
+        },
+        {
+          "hand": "J7s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.07
+        },
+        {
+          "hand": "J6s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.03
+        },
+        {
+          "hand": "J5s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.02
+        },
+        {
+          "hand": "J4s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "J3s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "J2s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "ATo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.27
+        },
+        {
+          "hand": "KTo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.17
+        },
+        {
+          "hand": "QTo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.15
+        },
+        {
+          "hand": "JTo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.15
+        },
+        {
+          "hand": "TT",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 2.26
+        },
+        {
+          "hand": "T9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.27
+        },
+        {
+          "hand": "T8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.13
+        },
+        {
+          "hand": "T7s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.08
+        },
+        {
+          "hand": "T6s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.03
+        },
+        {
+          "hand": "T5s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T4s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T3s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T2s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A9o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.15
+        },
+        {
+          "hand": "K9o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.07
+        },
+        {
+          "hand": "Q9o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.05
+        },
+        {
+          "hand": "J9o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.05
+        },
+        {
+          "hand": "T9o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.05
+        },
+        {
+          "hand": "99",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 1.17
+        },
+        {
+          "hand": "98s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.1
+        },
+        {
+          "hand": "97s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.08
+        },
+        {
+          "hand": "96s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.03
+        },
+        {
+          "hand": "95s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "94s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "93s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "92s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A8o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.08
+        },
+        {
+          "hand": "K8o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q8o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J8o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T8o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "98o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "88",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.71
+        },
+        {
+          "hand": "87s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.09
+        },
+        {
+          "hand": "86s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.05
+        },
+        {
+          "hand": "85s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "84s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "83s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "82s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A7o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.05
+        },
+        {
+          "hand": "K7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "97o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "87o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "77",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.41
+        },
+        {
+          "hand": "76s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.06
+        },
+        {
+          "hand": "75s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.02
+        },
+        {
+          "hand": "74s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "73s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "72s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A6o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.02
+        },
+        {
+          "hand": "K6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "96o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "86o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "76o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "66",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.23
+        },
+        {
+          "hand": "65s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.04
+        },
+        {
+          "hand": "64s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "63s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "62s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A5o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.03
+        },
+        {
+          "hand": "K5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "95o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "85o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "75o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "65o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "55",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.17
+        },
+        {
+          "hand": "54s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.01
+        },
+        {
+          "hand": "53s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "52s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A4o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.01
+        },
+        {
+          "hand": "K4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "94o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "84o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "74o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "64o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "54o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "44",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.11
+        },
+        {
+          "hand": "43s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "42s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A3o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "93o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "83o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "73o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "63o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "53o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "43o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "33",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.05
+        },
+        {
+          "hand": "32s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A2o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "92o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "82o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "72o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "62o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "52o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "42o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "32o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "22",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.01
+        }
+      ]
+    },
+    {
+      "id": "rfi-sb-regular",
+      "family": "rfi",
+      "hero": "SB",
+      "villain": {
+        "type": "regular",
+        "position": null
+      },
+      "sourceSheet": "RFI SB",
+      "sizings": {
+        "open": 3,
+        "vs3bet": {
+          "BB": 10
+        },
+        "vsOpen": {
+          "UTG": 2,
+          "HJ": 2,
+          "CO": 2.3,
+          "BTN": 2.5
+        }
+      },
+      "legend": [
+        {
+          "label": "RFI",
+          "action": "raise",
+          "percent": 43.4
+        },
+        {
+          "label": "FOLD",
+          "action": "fold",
+          "percent": 56.6
+        }
+      ],
+      "hands": [
+        {
+          "hand": "AA",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 7.66
+        },
+        {
+          "hand": "AKs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 2.77
+        },
+        {
+          "hand": "AQs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 1.82
+        },
+        {
+          "hand": "AJs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 1.3
+        },
+        {
+          "hand": "ATs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 1.08
+        },
+        {
+          "hand": "A9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.71
+        },
+        {
+          "hand": "A8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.6
+        },
+        {
+          "hand": "A7s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.48
+        },
+        {
+          "hand": "A6s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.4
+        },
+        {
+          "hand": "A5s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.47
+        },
+        {
+          "hand": "A4s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.4
+        },
+        {
+          "hand": "A3s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.35
+        },
+        {
+          "hand": "A2s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.27
+        },
+        {
+          "hand": "AKo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 2.13
+        },
+        {
+          "hand": "KK",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 5.71
+        },
+        {
+          "hand": "KQs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 1.15
+        },
+        {
+          "hand": "KJs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.96
+        },
+        {
+          "hand": "KTs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.82
+        },
+        {
+          "hand": "K9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.48
+        },
+        {
+          "hand": "K8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.29
+        },
+        {
+          "hand": "K7s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.27
+        },
+        {
+          "hand": "K6s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.24
+        },
+        {
+          "hand": "K5s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.2
+        },
+        {
+          "hand": "K4s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.17
+        },
+        {
+          "hand": "K3s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.14
+        },
+        {
+          "hand": "K2s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.11
+        },
+        {
+          "hand": "AQo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 1.11
+        },
+        {
+          "hand": "KQo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.56
+        },
+        {
+          "hand": "QQ",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 4.29
+        },
+        {
+          "hand": "QJs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.83
+        },
+        {
+          "hand": "QTs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.74
+        },
+        {
+          "hand": "Q9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.39
+        },
+        {
+          "hand": "Q8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.25
+        },
+        {
+          "hand": "Q7s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.17
+        },
+        {
+          "hand": "Q6s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.15
+        },
+        {
+          "hand": "Q5s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.12
+        },
+        {
+          "hand": "Q4s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.09
+        },
+        {
+          "hand": "Q3s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.06
+        },
+        {
+          "hand": "Q2s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.04
+        },
+        {
+          "hand": "AJo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.65
+        },
+        {
+          "hand": "KJo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.36
+        },
+        {
+          "hand": "QJo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.3
+        },
+        {
+          "hand": "JJ",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 3.08
+        },
+        {
+          "hand": "JTs",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.7
+        },
+        {
+          "hand": "J9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.38
+        },
+        {
+          "hand": "J8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.23
+        },
+        {
+          "hand": "J7s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.15
+        },
+        {
+          "hand": "J6s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.07
+        },
+        {
+          "hand": "J5s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.05
+        },
+        {
+          "hand": "J4s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.02
+        },
+        {
+          "hand": "J3s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "J2s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "ATo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.43
+        },
+        {
+          "hand": "KTo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.26
+        },
+        {
+          "hand": "QTo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.22
+        },
+        {
+          "hand": "JTo",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.21
+        },
+        {
+          "hand": "TT",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 2.2
+        },
+        {
+          "hand": "T9s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.41
+        },
+        {
+          "hand": "T8s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.23
+        },
+        {
+          "hand": "T7s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.16
+        },
+        {
+          "hand": "T6s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.07
+        },
+        {
+          "hand": "T5s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T4s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T3s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "T2s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A9o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.23
+        },
+        {
+          "hand": "K9o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.08
+        },
+        {
+          "hand": "Q9o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.05
+        },
+        {
+          "hand": "J9o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.05
+        },
+        {
+          "hand": "T9o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.06
+        },
+        {
+          "hand": "99",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 1.46
+        },
+        {
+          "hand": "98s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.21
+        },
+        {
+          "hand": "97s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.18
+        },
+        {
+          "hand": "96s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.08
+        },
+        {
+          "hand": "95s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "94s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "93s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "92s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A8o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.15
+        },
+        {
+          "hand": "K8o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q8o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J8o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T8o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "98o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "88",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 1
+        },
+        {
+          "hand": "87s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.2
+        },
+        {
+          "hand": "86s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.14
+        },
+        {
+          "hand": "85s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.03
+        },
+        {
+          "hand": "84s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "83s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "82s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A7o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.08
+        },
+        {
+          "hand": "K7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T7o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "97o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "87o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "77",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.72
+        },
+        {
+          "hand": "76s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.17
+        },
+        {
+          "hand": "75s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.08
+        },
+        {
+          "hand": "74s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "73s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "72s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A6o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.03
+        },
+        {
+          "hand": "K6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T6o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "96o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "86o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "76o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "66",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.51
+        },
+        {
+          "hand": "65s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.11
+        },
+        {
+          "hand": "64s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.04
+        },
+        {
+          "hand": "63s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "62s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A5o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": 0.04
+        },
+        {
+          "hand": "K5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T5o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "95o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "85o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "75o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "65o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "55",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.37
+        },
+        {
+          "hand": "54s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": 0.07
+        },
+        {
+          "hand": "53s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "52s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A4o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T4o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "94o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "84o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "74o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "64o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "54o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "44",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.27
+        },
+        {
+          "hand": "43s",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "42s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A3o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T3o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "93o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "83o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "73o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "63o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "53o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "43o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "33",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.18
+        },
+        {
+          "hand": "32s",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 4,
+          "ev": null
+        },
+        {
+          "hand": "A2o",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "K2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "Q2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "J2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "T2o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "92o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "82o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "72o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "62o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "52o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "42o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "32o",
+          "action": "fold",
+          "label": "FOLD",
+          "combos": 12,
+          "ev": null
+        },
+        {
+          "hand": "22",
+          "action": "raise",
+          "label": "RFI",
+          "combos": 6,
+          "ev": 0.13
+        }
+      ]
+    }
+  ]
+}

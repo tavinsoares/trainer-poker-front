@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "typecheck": "vue-tsc -b",
     "test": "vitest run",
+    "convert:data": "python tools/convert_ranges.py",
     "validate:data": "vitest run tests/data"
   },
   "dependencies": {
