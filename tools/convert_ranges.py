@@ -37,9 +37,13 @@ POSITION_ALIASES = {"MP": "HJ"}
 # Nomes de aba tratados. Em "X vY", X é o Hero e Y é quem abriu. Abas com sufixo (por
 # exemplo "BBvUTG 2.5", uma variante de tamanho de aposta) não casam e ficam de fora.
 _SEAT = r"(UTG|MP|HJ|CO|BTN|SB)"
+_SEAT_OR_BB = r"(UTG|MP|HJ|CO|BTN|SB|BB)"
 RFI_SHEET = re.compile(r"^RFI (UTG|MP|CO|BTN|SB)$")
 THREE_BET_SHEET = re.compile(rf"^3B {_SEAT}v{_SEAT}$")
 BB_DEFENSE_SHEET = re.compile(rf"^BBv{_SEAT}$")
+# Enfrentar agressão: o Hero é quem abriu (vs 3B e vs JAM) ou quem deu o 3bet (vs 4B).
+VS_AGGRESSION_SHEET = re.compile(rf"^{_SEAT_OR_BB}v(3B|4B|JAM) {_SEAT_OR_BB}$")
+VS_AGGRESSION_FAMILIES = {"3B": "vs-3bet", "4B": "vs-4bet", "JAM": "vs-jam"}
 
 
 # Geometria de toda aba: matriz 13x13 a partir de G5. Cada mão ocupa 8 colunas,
@@ -60,8 +64,21 @@ LEGEND_TEXT = re.compile(r"^(.+?)\s*\n\s*(\d+(?:[.,]\d+)?)\s*%$")
 LABEL_ACTIONS = {
     "RFI": "raise",
     "3BET": "raise",
+    "4BET": "raise",
+    "JAM": "jam",
     "CALL": "call",
     "FOLD": "fold",
+}
+
+# Cores com significado fixo na planilha inteira, para o que a legenda da aba não traz:
+# os dois tons de cinza são "fora do range" (nenhuma legenda os cita) e o vermelho-escuro
+# é o jam (a legenda o cita em algumas abas, mas não em todas: no MPv3B CO duas mãos
+# têm essa cor sem entrada na legenda). A legenda da aba, quando cita a cor, vence.
+OUT_OF_RANGE_LABEL = "FORA DO RANGE"
+WORKBOOK_COLORS = {
+    "FF666666": {"label": OUT_OF_RANGE_LABEL, "action": "out_of_range"},
+    "FF666566": {"label": OUT_OF_RANGE_LABEL, "action": "out_of_range"},
+    "FFB15B4A": {"label": "JAM", "action": "jam"},
 }
 
 
@@ -83,6 +100,7 @@ _POSITION = r"(UTG|MP|HJ|CO|BTN|SB|BB)"
 _SIZE = r"(\d+(?:[.,]\d+)?)\s*bb"
 SIZING_OPEN = re.compile(rf"^RFI\s+{_SIZE}$", re.IGNORECASE)
 SIZING_THREE_BET = re.compile(rf"^{_POSITION}\s+3B\s+{_SIZE}$", re.IGNORECASE)
+SIZING_FOUR_BET = re.compile(rf"^{_POSITION}\s+4B\s+{_SIZE}$", re.IGNORECASE)
 SIZING_VS_4BET = re.compile(rf"^vs\s+4B\s+{_SIZE}$", re.IGNORECASE)
 SIZING_VS_3BET = re.compile(rf"^vs\s+3B\s+{_POSITION}\s+{_SIZE}$", re.IGNORECASE)
 SIZING_VS_OPEN = re.compile(rf"^vs\s+RFI\s+{_POSITION}\s+{_SIZE}$", re.IGNORECASE)
@@ -106,7 +124,7 @@ class SizingShape(NamedTuple):
     """Uma forma da barra lateral que descreve um tamanho de aposta."""
 
     column: int
-    kind: str  # "open", "threeBet", "vs4bet", "vs3bet" ou "vsOpen"
+    kind: str  # "open", "threeBet", "fourBet", "vs4bet", "vs3bet" ou "vsOpen"
     position: str | None  # só nos tipos que citam uma posição
     size: float | int
 
@@ -164,7 +182,12 @@ def parse_sizing(column: int, text: str) -> SizingShape | None:
         return SizingShape(column, "open", None, parse_decimal(match.group(1)))
     if match := SIZING_VS_4BET.match(text):
         return SizingShape(column, "vs4bet", None, parse_decimal(match.group(1)))
-    for kind, pattern in (("threeBet", SIZING_THREE_BET), ("vs3bet", SIZING_VS_3BET), ("vsOpen", SIZING_VS_OPEN)):
+    for kind, pattern in (
+        ("threeBet", SIZING_THREE_BET),
+        ("fourBet", SIZING_FOUR_BET),
+        ("vs3bet", SIZING_VS_3BET),
+        ("vsOpen", SIZING_VS_OPEN),
+    ):
         if match := pattern.match(text):
             position = normalize_position(match.group(1).upper())
             return SizingShape(column, kind, position, parse_decimal(match.group(2)))
@@ -189,11 +212,15 @@ def read_sizings(drawings: DrawingReader, spot: dict) -> dict:
             regular.append(shape)
 
     sizings: dict = {}
-    for kind in ("open", "threeBet", "vs4bet"):
+    for kind in ("open", "threeBet", "fourBet", "vs4bet"):
         found = [shape for shape in regular if shape.kind == kind]
         if len(found) > 1:
             raise ConversionError(f"aba '{sheet_name}': achei {len(found)} formas de tamanho '{kind}', esperava no máximo uma")
         if found:
+            if found[0].position is not None and found[0].position != spot["hero"]:
+                raise ConversionError(
+                    f"aba '{sheet_name}': o tamanho '{kind}' é do {found[0].position}, e não do Hero ({spot['hero']})"
+                )
             sizings[kind] = found[0].size
     for kind in ("vs3bet", "vsOpen"):
         by_position: dict[str, float | int] = {}
@@ -202,24 +229,54 @@ def read_sizings(drawings: DrawingReader, spot: dict) -> dict:
                 raise ConversionError(f"aba '{sheet_name}': tamanho repetido para '{kind}' {shape.position}")
             by_position[shape.position] = shape.size
         sizings[kind] = {p: by_position[p] for p in POSITION_ORDER if p in by_position}
-    for shape in regular:
-        if shape.kind == "threeBet" and shape.position != spot["hero"]:
-            raise ConversionError(
-                f"aba '{sheet_name}': o 3bet de {shape.position} não é do Hero ({spot['hero']})"
-            )
 
-    if spot["family"] == "rfi":
-        required = ["open"]
-    else:
-        required = ["threeBet", "vs4bet"]
-        if spot["villain"]["position"] not in sizings["vsOpen"]:
-            raise ConversionError(
-                f"aba '{sheet_name}': falta o tamanho do open do {spot['villain']['position']} (vs RFI)"
-            )
-    missing = [kind for kind in required if kind not in sizings]
+    missing = [kind for kind in REQUIRED_SIZINGS[spot["family"]] if kind not in sizings]
+    villain_kind = REQUIRED_VILLAIN_SIZING.get(spot["family"])
+    if villain_kind and spot["villain"]["position"] not in sizings[villain_kind]:
+        missing.append(f"{villain_kind}[{spot['villain']['position']}]")
     if missing:
         raise ConversionError(f"aba '{sheet_name}': faltam as formas de tamanho {', '.join(missing)}")
-    return sizings
+    return ordered_sizings(sizings)
+
+
+# Tamanhos que cada família exige da aba. A família vs-4bet também precisa do `threeBet`,
+# mas ele não está na aba: vem do RFI do vilão (ver derive_sizings).
+REQUIRED_SIZINGS = {
+    "rfi": ("open",),
+    "3bet": ("threeBet", "vs4bet"),
+    "bb-defense": ("threeBet", "vs4bet"),
+    "vs-3bet": ("open", "fourBet"),
+    "vs-4bet": ("vs4bet",),
+    "vs-jam": ("open",),
+}
+# E o tamanho da aposta do vilão que o Hero enfrenta, por posição do vilão.
+REQUIRED_VILLAIN_SIZING = {"3bet": "vsOpen", "bb-defense": "vsOpen", "vs-3bet": "vs3bet", "vs-4bet": "vsOpen"}
+SIZING_KEY_ORDER = ("open", "threeBet", "fourBet", "vs4bet", "vs3bet", "vsOpen")
+
+
+def ordered_sizings(sizings: dict) -> dict:
+    """Mesma ordem de chaves sempre, para o JSON ser estável."""
+    return {key: sizings[key] for key in SIZING_KEY_ORDER if key in sizings}
+
+
+def derive_sizings(spots: list[dict]) -> None:
+    """Completa o `threeBet` dos spots de vs 4bet com o que o RFI do vilão diz enfrentar.
+
+    A aba de "enfrentar 4bet depois de dar 3bet" traz o 4bet e o open do vilão, mas não o
+    3bet que o próprio Hero deu. Esse tamanho está na aba de RFI do vilão ("vs 3B <Hero>").
+    """
+    rfi_by_hero = {spot["hero"]: spot for spot in spots if spot["family"] == "rfi"}
+    for spot in spots:
+        if spot["family"] != "vs-4bet":
+            continue
+        villain = spot["villain"]["position"]
+        size = rfi_by_hero.get(villain, {}).get("sizings", {}).get("vs3bet", {}).get(spot["hero"])
+        if size is None:
+            raise ConversionError(
+                f"aba '{spot['sourceSheet']}': o RFI do {villain} não diz o 3bet do {spot['hero']}, "
+                "então não dá para completar o tamanho do 3bet"
+            )
+        spot["sizings"] = ordered_sizings({**spot["sizings"], "threeBet": size})
 
 
 def fill_key(cell) -> str | None:
@@ -329,18 +386,22 @@ def read_hands(sheet, legend: dict[str, dict]) -> list[dict]:
                     f"aba '{sheet.title}': a célula {cell.coordinate} deveria ser {expected}, mas tem {found!r}"
                 )
             key = fill_key(cell)
-            if key not in legend:
+            # A legenda da aba vence; só o que ela não cita cai nas cores fixas da planilha.
+            entry = legend.get(key) or WORKBOOK_COLORS.get(key)
+            if entry is None:
                 raise ConversionError(
-                    f"aba '{sheet.title}': a cor da célula {cell.coordinate} ({expected}) não consta da legenda"
+                    f"aba '{sheet.title}': a cor da célula {cell.coordinate} ({expected}) não consta da "
+                    "legenda nem das cores fixas da planilha"
                 )
-            entry = legend[key]
+            out_of_range = entry["action"] == "out_of_range"
             hands.append(
                 {
                     "hand": expected,
                     "action": entry["action"],
                     "label": entry["label"],
                     "combos": combos_of(expected),
-                    "ev": read_ev(sheet, cell),
+                    # EV residual de célula cinza é descartado: essas mãos nunca são sorteadas.
+                    "ev": None if out_of_range else read_ev(sheet, cell),
                 }
             )
     return hands
@@ -358,6 +419,8 @@ def classify_sheet(sheet_name: str) -> dict | None:
         return _identity("3bet", match.group(1), match.group(2), sheet_name)
     if match := BB_DEFENSE_SHEET.match(sheet_name):
         return _identity("bb-defense", "BB", match.group(1), sheet_name)
+    if match := VS_AGGRESSION_SHEET.match(sheet_name):
+        return _identity(VS_AGGRESSION_FAMILIES[match.group(2)], match.group(1), match.group(3), sheet_name)
     return None
 
 
@@ -403,6 +466,7 @@ def convert(source: Path, imported_at: str) -> tuple[dict, list[str]]:
             )
     finally:
         drawings.close()
+    derive_sizings(spots)
     data = {
         "manifest": {
             "source": SOURCE_NAME,

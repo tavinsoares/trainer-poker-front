@@ -207,15 +207,22 @@ describe('legenda', () => {
     ])
   })
 
-  it('só tem ações que aparecem nas mãos, e toda ação das mãos aparece na legenda', () => {
-    const violacoes = dados.spots.flatMap((s) => {
-      const nasMaos = new Set(s.hands.map((h) => h.action))
+  // As mãos fora do range são cinza e a planilha não as põe na legenda, então ficam de fora daqui.
+  // A planilha tem duas inconsistências, conferidas à mão: no MPv3B CO duas mãos são vermelho-escuro
+  // (jam), mas a legenda não traz o JAM; no SBv3B BB a legenda traz JAM 4,7%, mas nenhuma mão tem
+  // essa cor. Qualquer outra divergência, ou o fim de uma dessas, reprova.
+  it('só tem ações que aparecem nas mãos, e toda ação das mãos aparece na legenda, salvo duas inconsistências da planilha', () => {
+    const divergencias = dados.spots.flatMap((s) => {
+      const nasMaos = new Set<Action>(s.hands.map((h) => h.action).filter((a) => a !== 'out_of_range'))
       const naLegenda = new Set(s.legend.map((l) => l.action))
       return [...new Set([...nasMaos, ...naLegenda])]
         .filter((a) => nasMaos.has(a) !== naLegenda.has(a))
         .map((a) => `${s.id}: a ação "${a}" não está nos dois lados (mãos e legenda)`)
     })
-    expect(violacoes).toEqual([])
+    expect(divergencias).toEqual([
+      'vs-3bet-hj-vs-co-regular: a ação "jam" não está nos dois lados (mãos e legenda)',
+      'vs-3bet-sb-vs-bb-regular: a ação "jam" não está nos dois lados (mãos e legenda)',
+    ])
   })
 
   it('soma 100% por spot, dentro do arredondamento', () => {
@@ -227,9 +234,11 @@ describe('legenda', () => {
   })
 
   // A legenda não é reproduzível só pelas cores (ver DESVIO_MAXIMO_PP), então o teste é de
-  // ordem de grandeza: cada ação fica perto do que as cores mostram.
+  // ordem de grandeza: cada ação fica perto do que as cores mostram. Só vale onde todas as mãos
+  // chegam ao spot: com mãos fora do range, a legenda pesa cada mão pela frequência dela no range
+  // (no SBv4B UTG, FOLD diz 21,2% e as cores dão 60%), e a comparação deixa de fazer sentido.
   it('tem, para cada ação, um percentual próximo da contagem de mãos da cor', () => {
-    const violacoes = dados.spots.flatMap((s) =>
+    const violacoes = dados.spots.filter((s) => !s.hands.some((h) => h.action === 'out_of_range')).flatMap((s) =>
       s.legend.flatMap((l) => {
         const pelasCores = percentual(combosDe(s, (h) => h.action === l.action))
         return Math.abs(l.percent - pelasCores) <= DESVIO_MAXIMO_PP
@@ -277,11 +286,25 @@ describe('EV', () => {
     expect(emFold).toEqual(['HJ A9o 0', 'CO K3s 0.02'])
   })
 
-  // Fold vale 0 por definição: um EV escrito numa mão de fold só pode ser zero ou arredondamento.
-  it('tem EV perto de zero em toda mão de fold que traz EV', () => {
+  // No RFI, no 3bet e na defesa do BB, fold vale 0 por definição: um EV escrito numa mão de fold
+  // só pode ser zero ou arredondamento. Ao enfrentar agressão, mãos mistas pintadas de fold
+  // chegam a ter EV positivo (até 4bb no BBv4B SB), então a regra vale só para essas três famílias.
+  it('tem EV perto de zero em toda mão de fold que traz EV, no RFI, no 3bet e na defesa do BB', () => {
+    const familias: SpotFamily[] = ['rfi', '3bet', 'bb-defense']
+    const violacoes = dados.spots
+      .filter((s) => familias.includes(s.family))
+      .flatMap((s) =>
+        s.hands
+          .filter((h) => h.action === 'fold' && h.ev !== null && Math.abs(h.ev) > 0.05)
+          .map((h) => `${s.id}: mão ${h.hand} é fold, mas tem EV ${h.ev}`),
+      )
+    expect(violacoes).toEqual([])
+  })
+
+  it('nunca tem EV negativo numa mão de fold', () => {
     const violacoes = dados.spots.flatMap((s) =>
       s.hands
-        .filter((h) => h.action === 'fold' && h.ev !== null && Math.abs(h.ev) > 0.05)
+        .filter((h) => h.action === 'fold' && h.ev !== null && h.ev < -0.05)
         .map((h) => `${s.id}: mão ${h.hand} é fold, mas tem EV ${h.ev}`),
     )
     expect(violacoes).toEqual([])
@@ -508,6 +531,391 @@ describe('3bet contra um open e defesa do BB: sizings', () => {
       const rfi = spotPorHero(hero).sizings.open
       return spot.sizings.open === rfi ? [] : [`${spot.id}: open de ${spot.sizings.open}bb, mas o RFI do ${hero} é ${rfi}bb`]
     })
+    expect(violacoes).toEqual([])
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Enfrentar agressão contra regular (ticket 5): vs 3bet, vs 4bet e vs jam.
+// As tabelas abaixo saíram de um script que lê a planilha por um caminho diferente do do
+// conversor (cor da célula, legenda e formas direto do XML), e foram conferidas por amostragem.
+
+const SPOTS_DE_AGRESSAO = [
+  ['UTGv3B HJ', 'vs-3bet', 'UTG', 'HJ'],
+  ['UTGv3B CO', 'vs-3bet', 'UTG', 'CO'],
+  ['UTGv3B BTN', 'vs-3bet', 'UTG', 'BTN'],
+  ['UTGv3B SB', 'vs-3bet', 'UTG', 'SB'],
+  ['UTGv3B BB', 'vs-3bet', 'UTG', 'BB'],
+  ['MPv3B CO', 'vs-3bet', 'HJ', 'CO'],
+  ['MPv3B BTN', 'vs-3bet', 'HJ', 'BTN'],
+  ['MPv3B SB', 'vs-3bet', 'HJ', 'SB'],
+  ['MPv3B BB', 'vs-3bet', 'HJ', 'BB'],
+  ['COv3B BTN', 'vs-3bet', 'CO', 'BTN'],
+  ['COv3B SB', 'vs-3bet', 'CO', 'SB'],
+  ['COv3B BB', 'vs-3bet', 'CO', 'BB'],
+  ['BTNv3B SB', 'vs-3bet', 'BTN', 'SB'],
+  ['BTNv3B BB', 'vs-3bet', 'BTN', 'BB'],
+  ['SBv3B BB', 'vs-3bet', 'SB', 'BB'],
+  ['HJv4B UTG', 'vs-4bet', 'HJ', 'UTG'],
+  ['COv4B UTG', 'vs-4bet', 'CO', 'UTG'],
+  ['COv4B HJ', 'vs-4bet', 'CO', 'HJ'],
+  ['BTNv4B UTG', 'vs-4bet', 'BTN', 'UTG'],
+  ['BTNv4B HJ', 'vs-4bet', 'BTN', 'HJ'],
+  ['BTNv4B CO', 'vs-4bet', 'BTN', 'CO'],
+  ['SBv4B UTG', 'vs-4bet', 'SB', 'UTG'],
+  ['SBv4B HJ', 'vs-4bet', 'SB', 'HJ'],
+  ['SBv4B CO', 'vs-4bet', 'SB', 'CO'],
+  ['SBv4B BTN', 'vs-4bet', 'SB', 'BTN'],
+  ['BBv4B UTG', 'vs-4bet', 'BB', 'UTG'],
+  ['BBv4B HJ', 'vs-4bet', 'BB', 'HJ'],
+  ['BBv4B CO', 'vs-4bet', 'BB', 'CO'],
+  ['BBv4B BTN', 'vs-4bet', 'BB', 'BTN'],
+  ['BBv4B SB', 'vs-4bet', 'BB', 'SB'],
+  ['UTGvJAM HJ', 'vs-jam', 'UTG', 'HJ'],
+  ['UTGvJAM CO', 'vs-jam', 'UTG', 'CO'],
+  ['UTGvJAM BTN', 'vs-jam', 'UTG', 'BTN'],
+  ['UTGvJAM SB', 'vs-jam', 'UTG', 'SB'],
+  ['UTGvJAM BB', 'vs-jam', 'UTG', 'BB'],
+  ['HJvJAM CO', 'vs-jam', 'HJ', 'CO'],
+  ['HJvJAM BTN', 'vs-jam', 'HJ', 'BTN'],
+  ['HJvJAM SB', 'vs-jam', 'HJ', 'SB'],
+  ['HJvJAM BB', 'vs-jam', 'HJ', 'BB'],
+  ['COvJAM BTN', 'vs-jam', 'CO', 'BTN'],
+  ['COvJAM SB', 'vs-jam', 'CO', 'SB'],
+  ['COvJAM BB', 'vs-jam', 'CO', 'BB'],
+  ['BTNvJAM SB', 'vs-jam', 'BTN', 'SB'],
+  ['BTNvJAM BB', 'vs-jam', 'BTN', 'BB'],
+  ['SBvJAM BB', 'vs-jam', 'SB', 'BB'],
+] as const
+
+const CONTAGENS_AGRESSAO = [
+  ['UTGv3B HJ', 11, 0, 6, 30, 122, 11, 0, 5, 4],
+  ['UTGv3B CO', 12, 0, 6, 29, 122, 12, 0, 5, 4],
+  ['UTGv3B BTN', 12, 0, 7, 28, 122, 10, 0, 4, 0],
+  ['UTGv3B SB', 8, 0, 11, 28, 122, 7, 0, 8, 3],
+  ['UTGv3B BB', 5, 0, 10, 32, 122, 4, 0, 8, 0],
+  ['MPv3B CO', 10, 2, 11, 39, 107, 10, 2, 9, 3],
+  ['MPv3B BTN', 12, 0, 10, 39, 108, 11, 0, 2, 0],
+  ['MPv3B SB', 8, 0, 14, 39, 108, 7, 0, 8, 0],
+  ['MPv3B BB', 7, 0, 16, 38, 108, 6, 0, 9, 0],
+  ['COv3B BTN', 15, 0, 19, 34, 101, 14, 0, 13, 0],
+  ['COv3B SB', 10, 0, 24, 34, 101, 8, 0, 14, 0],
+  ['COv3B BB', 9, 0, 17, 42, 101, 9, 0, 7, 0],
+  ['BTNv3B SB', 10, 0, 35, 56, 68, 7, 0, 24, 0],
+  ['BTNv3B BB', 9, 0, 34, 59, 67, 7, 0, 25, 0],
+  ['SBv3B BB', 22, 0, 27, 54, 66, 17, 0, 20, 2],
+  ['HJv4B UTG', 0, 4, 11, 9, 145, 0, 4, 6, 0],
+  ['COv4B UTG', 0, 4, 8, 9, 148, 0, 4, 5, 0],
+  ['COv4B HJ', 0, 4, 9, 11, 145, 0, 4, 7, 0],
+  ['BTNv4B UTG', 0, 4, 6, 11, 148, 0, 4, 6, 4],
+  ['BTNv4B HJ', 0, 4, 9, 12, 144, 0, 4, 9, 3],
+  ['BTNv4B CO', 0, 4, 17, 13, 135, 0, 4, 15, 1],
+  ['SBv4B UTG', 0, 4, 4, 14, 147, 0, 4, 3, 6],
+  ['SBv4B HJ', 0, 4, 7, 15, 143, 0, 4, 6, 4],
+  ['SBv4B CO', 0, 7, 7, 17, 138, 0, 7, 4, 5],
+  ['SBv4B BTN', 0, 8, 16, 13, 132, 0, 8, 15, 2],
+  ['BBv4B UTG', 0, 4, 3, 11, 151, 0, 4, 3, 6],
+  ['BBv4B HJ', 0, 4, 5, 14, 146, 0, 4, 4, 3],
+  ['BBv4B CO', 0, 6, 7, 17, 139, 0, 6, 4, 8],
+  ['BBv4B BTN', 0, 8, 18, 12, 131, 0, 8, 17, 6],
+  ['BBv4B SB', 0, 5, 22, 19, 123, 0, 5, 18, 4],
+  ['UTGvJAM HJ', 0, 0, 5, 6, 158, 0, 0, 3, 1],
+  ['UTGvJAM CO', 0, 0, 5, 7, 157, 0, 0, 3, 1],
+  ['UTGvJAM BTN', 0, 0, 5, 7, 157, 0, 0, 5, 0],
+  ['UTGvJAM SB', 0, 0, 3, 6, 160, 0, 0, 3, 0],
+  ['UTGvJAM BB', 0, 0, 3, 3, 163, 0, 0, 3, 0],
+  ['HJvJAM CO', 0, 0, 5, 7, 157, 0, 0, 5, 0],
+  ['HJvJAM BTN', 0, 0, 5, 6, 158, 0, 0, 5, 1],
+  ['HJvJAM SB', 0, 0, 5, 4, 160, 0, 0, 5, 0],
+  ['HJvJAM BB', 0, 0, 4, 4, 161, 0, 0, 4, 0],
+  ['COvJAM BTN', 0, 0, 6, 11, 152, 0, 0, 6, 1],
+  ['COvJAM SB', 0, 0, 6, 4, 159, 0, 0, 6, 0],
+  ['COvJAM BB', 0, 0, 6, 4, 159, 0, 0, 6, 0],
+  ['BTNvJAM SB', 0, 0, 7, 4, 158, 0, 0, 7, 0],
+  ['BTNvJAM BB', 0, 0, 6, 3, 160, 0, 0, 6, 0],
+  ['SBvJAM BB', 0, 0, 8, 18, 143, 0, 0, 8, 4],
+] as const
+
+const LEGENDAS_AGRESSAO = [
+  ['UTGv3B HJ', [['4BET', 20.8], ['CALL', 20.8], ['FOLD', 58.4]]],
+  ['UTGv3B CO', [['4BET', 23.6], ['CALL', 18.3], ['FOLD', 58.1]]],
+  ['UTGv3B BTN', [['4BET', 25.2], ['CALL', 9.8], ['FOLD', 64.9]]],
+  ['UTGv3B SB', [['4BET', 14.1], ['CALL', 25], ['FOLD', 60.9]]],
+  ['UTGv3B BB', [['4BET', 10.4], ['CALL', 23.5], ['FOLD', 66.2]]],
+  ['MPv3B CO', [['4BET', 22.4], ['CALL', 18.5], ['FOLD', 59.1]]],
+  ['MPv3B BTN', [['4BET', 24.3], ['CALL', 7.9], ['FOLD', 67.8]]],
+  ['MPv3B SB', [['4BET', 15.2], ['CALL', 16.7], ['FOLD', 68.1]]],
+  ['MPv3B BB', [['4BET', 9.2], ['CALL', 24.2], ['FOLD', 66.6]]],
+  ['COv3B BTN', [['4BET', 22.2], ['CALL', 17.3], ['FOLD', 60.5]]],
+  ['COv3B SB', [['4BET', 13.8], ['CALL', 20.8], ['FOLD', 65.4]]],
+  ['COv3B BB', [['4BET', 10.8], ['CALL', 21.2], ['FOLD', 68]]],
+  ['BTNv3B SB', [['4BET', 11.3], ['CALL', 24.9], ['FOLD', 63.8]]],
+  ['BTNv3B BB', [['4BET', 11.4], ['CALL', 25], ['FOLD', 63.6]]],
+  ['SBv3B BB', [['JAM', 4.7], ['4BET', 16.2], ['CALL', 19.5], ['FOLD', 59.6]]],
+  ['HJv4B UTG', [['JAM', 15.1], ['CALL', 42.9], ['FOLD', 42]]],
+  ['COv4B UTG', [['JAM', 13.6], ['CALL', 49.9], ['FOLD', 36.5]]],
+  ['COv4B HJ', [['JAM', 12.3], ['CALL', 49.2], ['FOLD', 38.5]]],
+  ['BTNv4B UTG', [['JAM', 15.5], ['CALL', 45.5], ['FOLD', 39]]],
+  ['BTNv4B HJ', [['JAM', 14.7], ['CALL', 47.9], ['FOLD', 37.4]]],
+  ['BTNv4B CO', [['JAM', 13.8], ['CALL', 48.5], ['FOLD', 37.7]]],
+  ['SBv4B UTG', [['JAM', 26.8], ['CALL', 52], ['FOLD', 21.2]]],
+  ['SBv4B HJ', [['JAM', 30], ['CALL', 35], ['FOLD', 35]]],
+  ['SBv4B CO', [['JAM', 31.5], ['CALL', 24.8], ['FOLD', 43.7]]],
+  ['SBv4B BTN', [['JAM', 24.9], ['CALL', 44.4], ['FOLD', 30.8]]],
+  ['BBv4B UTG', [['JAM', 30.8], ['CALL', 36.4], ['FOLD', 32.9]]],
+  ['BBv4B HJ', [['JAM', 29.5], ['CALL', 29.9], ['FOLD', 40.7]]],
+  ['BBv4B CO', [['JAM', 31.3], ['CALL', 23.8], ['FOLD', 44.9]]],
+  ['BBv4B BTN', [['JAM', 23], ['CALL', 45.7], ['FOLD', 31.3]]],
+  ['BBv4B SB', [['JAM', 16.5], ['CALL', 48.1], ['FOLD', 35.5]]],
+  ['UTGvJAM HJ', [['CALL', 51.9], ['FOLD', 48.1]]],
+  ['UTGvJAM CO', [['CALL', 51.9], ['FOLD', 48.1]]],
+  ['UTGvJAM BTN', [['CALL', 56.2], ['FOLD', 43.8]]],
+  ['UTGvJAM SB', [['CALL', 51.1], ['FOLD', 48.9]]],
+  ['UTGvJAM BB', [['CALL', 53.5], ['FOLD', 46.5]]],
+  ['HJvJAM CO', [['CALL', 52.9], ['FOLD', 47.1]]],
+  ['HJvJAM BTN', [['CALL', 52.8], ['FOLD', 47.2]]],
+  ['HJvJAM SB', [['CALL', 54.7], ['FOLD', 45.3]]],
+  ['HJvJAM BB', [['CALL', 56.5], ['FOLD', 43.5]]],
+  ['COvJAM BTN', [['CALL', 50.3], ['FOLD', 49.7]]],
+  ['COvJAM SB', [['CALL', 57.3], ['FOLD', 42.7]]],
+  ['COvJAM BB', [['CALL', 60.8], ['FOLD', 39.2]]],
+  ['BTNvJAM SB', [['CALL', 58.7], ['FOLD', 41.3]]],
+  ['BTNvJAM BB', [['CALL', 60], ['FOLD', 40]]],
+  ['SBvJAM BB', [['CALL', 48.1], ['FOLD', 51.9]]],
+] as const
+
+const MAOS_AGRESSAO: Record<string, Record<string, readonly [Action, number | null]>> = {
+  'UTGv3B HJ': { 'AA': ['raise', 28.07], '76s': ['call', 0.26], 'KQo': ['fold', null] },
+  'UTGv3B CO': { 'AA': ['raise', 28.24], '76s': ['call', 0.18], 'KQo': ['fold', null] },
+  'UTGv3B BTN': { 'AA': ['raise', 30.75], '76s': ['call', 0], 'KQo': ['fold', null] },
+  'UTGv3B SB': { 'AA': ['raise', 33.11], '76s': ['call', 0.08], 'KQo': ['fold', null] },
+  'UTGv3B BB': { 'AA': ['raise', 32.4], '76s': ['call', 0.04], 'KQo': ['fold', null] },
+  'MPv3B CO': { 'AA': ['raise', 28.99], '76s': ['call', 0.11], 'KQo': ['fold', null] },
+  'MPv3B BTN': { 'AA': ['raise', 31.63], '76s': ['call', null], 'KQo': ['fold', null] },
+  'MPv3B SB': { 'AA': ['raise', 35.45], '76s': ['call', null], 'KQo': ['fold', null] },
+  'MPv3B BB': { 'AA': ['raise', 33.34], '76s': ['call', 0.02], 'KQo': ['fold', null] },
+  'COv3B BTN': { 'AA': ['raise', 32.26], '76s': ['call', 0], 'KQo': ['fold', null] },
+  'COv3B SB': { 'AA': ['raise', 35.87], '76s': ['call', 0.02], 'KQo': ['raise', null] },
+  'COv3B BB': { 'AA': ['raise', 35.8], '76s': ['call', null], 'KQo': ['fold', null] },
+  'BTNv3B SB': { 'AA': ['raise', 37.46], '76s': ['call', null], 'KQo': ['call', 0.22] },
+  'BTNv3B BB': { 'AA': ['raise', 36.62], '76s': ['call', null], 'KQo': ['call', 0.27] },
+  'SBv3B BB': { 'AA': ['raise', 31.76], '76s': ['call', null], 'KQo': ['raise', 0.47] },
+  'HJv4B UTG': { 'AA': ['jam', 49.04], '76s': ['out_of_range', null], 'KQo': ['fold', null] },
+  'COv4B UTG': { 'AA': ['jam', 48.78], '76s': ['out_of_range', null], 'KQo': ['fold', null] },
+  'COv4B HJ': { 'AA': ['call', 50.32], '76s': ['out_of_range', null], 'KQo': ['fold', null] },
+  'BTNv4B UTG': { 'AA': ['jam', 53.19], '76s': ['out_of_range', null], 'KQo': ['fold', null] },
+  'BTNv4B HJ': { 'AA': ['call', 53.83], '76s': ['out_of_range', null], 'KQo': ['fold', null] },
+  'BTNv4B CO': { 'AA': ['call', 55.11], '76s': ['call', 0.41], 'KQo': ['fold', null] },
+  'SBv4B UTG': { 'AA': ['jam', 49.3], '76s': ['out_of_range', null], 'KQo': ['fold', null] },
+  'SBv4B HJ': { 'AA': ['jam', 55.55], '76s': ['call', 0.66], 'KQo': ['fold', null] },
+  'SBv4B CO': { 'AA': ['jam', 59.67], '76s': ['out_of_range', null], 'KQo': ['fold', null] },
+  'SBv4B BTN': { 'AA': ['jam', 61.37], '76s': ['call', 0.69], 'KQo': ['fold', null] },
+  'BBv4B UTG': { 'AA': ['jam', 51.93], '76s': ['fold', 0.01], 'KQo': ['out_of_range', null] },
+  'BBv4B HJ': { 'AA': ['jam', 56.36], '76s': ['fold', null], 'KQo': ['out_of_range', null] },
+  'BBv4B CO': { 'AA': ['jam', 64.82], '76s': ['fold', 0.21], 'KQo': ['fold', null] },
+  'BBv4B BTN': { 'AA': ['jam', 63.69], '76s': ['call', 0.79], 'KQo': ['fold', null] },
+  'BBv4B SB': { 'AA': ['call', 56.38], '76s': ['call', 2.03], 'KQo': ['fold', 3.53] },
+  'UTGvJAM HJ': { 'AA': ['call', 91.05], '76s': ['out_of_range', null], 'KQo': ['out_of_range', null] },
+  'UTGvJAM CO': { 'AA': ['call', 90.29], '76s': ['out_of_range', null], 'KQo': ['out_of_range', null] },
+  'UTGvJAM BTN': { 'AA': ['call', 91.66], '76s': ['out_of_range', null], 'KQo': ['out_of_range', null] },
+  'UTGvJAM SB': { 'AA': ['call', 90.74], '76s': ['out_of_range', null], 'KQo': ['out_of_range', null] },
+  'UTGvJAM BB': { 'AA': ['call', 91.61], '76s': ['out_of_range', null], 'KQo': ['out_of_range', null] },
+  'HJvJAM CO': { 'AA': ['call', 91.6], '76s': ['out_of_range', null], 'KQo': ['out_of_range', null] },
+  'HJvJAM BTN': { 'AA': ['call', 92.49], '76s': ['out_of_range', null], 'KQo': ['out_of_range', null] },
+  'HJvJAM SB': { 'AA': ['call', 92.7], '76s': ['out_of_range', null], 'KQo': ['out_of_range', null] },
+  'HJvJAM BB': { 'AA': ['call', 93.27], '76s': ['out_of_range', null], 'KQo': ['out_of_range', null] },
+  'COvJAM BTN': { 'AA': ['call', 93.39], '76s': ['out_of_range', null], 'KQo': ['out_of_range', null] },
+  'COvJAM SB': { 'AA': ['call', 92.83], '76s': ['out_of_range', null], 'KQo': ['fold', null] },
+  'COvJAM BB': { 'AA': ['call', 95.83], '76s': ['out_of_range', null], 'KQo': ['out_of_range', null] },
+  'BTNvJAM SB': { 'AA': ['call', 94.25], '76s': ['out_of_range', null], 'KQo': ['out_of_range', null] },
+  'BTNvJAM BB': { 'AA': ['call', 95.19], '76s': ['out_of_range', null], 'KQo': ['out_of_range', null] },
+  'SBvJAM BB': { 'AA': ['call', 91.49], '76s': ['out_of_range', null], 'KQo': ['fold', null] },
+}
+
+const SIZINGS_AGRESSAO = [
+  ['UTGv3B HJ', { open: 2, fourBet: 19, vs3bet: { HJ: 6.5, CO: 6.5, BTN: 7.5, SB: 10, BB: 12 }, vsOpen: {} }],
+  ['UTGv3B CO', { open: 2, fourBet: 18, vs3bet: { HJ: 6.5, CO: 6.5, BTN: 7.5, SB: 10, BB: 12 }, vsOpen: {} }],
+  ['UTGv3B BTN', { open: 2, fourBet: 20, vs3bet: { HJ: 6.5, CO: 6.5, BTN: 7.5, SB: 10, BB: 12 }, vsOpen: {} }],
+  ['UTGv3B SB', { open: 2, fourBet: 19, vs3bet: { HJ: 6.5, CO: 6.5, BTN: 7.5, SB: 10, BB: 12 }, vsOpen: {} }],
+  ['UTGv3B BB', { open: 2, fourBet: 22, vs3bet: { HJ: 6.5, CO: 6.5, BTN: 7.5, SB: 10, BB: 12 }, vsOpen: {} }],
+  ['MPv3B CO', { open: 2, fourBet: 19, vs3bet: { CO: 6.5, BTN: 7.5, SB: 11, BB: 12.3 }, vsOpen: { UTG: 2 } }],
+  ['MPv3B BTN', { open: 2, fourBet: 20, vs3bet: { CO: 6.5, BTN: 7.5, SB: 11, BB: 12.3 }, vsOpen: { UTG: 2 } }],
+  ['MPv3B SB', { open: 2, fourBet: 22, vs3bet: { CO: 6.5, BTN: 7.5, SB: 11, BB: 12.3 }, vsOpen: { UTG: 2 } }],
+  ['MPv3B BB', { open: 2, fourBet: 25, vs3bet: { CO: 6.5, BTN: 7.5, SB: 11, BB: 12.3 }, vsOpen: { UTG: 2 } }],
+  ['COv3B BTN', { open: 2.3, fourBet: 21, vs3bet: { BTN: 7.5, SB: 11.5, BB: 13.5 }, vsOpen: { UTG: 2, HJ: 2 } }],
+  ['COv3B SB', { open: 2.3, fourBet: 25, vs3bet: { BTN: 7.5, SB: 11.5, BB: 13.5 }, vsOpen: { UTG: 2, HJ: 2 } }],
+  ['COv3B BB', { open: 2.3, fourBet: 28, vs3bet: { BTN: 7.5, SB: 11.5, BB: 13.5 }, vsOpen: { UTG: 2, HJ: 2 } }],
+  ['BTNv3B SB', { open: 2.5, fourBet: 26, vs3bet: { SB: 12, BB: 13 }, vsOpen: { UTG: 2, HJ: 2, CO: 2.3 } }],
+  ['BTNv3B BB', { open: 2.5, fourBet: 27, vs3bet: { SB: 12, BB: 13 }, vsOpen: { UTG: 2, HJ: 2, CO: 2.3 } }],
+  ['SBv3B BB', { open: 3, fourBet: 21, vs3bet: { BB: 10 }, vsOpen: { UTG: 2, HJ: 2, CO: 2.3, BTN: 2.5 } }],
+  ['HJv4B UTG', { open: 2, vs4bet: 19, vs3bet: { CO: 6.5, BTN: 7.5, SB: 11, BB: 12.3 }, vsOpen: { UTG: 2 } }],
+  ['COv4B UTG', { open: 2.3, vs4bet: 18, vs3bet: { BTN: 7.5, SB: 11.5, BB: 13.5 }, vsOpen: { UTG: 2, HJ: 2 } }],
+  ['COv4B HJ', { open: 2.3, vs4bet: 19, vs3bet: { BTN: 7.5, SB: 11.5, BB: 13.5 }, vsOpen: { UTG: 2, HJ: 2 } }],
+  ['BTNv4B UTG', { open: 2.5, vs4bet: 20, vs3bet: { SB: 12, BB: 13 }, vsOpen: { UTG: 2, HJ: 2, CO: 2.3 } }],
+  ['BTNv4B HJ', { open: 2.5, vs4bet: 20, vs3bet: { SB: 12, BB: 13 }, vsOpen: { UTG: 2, HJ: 2, CO: 2.3 } }],
+  ['BTNv4B CO', { open: 2.5, vs4bet: 21, vs3bet: { SB: 12, BB: 13 }, vsOpen: { UTG: 2, HJ: 2, CO: 2.3 } }],
+  ['SBv4B UTG', { open: 3, vs4bet: 19, vs3bet: { BB: 10 }, vsOpen: { UTG: 2, HJ: 2, CO: 2.3, BTN: 2.5 } }],
+  ['SBv4B HJ', { open: 3, vs4bet: 22, vs3bet: { BB: 10 }, vsOpen: { UTG: 2, HJ: 2, CO: 2.3, BTN: 2.5 } }],
+  ['SBv4B CO', { open: 3, vs4bet: 25, vs3bet: { BB: 10 }, vsOpen: { UTG: 2, HJ: 2, CO: 2.3, BTN: 2.5 } }],
+  ['SBv4B BTN', { open: 3, vs4bet: 26, vs3bet: { BB: 10 }, vsOpen: { UTG: 2, HJ: 2, CO: 2.3, BTN: 2.5 } }],
+  ['BBv4B UTG', { vs4bet: 22, vs3bet: {}, vsOpen: { UTG: 2, HJ: 2, CO: 2.3, BTN: 2.5, SB: 3 } }],
+  ['BBv4B HJ', { vs4bet: 25, vs3bet: {}, vsOpen: { UTG: 2, HJ: 2, CO: 2.3, BTN: 2.5, SB: 3 } }],
+  ['BBv4B CO', { vs4bet: 28, vs3bet: {}, vsOpen: { UTG: 2, HJ: 2, CO: 2.3, BTN: 2.5, SB: 3 } }],
+  ['BBv4B BTN', { vs4bet: 27, vs3bet: {}, vsOpen: { UTG: 2, HJ: 2, CO: 2.3, BTN: 2.5, SB: 3 } }],
+  ['BBv4B SB', { vs4bet: 21, vs3bet: {}, vsOpen: { UTG: 2, HJ: 2, CO: 2.3, BTN: 2.5, SB: 3 } }],
+  ['UTGvJAM HJ', { open: 2, vs3bet: { HJ: 6.5, CO: 6.5, BTN: 7.5, SB: 10, BB: 12 }, vsOpen: {} }],
+  ['UTGvJAM CO', { open: 2, vs3bet: { HJ: 6.5, CO: 6.5, BTN: 7.5, SB: 10, BB: 12 }, vsOpen: {} }],
+  ['UTGvJAM BTN', { open: 2, vs3bet: { HJ: 6.5, CO: 6.5, BTN: 7.5, SB: 10, BB: 12 }, vsOpen: {} }],
+  ['UTGvJAM SB', { open: 2, vs3bet: { HJ: 6.5, CO: 6.5, BTN: 7.5, SB: 10, BB: 12 }, vsOpen: {} }],
+  ['UTGvJAM BB', { open: 2, vs3bet: { HJ: 6.5, CO: 6.5, BTN: 7.5, SB: 10, BB: 12 }, vsOpen: {} }],
+  ['HJvJAM CO', { open: 2, vs3bet: { CO: 6.5, BTN: 7.5, SB: 11, BB: 12.3 }, vsOpen: { UTG: 2 } }],
+  ['HJvJAM BTN', { open: 2, vs3bet: { CO: 6.5, BTN: 7.5, SB: 11, BB: 12.3 }, vsOpen: { UTG: 2 } }],
+  ['HJvJAM SB', { open: 2, vs3bet: { CO: 6.5, BTN: 7.5, SB: 11, BB: 12.3 }, vsOpen: { UTG: 2 } }],
+  ['HJvJAM BB', { open: 2, vs3bet: { CO: 6.5, BTN: 7.5, SB: 11, BB: 12.3 }, vsOpen: { UTG: 2 } }],
+  ['COvJAM BTN', { open: 2.3, vs3bet: { BTN: 7.5, SB: 11.5, BB: 13.5 }, vsOpen: { UTG: 2, HJ: 2 } }],
+  ['COvJAM SB', { open: 2.3, vs3bet: { BTN: 7.5, SB: 11.5, BB: 13.5 }, vsOpen: { UTG: 2, HJ: 2 } }],
+  ['COvJAM BB', { open: 2.3, vs3bet: { BTN: 7.5, SB: 11.5, BB: 13.5 }, vsOpen: { UTG: 2, HJ: 2 } }],
+  ['BTNvJAM SB', { open: 2.5, vs3bet: { SB: 12, BB: 13 }, vsOpen: { UTG: 2, HJ: 2, CO: 2.3 } }],
+  ['BTNvJAM BB', { open: 2.5, vs3bet: { SB: 12, BB: 13 }, vsOpen: { UTG: 2, HJ: 2, CO: 2.3 } }],
+  ['SBvJAM BB', { open: 3, vs3bet: { BB: 10 }, vsOpen: { UTG: 2, HJ: 2, CO: 2.3, BTN: 2.5 } }],
+] as const
+
+const ACAO_DO_ROTULO = { '4BET': 'raise', JAM: 'jam', CALL: 'call', FOLD: 'fold' } as const
+
+describe('enfrentar agressão: spots', () => {
+  it('tem os 15 spots de cada família (vs 3bet, vs 4bet e vs jam) contra regular, um por aba', () => {
+    const familia = (f: SpotFamily) =>
+      dados.spots.filter((s) => s.family === f && s.villain.type === 'regular').map((s) => s.sourceSheet).sort()
+    const esperadas = (f: SpotFamily) =>
+      SPOTS_DE_AGRESSAO.filter((linha) => linha[1] === f).map((linha) => linha[0]).sort()
+    for (const f of ['vs-3bet', 'vs-4bet', 'vs-jam'] as const) {
+      expect(esperadas(f)).toHaveLength(15)
+      expect(familia(f)).toEqual(esperadas(f))
+    }
+  })
+
+  // O MP da planilha aparece como HJ, no Hero e no vilão.
+  it.each(SPOTS_DE_AGRESSAO)('a aba %s é da família %s, com Hero %s contra o %s', (aba, familia, hero, vilao) => {
+    const spot = spotDaAba(aba)
+    expect(spot).toMatchObject({ family: familia, hero, villain: { type: 'regular', position: vilao } })
+    expect(spot.id).toBe(`${familia}-${hero}-vs-${vilao}-regular`.toLowerCase())
+  })
+})
+
+describe('enfrentar agressão: mãos e legenda', () => {
+  // [aba, mãos de raise, jam, call, fold, fora do range, e as com EV de raise, jam, call, fold]
+  it.each(CONTAGENS_AGRESSAO)(
+    'na aba %s há %i mãos de 4bet, %i de jam, %i de call, %i de fold e %i fora do range',
+    (aba, r, j, c, f, fora, rEv, jEv, cEv, fEv) => {
+      expect([
+        contaMaos(aba, 'raise'), contaMaos(aba, 'jam'), contaMaos(aba, 'call'), contaMaos(aba, 'fold'), contaMaos(aba, 'out_of_range'),
+        contaMaos(aba, 'raise', true), contaMaos(aba, 'jam', true), contaMaos(aba, 'call', true), contaMaos(aba, 'fold', true),
+      ]).toEqual([r, j, c, f, fora, rEv, jEv, cEv, fEv])
+    },
+  )
+
+  // Na legenda de cada aba o JAM é salmão ou vermelho-escuro, e o 4BET é salmão: a cor sozinha não diz a ação.
+  it.each(LEGENDAS_AGRESSAO)('a legenda da aba %s traz os rótulos e percentuais da planilha', (aba, entradas) => {
+    expect(spotDaAba(aba).legend).toEqual(
+      entradas.map(([label, percent]) => ({ label, action: ACAO_DO_ROTULO[label], percent })),
+    )
+  })
+
+  const TODAS_AS_MAOS_AGRESSAO = Object.entries(MAOS_AGRESSAO).flatMap(([aba, maos]) =>
+    Object.entries(maos).map(([nome, [acao, ev]]) => [aba, nome, acao, ev] as const),
+  )
+  it.each(TODAS_AS_MAOS_AGRESSAO)('na aba %s, %s é %s com EV %s', (aba, nome, acao, ev) => {
+    expect(maoDaAba(aba, nome)).toMatchObject({ action: acao, ev })
+  })
+
+  // No MPv3B CO duas mãos são vermelho-escuro (jam), mas a legenda da aba não traz o JAM.
+  it('lê o vermelho-escuro como jam mesmo quando a legenda da aba não o cita', () => {
+    expect(maoDaAba('MPv3B CO', 'AKo')).toMatchObject({ action: 'jam', label: 'JAM', ev: 2.46 })
+    expect(maoDaAba('MPv3B CO', 'QQ')).toMatchObject({ action: 'jam', label: 'JAM', ev: 7.62 })
+    expect(spotDaAba('MPv3B CO').legend.map((l) => l.label)).not.toContain('JAM')
+  })
+})
+
+describe('mãos fora do range', () => {
+  it('são as células cinza, com o rótulo FORA DO RANGE e sem EV', () => {
+    const violacoes = dados.spots.flatMap((s) =>
+      s.hands
+        .filter((h) => h.action === 'out_of_range' && (h.ev !== null || h.label !== 'FORA DO RANGE'))
+        .map((h) => `${s.id}: mão ${h.hand} fora do range tem rótulo "${h.label}" e EV ${h.ev}`),
+    )
+    expect(violacoes).toEqual([])
+  })
+
+  it('só existem nos spots de enfrentar agressão', () => {
+    const familias = new Set(dados.spots.filter((s) => s.hands.some((h) => h.action === 'out_of_range')).map((s) => s.family))
+    expect([...familias].sort()).toEqual(['vs-3bet', 'vs-4bet', 'vs-jam'])
+  })
+
+  // As mãos cinza nunca são sorteadas, então o range de cada spot tem de sobrar alguma mão.
+  it('deixam sempre mãos dentro do range, com fold ou outra ação', () => {
+    const vazios = dados.spots.filter((s) => s.hands.every((h) => h.action === 'out_of_range')).map((s) => s.id)
+    expect(vazios).toEqual([])
+  })
+})
+
+describe('enfrentar agressão: sizings', () => {
+  // Lidos à mão nas formas de cada aba (coluna do vilão regular).
+  it.each(SIZINGS_AGRESSAO)('os tamanhos da aba %s batem com as formas da aba', (aba, esperado) => {
+    const spot = spotDaAba(aba)
+    // Ao enfrentar 4bet, a aba não traz o 3bet do Hero: ele vem do RFI do vilão.
+    const derivado =
+      spot.family === 'vs-4bet' && spot.villain.position
+        ? { threeBet: spotPorHero(spot.villain.position).sizings.vs3bet[spot.hero] }
+        : {}
+    expect(spot.sizings).toEqual({ ...esperado, ...derivado })
+  })
+
+  it('traz, em cada família, os tamanhos necessários para montar o spot', () => {
+    const violacoes = dados.spots.flatMap((s) => {
+      const z = s.sizings
+      const vilao = s.villain.position
+      const faltas =
+        s.family === 'vs-3bet'
+          ? [z.open, z.fourBet, vilao ? z.vs3bet[vilao] : undefined]
+          : s.family === 'vs-4bet'
+            ? [z.threeBet, z.vs4bet, vilao ? z.vsOpen[vilao] : undefined]
+            : s.family === 'vs-jam'
+              ? [z.open]
+              : []
+      return faltas.some((v) => v === undefined) ? [`${s.id}: faltam tamanhos de aposta (${JSON.stringify(z)})`] : []
+    })
+    expect(violacoes).toEqual([])
+  })
+
+  // Coerência entre abas: o 4bet que o Hero enfrenta é o 4bet que a aba espelho do vilão diz dar.
+  it('enfrenta, no vs 4bet, o mesmo 4bet que a aba de vs 3bet do vilão diz dar', () => {
+    const violacoes = dados.spots
+      .filter((s) => s.family === 'vs-4bet')
+      .flatMap((s) => {
+        const espelho = dados.spots.find(
+          (x) => x.family === 'vs-3bet' && x.hero === s.villain.position && x.villain.position === s.hero,
+        )
+        if (!espelho) return [`${s.id}: não há o spot de vs 3bet correspondente`]
+        return espelho.sizings.fourBet === s.sizings.vs4bet
+          ? []
+          : [`${s.id}: enfrenta 4bet de ${s.sizings.vs4bet}bb, mas ${espelho.id} diz dar ${espelho.sizings.fourBet}bb`]
+      })
+    expect(violacoes).toEqual([])
+  })
+
+  it('abre, no vs 3bet e no vs jam, com o mesmo tamanho do RFI do Hero, e enfrenta o 3bet que o RFI diz', () => {
+    const violacoes = dados.spots
+      .filter((s) => s.family === 'vs-3bet' || s.family === 'vs-jam')
+      .flatMap((s) => {
+        const rfi = spotPorHero(s.hero).sizings
+        const vilao = s.villain.position
+        const erros = []
+        if (s.sizings.open !== rfi.open) erros.push(`${s.id}: abre ${s.sizings.open}bb, mas o RFI do ${s.hero} é ${rfi.open}bb`)
+        if (s.family === 'vs-3bet' && vilao && s.sizings.vs3bet[vilao] !== rfi.vs3bet[vilao]) {
+          erros.push(`${s.id}: enfrenta 3bet de ${s.sizings.vs3bet[vilao]}bb, mas o RFI do ${s.hero} diz ${rfi.vs3bet[vilao]}bb`)
+        }
+        return erros
+      })
     expect(violacoes).toEqual([])
   })
 })

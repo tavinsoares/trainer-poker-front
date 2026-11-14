@@ -4,10 +4,11 @@
 export type Position = 'UTG' | 'HJ' | 'CO' | 'BTN' | 'SB' | 'BB'
 
 /**
- * Família do spot: abrir o pote (`rfi`), 3bet contra um open (`3bet`) e defesa do BB
- * contra um open (`bb-defense`).
+ * Família do spot: abrir o pote (`rfi`), 3bet contra um open (`3bet`), defesa do BB contra
+ * um open (`bb-defense`), enfrentar 3bet depois de abrir (`vs-3bet`), enfrentar 4bet depois
+ * de dar 3bet (`vs-4bet`) e enfrentar jam depois de abrir (`vs-jam`).
  */
-export type SpotFamily = 'rfi' | '3bet' | 'bb-defense'
+export type SpotFamily = 'rfi' | '3bet' | 'bb-defense' | 'vs-3bet' | 'vs-4bet' | 'vs-jam'
 
 export type VillainType = 'regular' | 'fish'
 
@@ -27,9 +28,14 @@ export interface Manifest {
 export interface Sizings {
   /** Tamanho do open do próprio Hero, em bb (a aba traz quando o Hero também abre o pote). */
   open?: number
-  /** Tamanho do 3bet do Hero, em bb (spots de 3bet e de defesa do BB). */
+  /**
+   * Tamanho do 3bet do Hero, em bb (spots de 3bet e de defesa do BB). Nos spots de enfrentar
+   * 4bet vem do RFI do vilão (o 3bet que o Hero deu), porque a aba não o traz.
+   */
   threeBet?: number
-  /** Tamanho do 4bet que o Hero enfrentaria depois de dar 3bet, em bb. */
+  /** Tamanho do 4bet do Hero, em bb (spots em que o Hero abre e enfrenta um 3bet). */
+  fourBet?: number
+  /** Tamanho do 4bet que o Hero enfrenta depois de dar 3bet, em bb. */
   vs4bet?: number
   /** Tamanho do 3bet que o Hero enfrenta, por posição de quem deu o 3bet, em bb. */
   vs3bet: Partial<Record<Position, number>>
@@ -49,11 +55,17 @@ export interface Hand {
   /** Nome canônico: `AA`, `AKs`, `AKo`... */
   hand: string
   action: Action
-  /** Rótulo da legenda correspondente à cor da célula. */
+  /**
+   * Rótulo da legenda correspondente à cor da célula. Nas mãos fora do range, que a planilha
+   * pinta de cinza sem rótulo de legenda, é "FORA DO RANGE".
+   */
   label: string
   /** 6 para par, 4 para suited, 12 para offsuit. */
   combos: number
-  /** EV em bb quando a planilha o traz, `null` quando não traz. */
+  /**
+   * EV em bb quando a planilha o traz, `null` quando não traz. Sempre `null` nas mãos fora do
+   * range: a planilha tem EV residual em algumas células cinza, e essas mãos nunca são sorteadas.
+   */
   ev: number | null
 }
 
