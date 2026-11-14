@@ -950,5 +950,457 @@
       "sheet": "SBv3B BB 9.1",
       "reason": "variante de tamanho de aposta"
     }
+  ],
+  "discardedGrayEv": [
+    {
+      "sheet": "HJv4B UTG",
+      "hand": "87s",
+      "ev": 0.19,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "HJv4B UTG",
+      "hand": "76s",
+      "ev": 0.2,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "COv4B UTG",
+      "hand": "87s",
+      "ev": 0.3,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "COv4B UTG",
+      "hand": "77",
+      "ev": 0,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "COv4B UTG",
+      "hand": "76s",
+      "ev": 0.33,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "COv4B UTG",
+      "hand": "66",
+      "ev": 0.13,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "COv4B UTG",
+      "hand": "65s",
+      "ev": 0.27,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "COv4B UTG",
+      "hand": "54s",
+      "ev": 0.31,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "COv4B HJ",
+      "hand": "T9s",
+      "ev": 0,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "COv4B HJ",
+      "hand": "87s",
+      "ev": 0.18,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "COv4B HJ",
+      "hand": "76s",
+      "ev": 0.15,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "COv4B HJ",
+      "hand": "66",
+      "ev": 0.04,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "COv4B HJ",
+      "hand": "65s",
+      "ev": 0.1,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "COv4B HJ",
+      "hand": "54s",
+      "ev": 0.2,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BTNv4B UTG",
+      "hand": "88",
+      "ev": 0.09,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BTNv4B UTG",
+      "hand": "77",
+      "ev": 0.17,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BTNv4B UTG",
+      "hand": "76s",
+      "ev": 0.46,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BTNv4B UTG",
+      "hand": "66",
+      "ev": 0.3,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BTNv4B UTG",
+      "hand": "65s",
+      "ev": 0.44,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BTNv4B UTG",
+      "hand": "54s",
+      "ev": 0.44,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BTNv4B HJ",
+      "hand": "77",
+      "ev": 0.42,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BTNv4B HJ",
+      "hand": "76s",
+      "ev": 0.69,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BTNv4B HJ",
+      "hand": "66",
+      "ev": 0.55,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BTNv4B HJ",
+      "hand": "65s",
+      "ev": 0.72,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BTNv4B HJ",
+      "hand": "54s",
+      "ev": 0.76,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BTNv4B CO",
+      "hand": "K6s",
+      "ev": 0.17,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BTNv4B CO",
+      "hand": "66",
+      "ev": 0.13,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BTNv4B CO",
+      "hand": "54s",
+      "ev": 0.46,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "SBv4B UTG",
+      "hand": "A4s",
+      "ev": 0.13,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "SBv4B UTG",
+      "hand": "A3s",
+      "ev": 0.12,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "SBv4B UTG",
+      "hand": "87s",
+      "ev": 0.63,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "SBv4B UTG",
+      "hand": "77",
+      "ev": 0.36,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "SBv4B UTG",
+      "hand": "76s",
+      "ev": 0.81,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "SBv4B UTG",
+      "hand": "65s",
+      "ev": 0.76,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "SBv4B UTG",
+      "hand": "54s",
+      "ev": 0.64,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "SBv4B HJ",
+      "hand": "87s",
+      "ev": 0.63,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "SBv4B HJ",
+      "hand": "66",
+      "ev": 0.52,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "SBv4B HJ",
+      "hand": "54s",
+      "ev": 0.66,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "SBv4B CO",
+      "hand": "76s",
+      "ev": 0.71,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "SBv4B CO",
+      "hand": "54s",
+      "ev": 0.93,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "SBv4B BTN",
+      "hand": "98s",
+      "ev": 0.2,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "SBv4B BTN",
+      "hand": "87s",
+      "ev": 0.58,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B UTG",
+      "hand": "A4s",
+      "ev": 0.13,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B UTG",
+      "hand": "A3s",
+      "ev": 0.03,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B UTG",
+      "hand": "98s",
+      "ev": 0.01,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B HJ",
+      "hand": "A4s",
+      "ev": 0.1,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B BTN",
+      "hand": "K7s",
+      "ev": 0.02,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B BTN",
+      "hand": "K6s",
+      "ev": 0.16,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B BTN",
+      "hand": "86s",
+      "ev": 0.37,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B SB",
+      "hand": "A8s",
+      "ev": 3.33,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B SB",
+      "hand": "A7s",
+      "ev": 3.05,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B SB",
+      "hand": "A3s",
+      "ev": 3.02,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B SB",
+      "hand": "K9s",
+      "ev": 2.67,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B SB",
+      "hand": "K8s",
+      "ev": 2.24,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B SB",
+      "hand": "K7s",
+      "ev": 2.22,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B SB",
+      "hand": "K6s",
+      "ev": 2.16,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B SB",
+      "hand": "Q9s",
+      "ev": 2.22,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B SB",
+      "hand": "Q8s",
+      "ev": 0,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B SB",
+      "hand": "Q7s",
+      "ev": 0,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B SB",
+      "hand": "Q4s",
+      "ev": 0.96,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B SB",
+      "hand": "KJo",
+      "ev": 1.83,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B SB",
+      "hand": "J8s",
+      "ev": 0,
+      "color": "FF666566"
+    },
+    {
+      "sheet": "BBv4B SB",
+      "hand": "J7s",
+      "ev": 0,
+      "color": "FF666566"
+    },
+    {
+      "sheet": "BBv4B SB",
+      "hand": "ATo",
+      "ev": 1.83,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B SB",
+      "hand": "KTo",
+      "ev": 0.99,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B SB",
+      "hand": "T7s",
+      "ev": 0,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B SB",
+      "hand": "T6s",
+      "ev": 0.32,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B SB",
+      "hand": "97s",
+      "ev": 1.56,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BBv4B SB",
+      "hand": "A5o",
+      "ev": 0.23,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "UTGvJAM SB",
+      "hand": "QQ",
+      "ev": 0.43,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "UTGvJAM SB",
+      "hand": "TT",
+      "ev": 0.21,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "HJvJAM CO",
+      "hand": "TT",
+      "ev": 0.12,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "HJvJAM SB",
+      "hand": "JJ",
+      "ev": 1.87,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "COvJAM SB",
+      "hand": "TT",
+      "ev": 1.95,
+      "color": "FF666666"
+    },
+    {
+      "sheet": "BTNvJAM BB",
+      "hand": "TT",
+      "ev": 10.31,
+      "color": "FF666666"
+    }
   ]
 }

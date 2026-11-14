@@ -41,11 +41,23 @@ const spotPorHero = (hero: Position) => {
   if (!spot) throw new Error(`spot de RFI contra regular do ${hero} não existe`)
   return spot
 }
-const mao = (hero: Position, nome: string) => {
-  const encontrada = spotPorHero(hero).hands.find((h) => h.hand === nome)
-  if (!encontrada) throw new Error(`mão ${nome} não existe no spot ${spotPorHero(hero).id}`)
+const spotDaAba = (aba: string) => {
+  const spot = dados.spots.find((s) => s.sourceSheet === aba)
+  if (!spot) throw new Error(`não há spot vindo da aba "${aba}"`)
+  return spot
+}
+const maoDaAba = (aba: string, nome: string) => {
+  const encontrada = spotDaAba(aba).hands.find((h) => h.hand === nome)
+  if (!encontrada) throw new Error(`mão ${nome} não existe no spot da aba "${aba}"`)
   return encontrada
 }
+const mao = (hero: Position, nome: string) => maoDaAba(spotPorHero(hero).sourceSheet, nome)
+
+// As abas de uma família, em ordem alfabética, no JSON e numa tabela de referência ([aba, família, ...]).
+const abasNoJson = (spots: Spot[], familia: SpotFamily) =>
+  spots.filter((s) => s.family === familia).map((s) => s.sourceSheet).sort()
+const abasNaTabela = (tabela: readonly (readonly [string, string, ...unknown[]])[], familia: SpotFamily) =>
+  tabela.filter((linha) => linha[1] === familia).map((linha) => linha[0]).sort()
 
 describe('procedência', () => {
   it('registra fonte, data de importação, versão do schema e hash da planilha', () => {
@@ -381,27 +393,16 @@ const SPOTS_DE_RESPOSTA = [
   ['BBvSB', 'bb-defense', 'BB', 'SB'],
 ] as const
 
-const spotDaAba = (aba: string) => {
-  const spot = dados.spots.find((s) => s.sourceSheet === aba)
-  if (!spot) throw new Error(`não há spot vindo da aba "${aba}"`)
-  return spot
-}
-const maoDaAba = (aba: string, nome: string) => {
-  const encontrada = spotDaAba(aba).hands.find((h) => h.hand === nome)
-  if (!encontrada) throw new Error(`mão ${nome} não existe no spot da aba "${aba}"`)
-  return encontrada
-}
 const contaMaos = (aba: string, acao: Action, comEv = false) =>
   spotDaAba(aba).hands.filter((h) => h.action === acao && (!comEv || h.ev !== null)).length
 
 describe('3bet contra um open e defesa do BB: spots', () => {
   it('tem os 10 spots de 3bet e os 5 de defesa do BB contra regular, um por aba', () => {
-    const familia = (f: SpotFamily) =>
-      dados.spots.filter((s) => s.family === f && s.villain.type === 'regular').map((s) => s.sourceSheet).sort()
-    const esperadas = (f: SpotFamily) =>
-      SPOTS_DE_RESPOSTA.filter((linha) => linha[1] === f).map((linha) => linha[0]).sort()
-    expect(familia('3bet')).toEqual(esperadas('3bet'))
-    expect(familia('bb-defense')).toEqual(esperadas('bb-defense'))
+    for (const f of ['3bet', 'bb-defense'] as const) {
+      expect(abasNoJson(contraRegular, f)).toEqual(abasNaTabela(SPOTS_DE_RESPOSTA, f))
+    }
+    expect(abasNaTabela(SPOTS_DE_RESPOSTA, '3bet')).toHaveLength(10)
+    expect(abasNaTabela(SPOTS_DE_RESPOSTA, 'bb-defense')).toHaveLength(5)
   })
 
   it.each(SPOTS_DE_RESPOSTA)('a aba %s é da família %s, com Hero %s contra o open do %s', (aba, familia, hero, vilao) => {
@@ -802,13 +803,9 @@ const ACAO_DO_ROTULO = { RFI: 'raise', '3BET': 'raise', '4BET': 'raise', JAM: 'j
 
 describe('enfrentar agressão: spots', () => {
   it('tem os 15 spots de cada família (vs 3bet, vs 4bet e vs jam) contra regular, um por aba', () => {
-    const familia = (f: SpotFamily) =>
-      dados.spots.filter((s) => s.family === f && s.villain.type === 'regular').map((s) => s.sourceSheet).sort()
-    const esperadas = (f: SpotFamily) =>
-      SPOTS_DE_AGRESSAO.filter((linha) => linha[1] === f).map((linha) => linha[0]).sort()
     for (const f of ['vs-3bet', 'vs-4bet', 'vs-jam'] as const) {
-      expect(esperadas(f)).toHaveLength(15)
-      expect(familia(f)).toEqual(esperadas(f))
+      expect(abasNaTabela(SPOTS_DE_AGRESSAO, f)).toHaveLength(15)
+      expect(abasNoJson(contraRegular, f)).toEqual(abasNaTabela(SPOTS_DE_AGRESSAO, f))
     }
   })
 
@@ -877,33 +874,22 @@ describe('mãos fora do range', () => {
 })
 
 describe('enfrentar agressão: sizings', () => {
-  // Lidos à mão nas formas de cada aba (coluna do vilão regular).
+  // O 3bet que o Hero deu nos spots de vs 4bet não está na aba. O conversor o completa com o 3bet que a
+  // aba de RFI do vilão diz enfrentar do Hero ("vs 3B <Hero>"); estes valores foram lidos à mão nessas
+  // abas de RFI, e não recalculados a partir do JSON.
+  const THREE_BET_NO_VS_4BET: Record<string, number> = {
+    'HJv4B UTG': 6.5, 'COv4B UTG': 6.5, 'COv4B HJ': 6.5,
+    'BTNv4B UTG': 7.5, 'BTNv4B HJ': 7.5, 'BTNv4B CO': 7.5,
+    'SBv4B UTG': 10, 'SBv4B HJ': 11, 'SBv4B CO': 11.5, 'SBv4B BTN': 12,
+    'BBv4B UTG': 12, 'BBv4B HJ': 12.3, 'BBv4B CO': 13.5, 'BBv4B BTN': 13, 'BBv4B SB': 10,
+  }
+
+  // Lidos à mão nas formas de cada aba (coluna do vilão regular). Cada família traz o que a aba dá:
+  // vs 3bet, o open e o 4bet do Hero e o 3bet do vilão; vs 4bet, o 4bet do vilão e o open dele; vs jam, o open.
   it.each(SIZINGS_AGRESSAO)('os tamanhos da aba %s batem com as formas da aba', (aba, esperado) => {
     const spot = spotDaAba(aba)
-    // Ao enfrentar 4bet, a aba não traz o 3bet do Hero: ele vem do RFI do vilão.
-    const derivado =
-      spot.family === 'vs-4bet' && spot.villain.position
-        ? { threeBet: spotPorHero(spot.villain.position).sizings.vs3bet[spot.hero] }
-        : {}
-    expect(spot.sizings).toEqual({ ...esperado, ...derivado })
-  })
-
-  // Contra fish a planilha não traz esses tamanhos (ver o describe de sizings contra fish).
-  it('traz, em cada família contra regular, os tamanhos necessários para montar o spot', () => {
-    const violacoes = contraRegular.flatMap((s) => {
-      const z = s.sizings
-      const vilao = s.villain.position
-      const faltas =
-        s.family === 'vs-3bet'
-          ? [z.open, z.fourBet, vilao ? z.vs3bet[vilao] : undefined]
-          : s.family === 'vs-4bet'
-            ? [z.threeBet, z.vs4bet, vilao ? z.vsOpen[vilao] : undefined]
-            : s.family === 'vs-jam'
-              ? [z.open]
-              : []
-      return faltas.some((v) => v === undefined) ? [`${s.id}: faltam tamanhos de aposta (${JSON.stringify(z)})`] : []
-    })
-    expect(violacoes).toEqual([])
+    const doVs4bet = spot.family === 'vs-4bet' ? { threeBet: THREE_BET_NO_VS_4BET[aba] } : {}
+    expect(spot.sizings).toEqual({ ...esperado, ...doVs4bet })
   })
 
   // Coerência entre abas: o 4bet que o Hero enfrenta é o 4bet que a aba espelho do vilão diz dar.
@@ -1218,11 +1204,11 @@ const ROTULOS_FISH_POR_FAMILIA: Record<string, string[]> = {
 describe('contra fish: spots', () => {
   it('tem os 62 spots, um por aba: 2 de RFI, 10 de 3bet, 5 de defesa do BB, 15 de vs 3bet, 15 de vs 4bet e 15 de vs jam', () => {
     expect(contraFish).toHaveLength(62)
-    const porFamilia = (f: SpotFamily) => contraFish.filter((s) => s.family === f).map((s) => s.sourceSheet).sort()
-    for (const f of ['rfi', '3bet', 'bb-defense', 'vs-3bet', 'vs-4bet', 'vs-jam'] as const) {
-      expect(porFamilia(f)).toEqual(SPOTS_FISH.filter((l) => l[1] === f).map((l) => l[0]).sort())
+    const familias = ['rfi', '3bet', 'bb-defense', 'vs-3bet', 'vs-4bet', 'vs-jam'] as const
+    for (const f of familias) {
+      expect(abasNoJson(contraFish, f)).toEqual(abasNaTabela(SPOTS_FISH, f))
     }
-    expect(['rfi', '3bet', 'bb-defense', 'vs-3bet', 'vs-4bet', 'vs-jam'].map((f) => porFamilia(f as SpotFamily).length)).toEqual([2, 10, 5, 15, 15, 15])
+    expect(familias.map((f) => abasNoJson(contraFish, f).length)).toEqual([2, 10, 5, 15, 15, 15])
   })
 
   // O vilão é fish. No RFI contra fish (OR BTNvF e OR SBvF) não há posição de vilão.
@@ -1379,5 +1365,50 @@ describe('inventário das abas', () => {
     const por = (motivo: string) => relatorio.excluded.filter((e) => e.reason === motivo).map((e) => e.sheet)
     expect(por('3-handed')).toEqual(['3H UTG', '3H HJ', '3H CO', '3H BTN', '3H SB', '3H BB'])
     expect(por('heads-up')).toEqual(['HU SB 1', 'HU BB 1', 'HU SB 1.1', 'HU BB 1.1', 'HU SB 1.2'])
+  })
+})
+
+// ---------------------------------------------------------------------------
+// EV que a planilha traz em células cinza (fora do range): o JSON de ranges o descarta, mas o relatório
+// o registra, porque alguns são altos e parecem erro de pintura (um TT cinza com EV 10,31 no BTNvJAM BB,
+// onde o JJ é call com EV 21,93). Vale conferir com quem mantém a planilha.
+
+describe('EV descartado das células cinza', () => {
+  it('registra no relatório as 75 células cinza que trazem EV, e o JSON as deixa sem EV', () => {
+    expect(relatorio.discardedGrayEv).toHaveLength(75)
+    const violacoes = relatorio.discardedGrayEv
+      .filter((d) => {
+        const h = spotDaAba(d.sheet).hands.find((x) => x.hand === d.hand)
+        return h?.action !== 'out_of_range' || h.ev !== null
+      })
+      .map((d) => `${d.sheet} ${d.hand}`)
+    expect(violacoes).toEqual([])
+  })
+
+  // Os dois tons de cinza: 73 das 75 células com EV são do tom FF666666, e 2 do FF666566. Tratar os dois como
+  // "fora do range" é uma convenção que a planilha não confirma, e o EV residual sugere que o FF666666 pode
+  // ter outro sentido. Fica registrado para confirmar com o mantenedor.
+  it('tem EV residual quase só no tom de cinza FF666666', () => {
+    const porTom = Object.fromEntries(
+      ['FF666666', 'FF666566'].map((tom) => [tom, relatorio.discardedGrayEv.filter((d) => d.color === tom).length]),
+    )
+    expect(porTom).toEqual({ FF666666: 73, FF666566: 2 })
+  })
+
+  it('lista as 14 células cinza com EV acima de 1bb, que parecem erro de pintura da planilha', () => {
+    const altos = relatorio.discardedGrayEv
+      .filter((d) => Math.abs(d.ev) > 1)
+      .map((d) => `${d.sheet} ${d.hand} ${d.ev}`)
+      .sort()
+    expect(altos).toEqual(
+      [
+        'BTNvJAM BB TT 10.31',
+        'BBv4B SB A8s 3.33', 'BBv4B SB A7s 3.05', 'BBv4B SB A3s 3.02', 'BBv4B SB K9s 2.67', 'BBv4B SB K8s 2.24',
+        'BBv4B SB K7s 2.22', 'BBv4B SB Q9s 2.22', 'BBv4B SB K6s 2.16', 'BBv4B SB KJo 1.83', 'BBv4B SB ATo 1.83',
+        'BBv4B SB 97s 1.56',
+        'COvJAM SB TT 1.95',
+        'HJvJAM SB JJ 1.87',
+      ].sort(),
+    )
   })
 })

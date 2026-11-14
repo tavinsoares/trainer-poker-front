@@ -105,4 +105,9 @@ export interface InventoryReport {
   imported: string[]
   /** Abas que ficaram de fora, na ordem da planilha. */
   excluded: { sheet: string; reason: ExclusionReason }[]
+  /**
+   * EVs que a planilha traz em células cinza (fora do range) e que o JSON de ranges descarta,
+   * porque essas mãos nunca são sorteadas. Alguns são altos, e vale conferir com quem mantém a planilha.
+   */
+  discardedGrayEv: { sheet: string; hand: string; ev: number; color: string }[]
 }
