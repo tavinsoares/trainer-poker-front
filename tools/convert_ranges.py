@@ -34,7 +34,12 @@ DEFAULT_OUTPUT = PROJECT_ROOT / "data" / "ranges.json"
 
 # A planilha chama o HJ de MP.
 POSITION_ALIASES = {"MP": "HJ"}
+# Nomes de aba tratados. Em "X vY", X é o Hero e Y é quem abriu. Abas com sufixo (por
+# exemplo "BBvUTG 2.5", uma variante de tamanho de aposta) não casam e ficam de fora.
+_SEAT = r"(UTG|MP|HJ|CO|BTN|SB)"
 RFI_SHEET = re.compile(r"^RFI (UTG|MP|CO|BTN|SB)$")
+THREE_BET_SHEET = re.compile(rf"^3B {_SEAT}v{_SEAT}$")
+BB_DEFENSE_SHEET = re.compile(rf"^BBv{_SEAT}$")
 
 
 # Geometria de toda aba: matriz 13x13 a partir de G5. Cada mão ocupa 8 colunas,
@@ -54,6 +59,8 @@ LEGEND_TEXT = re.compile(r"^(.+?)\s*\n\s*(\d+(?:[.,]\d+)?)\s*%$")
 # abas tratadas; um rótulo novo faz a conversão falhar em vez de adivinhar.
 LABEL_ACTIONS = {
     "RFI": "raise",
+    "3BET": "raise",
+    "CALL": "call",
     "FOLD": "fold",
 }
 
@@ -75,8 +82,13 @@ POSITION_ORDER = ["UTG", "HJ", "CO", "BTN", "SB", "BB"]
 _POSITION = r"(UTG|MP|HJ|CO|BTN|SB|BB)"
 _SIZE = r"(\d+(?:[.,]\d+)?)\s*bb"
 SIZING_OPEN = re.compile(rf"^RFI\s+{_SIZE}$", re.IGNORECASE)
+SIZING_THREE_BET = re.compile(rf"^{_POSITION}\s+3B\s+{_SIZE}$", re.IGNORECASE)
+SIZING_VS_4BET = re.compile(rf"^vs\s+4B\s+{_SIZE}$", re.IGNORECASE)
 SIZING_VS_3BET = re.compile(rf"^vs\s+3B\s+{_POSITION}\s+{_SIZE}$", re.IGNORECASE)
 SIZING_VS_OPEN = re.compile(rf"^vs\s+RFI\s+{_POSITION}\s+{_SIZE}$", re.IGNORECASE)
+# A barra lateral tem uma coluna de tamanhos para o vilão regular e, em muitas abas, outra
+# (a mais à esquerda, na coluna 0) para o fish. Os spots contra regular ignoram a do fish.
+FISH_SIDEBAR_COLUMN = 0
 
 
 def parse_decimal(text: str) -> float | int:
@@ -94,8 +106,8 @@ class SizingShape(NamedTuple):
     """Uma forma da barra lateral que descreve um tamanho de aposta."""
 
     column: int
-    kind: str  # "open", "vs3bet" ou "vsOpen"
-    position: str | None
+    kind: str  # "open", "threeBet", "vs4bet", "vs3bet" ou "vsOpen"
+    position: str | None  # só nos tipos que citam uma posição
     size: float | int
 
 
@@ -146,42 +158,67 @@ class DrawingReader:
         self._zip.close()
 
 
-def read_sizings(drawings: DrawingReader, sheet_name: str) -> dict:
-    """Sizings do vilão regular de um RFI: o open do Hero e os 3bets e opens enfrentados.
+def parse_sizing(column: int, text: str) -> SizingShape | None:
+    """Interpreta o texto de uma forma como um tamanho de aposta, ou None se não for um."""
+    if match := SIZING_OPEN.match(text):
+        return SizingShape(column, "open", None, parse_decimal(match.group(1)))
+    if match := SIZING_VS_4BET.match(text):
+        return SizingShape(column, "vs4bet", None, parse_decimal(match.group(1)))
+    for kind, pattern in (("threeBet", SIZING_THREE_BET), ("vs3bet", SIZING_VS_3BET), ("vsOpen", SIZING_VS_OPEN)):
+        if match := pattern.match(text):
+            position = normalize_position(match.group(1).upper())
+            return SizingShape(column, kind, position, parse_decimal(match.group(2)))
+    return None
 
-    A barra lateral tem uma coluna para o vilão regular e, em algumas abas, outra para o
-    fish. A do regular é a que contém o "RFI Xbb" do próprio Hero; a outra é ignorada.
+
+def read_sizings(drawings: DrawingReader, spot: dict) -> dict:
+    """Sizings de um spot contra regular, lidos das formas da aba.
+
+    Tipos: `open` (open do próprio Hero), `threeBet` (3bet do Hero), `vs4bet` (4bet que o Hero
+    enfrentaria), `vs3bet` e `vsOpen` (3bets e opens enfrentados, por posição de quem os fez).
     """
-    parsed: list[SizingShape] = []
+    sheet_name = spot["sourceSheet"]
+    regular: list[SizingShape] = []
     for column, text in drawings.shapes(sheet_name):
-        for kind, pattern in (("open", SIZING_OPEN), ("vs3bet", SIZING_VS_3BET), ("vsOpen", SIZING_VS_OPEN)):
-            match = pattern.match(text)
-            if not match:
-                continue
-            if column is None:
-                raise ConversionError(f"aba '{sheet_name}': a forma '{text}' não tem posição na aba")
-            if kind == "open":
-                parsed.append(SizingShape(column, kind, None, parse_decimal(match.group(1))))
-            else:
-                position = normalize_position(match.group(1).upper())
-                parsed.append(SizingShape(column, kind, position, parse_decimal(match.group(2))))
-
-    open_shapes = [shape for shape in parsed if shape.kind == "open"]
-    if len(open_shapes) != 1:
-        raise ConversionError(
-            f"aba '{sheet_name}': esperava uma forma 'RFI Xbb' (open do Hero), achei {len(open_shapes)}"
-        )
-    regular_column, open_size = open_shapes[0].column, open_shapes[0].size
-
-    sizings: dict = {"open": open_size, "vs3bet": {}, "vsOpen": {}}
-    for column, kind, position, size in parsed:
-        if column != regular_column or kind == "open":
+        shape = parse_sizing(-1 if column is None else column, text)
+        if shape is None:
             continue
-        if position in sizings[kind]:
-            raise ConversionError(f"aba '{sheet_name}': tamanho repetido para '{kind}' {position}")
-        sizings[kind][position] = size
+        if column is None:
+            raise ConversionError(f"aba '{sheet_name}': a forma '{text}' não tem posição na aba")
+        if shape.column != FISH_SIDEBAR_COLUMN:
+            regular.append(shape)
+
+    sizings: dict = {}
+    for kind in ("open", "threeBet", "vs4bet"):
+        found = [shape for shape in regular if shape.kind == kind]
+        if len(found) > 1:
+            raise ConversionError(f"aba '{sheet_name}': achei {len(found)} formas de tamanho '{kind}', esperava no máximo uma")
+        if found:
+            sizings[kind] = found[0].size
     for kind in ("vs3bet", "vsOpen"):
-        sizings[kind] = {p: sizings[kind][p] for p in POSITION_ORDER if p in sizings[kind]}
+        by_position: dict[str, float | int] = {}
+        for shape in (s for s in regular if s.kind == kind):
+            if shape.position in by_position:
+                raise ConversionError(f"aba '{sheet_name}': tamanho repetido para '{kind}' {shape.position}")
+            by_position[shape.position] = shape.size
+        sizings[kind] = {p: by_position[p] for p in POSITION_ORDER if p in by_position}
+    for shape in regular:
+        if shape.kind == "threeBet" and shape.position != spot["hero"]:
+            raise ConversionError(
+                f"aba '{sheet_name}': o 3bet de {shape.position} não é do Hero ({spot['hero']})"
+            )
+
+    if spot["family"] == "rfi":
+        required = ["open"]
+    else:
+        required = ["threeBet", "vs4bet"]
+        if spot["villain"]["position"] not in sizings["vsOpen"]:
+            raise ConversionError(
+                f"aba '{sheet_name}': falta o tamanho do open do {spot['villain']['position']} (vs RFI)"
+            )
+    missing = [kind for kind in required if kind not in sizings]
+    if missing:
+        raise ConversionError(f"aba '{sheet_name}': faltam as formas de tamanho {', '.join(missing)}")
     return sizings
 
 
@@ -315,17 +352,27 @@ def normalize_position(raw: str) -> str:
 
 def classify_sheet(sheet_name: str) -> dict | None:
     """Devolve a identidade do spot de uma aba, ou None se a aba não é tratada ainda."""
-    match = RFI_SHEET.match(sheet_name)
-    if match:
-        hero = normalize_position(match.group(1))
-        return {
-            "id": f"rfi-{hero.lower()}-regular",
-            "family": "rfi",
-            "hero": hero,
-            "villain": {"type": "regular", "position": None},
-            "sourceSheet": sheet_name,
-        }
+    if match := RFI_SHEET.match(sheet_name):
+        return _identity("rfi", match.group(1), None, sheet_name)
+    if match := THREE_BET_SHEET.match(sheet_name):
+        return _identity("3bet", match.group(1), match.group(2), sheet_name)
+    if match := BB_DEFENSE_SHEET.match(sheet_name):
+        return _identity("bb-defense", "BB", match.group(1), sheet_name)
     return None
+
+
+def _identity(family: str, hero: str, villain_position: str | None, sheet_name: str) -> dict:
+    """Identidade de um spot contra regular. O id é estável e legível."""
+    hero = normalize_position(hero)
+    villain_position = normalize_position(villain_position) if villain_position else None
+    spot_id = f"{family}-{hero.lower()}" + (f"-vs-{villain_position.lower()}" if villain_position else "") + "-regular"
+    return {
+        "id": spot_id,
+        "family": family,
+        "hero": hero,
+        "villain": {"type": "regular", "position": villain_position},
+        "sourceSheet": sheet_name,
+    }
 
 
 def sha256_of(path: Path) -> str:
@@ -349,7 +396,7 @@ def convert(source: Path, imported_at: str) -> tuple[dict, list[str]]:
             spots.append(
                 {
                     **identity,
-                    "sizings": read_sizings(drawings, sheet_name),
+                    "sizings": read_sizings(drawings, identity),
                     "legend": list(legend.values()),
                     "hands": read_hands(sheet, legend),
                 }

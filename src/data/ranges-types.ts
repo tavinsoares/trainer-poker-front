@@ -3,7 +3,11 @@
 
 export type Position = 'UTG' | 'HJ' | 'CO' | 'BTN' | 'SB' | 'BB'
 
-export type SpotFamily = 'rfi'
+/**
+ * Família do spot: abrir o pote (`rfi`), 3bet contra um open (`3bet`) e defesa do BB
+ * contra um open (`bb-defense`).
+ */
+export type SpotFamily = 'rfi' | '3bet' | 'bb-defense'
 
 export type VillainType = 'regular' | 'fish'
 
@@ -21,8 +25,12 @@ export interface Manifest {
 }
 
 export interface Sizings {
-  /** Tamanho do open do Hero, em bb (quando o spot é um RFI). */
+  /** Tamanho do open do próprio Hero, em bb (a aba traz quando o Hero também abre o pote). */
   open?: number
+  /** Tamanho do 3bet do Hero, em bb (spots de 3bet e de defesa do BB). */
+  threeBet?: number
+  /** Tamanho do 4bet que o Hero enfrentaria depois de dar 3bet, em bb. */
+  vs4bet?: number
   /** Tamanho do 3bet que o Hero enfrenta, por posição de quem deu o 3bet, em bb. */
   vs3bet: Partial<Record<Position, number>>
   /** Tamanho do open que o Hero enfrenta, por posição de quem abriu, em bb. */
