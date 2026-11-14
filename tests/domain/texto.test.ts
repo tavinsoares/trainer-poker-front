@@ -67,12 +67,19 @@ describe('nomes de exibição', () => {
     expect(veredito('vs-jam-btn-vs-bb-regular', 'AA', 'call').title).toBe('AA é call neste spot')
   })
 
-  it('o texto usa os mesmos nomes dos botões da pergunta', () => {
+  it('o texto usa o nome do botão da ação: o título, a da ação certa; o corpo, a da escolhida', () => {
     const violacoes = dados.spots.flatMap((s) => {
-      const p = perguntaDe(s.id, s.hands.find((h) => h.action !== 'out_of_range')!.hand)
-      const v = avaliar(dados, p, p.options[0]!.action)
-      const nomes = p.options.map((o) => o.label)
-      return nomes.some((n) => v.title.includes(n.toLowerCase()) || v.body.includes(n)) ? [] : [`${s.id}: nenhum nome de botão no texto`]
+      const mao = s.hands.find((h) => h.action !== 'out_of_range')!
+      const p = perguntaDe(s.id, mao.hand)
+      const certa = p.options.find((o) => o.action === mao.action)
+      if (!certa) return [`${s.id}: ${mao.hand} não tem botão para ${mao.action}`]
+      return p.options.flatMap(({ action, label }) => {
+        const v = avaliar(dados, p, action)
+        return [
+          ...(v.title === `${mao.hand} é ${certa.label.toLowerCase()} neste spot` ? [] : [`${s.id}: título ${v.title}`]),
+          ...(v.body.startsWith(`Você escolheu ${label}`) ? [] : [`${s.id}: corpo com a escolha ${action} sem o nome ${label}`]),
+        ]
+      })
     })
     expect(violacoes).toEqual([])
   })

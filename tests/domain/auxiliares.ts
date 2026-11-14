@@ -43,8 +43,9 @@ export const perguntaDe = (spotId: string, mao: string, base: RangesData = dados
   const contraparte = base.spots.find((s) => s.id === spotId.replace(/-fish$/, '-regular') && s !== spot)
   const sorteaveis = spot.hands.filter((h) => h.action !== 'out_of_range')
   const total = sorteaveis.reduce((soma, h) => soma + h.combos, 0)
-  const antes = sorteaveis.slice(0, sorteaveis.findIndex((h) => h.hand === mao)).reduce((soma, h) => soma + h.combos, 0)
-  if (!sorteaveis.some((h) => h.hand === mao)) throw new Error(`${spotId}: a mão ${mao} não é sorteável`)
+  const indice = sorteaveis.findIndex((h) => h.hand === mao)
+  if (indice < 0) throw new Error(`${spotId}: a mão ${mao} não é sorteável`)
+  const antes = sorteaveis.slice(0, indice).reduce((soma, h) => soma + h.combos, 0)
   const roteiro = [0, (antes + 0.5) / total]
   let chamada = 0
   const rng = () => roteiro[Math.min(chamada++, roteiro.length - 1)]!
