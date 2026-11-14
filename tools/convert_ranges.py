@@ -44,6 +44,11 @@ BB_DEFENSE_SHEET = re.compile(rf"^BBv{_SEAT}$")
 # Enfrentar agressão: o Hero é quem abriu (vs 3B e vs JAM) ou quem deu o 3bet (vs 4B).
 VS_AGGRESSION_SHEET = re.compile(rf"^{_SEAT_OR_BB}v(3B|4B|JAM) {_SEAT_OR_BB}$")
 VS_AGGRESSION_FAMILIES = {"3B": "vs-3bet", "4B": "vs-4bet", "JAM": "vs-jam"}
+# Contra fish: o mesmo nome da aba de regular, com " F" no fim. E o RFI contra fish, que só BTN e SB têm.
+FISH_VS_SHEET = re.compile(rf"^{_SEAT_OR_BB}v{_SEAT_OR_BB} F$")
+FISH_VS_AGGRESSION_SHEET = re.compile(rf"^{_SEAT_OR_BB}v(4B|JAM) {_SEAT_OR_BB} F$")
+FISH_RFI_SHEET = re.compile(r"^OR (BTN|SB)vF$")
+SEAT_ORDER = ["UTG", "HJ", "CO", "BTN", "SB", "BB"]  # ordem de ação no preflop, do primeiro ao último
 
 
 # Geometria de toda aba: matriz 13x13 a partir de G5. Cada mão ocupa 8 colunas,
@@ -259,14 +264,46 @@ def ordered_sizings(sizings: dict) -> dict:
     return {key: sizings[key] for key in SIZING_KEY_ORDER if key in sizings}
 
 
+def read_fish_sizings(drawings: DrawingReader, sheet_name: str) -> dict[str, dict[str, float | int]]:
+    """Tamanhos do fish na coluna "vs FISH" da barra lateral de uma aba contra regular.
+
+    As abas contra fish não trazem número nenhum (só rótulos como "vs RFI UTG"). Os tamanhos do
+    fish ficam nessa coluna das abas contra regular: o open do fish (vs RFI) e o 3bet do fish (vs 3B).
+    """
+    found: dict[str, dict[str, float | int]] = {"vs3bet": {}, "vsOpen": {}}
+    for column, text in drawings.shapes(sheet_name):
+        if column != FISH_SIDEBAR_COLUMN:
+            continue
+        shape = parse_sizing(column, text)
+        if shape is None:
+            continue
+        if shape.kind not in found:
+            raise ConversionError(f"aba '{sheet_name}': forma inesperada na coluna do fish: '{text}'")
+        found[shape.kind][shape.position] = shape.size
+    return found
+
+
+def merge_fish_sizings(table: dict[str, dict[str, float | int]], found: dict, sheet_name: str) -> None:
+    """Junta os tamanhos de fish de uma aba aos do Hero. Dois valores diferentes para o mesmo caso falham."""
+    for kind, by_position in found.items():
+        for position, size in by_position.items():
+            if table[kind].get(position, size) != size:
+                raise ConversionError(
+                    f"aba '{sheet_name}': o tamanho do fish '{kind}' {position} ({size}bb) conflita com "
+                    f"outra aba do mesmo Hero ({table[kind][position]}bb)"
+                )
+            table[kind][position] = size
+
+
 def derive_sizings(spots: list[dict]) -> None:
     """Completa o `threeBet` dos spots de vs 4bet com o que o RFI do vilão diz enfrentar.
 
     A aba de "enfrentar 4bet depois de dar 3bet" traz o 4bet e o open do vilão, mas não o
     3bet que o próprio Hero deu. Esse tamanho está na aba de RFI do vilão ("vs 3B <Hero>").
     """
-    rfi_by_hero = {spot["hero"]: spot for spot in spots if spot["family"] == "rfi"}
-    for spot in spots:
+    regular = [spot for spot in spots if spot["villain"]["type"] == "regular"]
+    rfi_by_hero = {spot["hero"]: spot for spot in regular if spot["family"] == "rfi"}
+    for spot in regular:
         if spot["family"] != "vs-4bet":
             continue
         villain = spot["villain"]["position"]
@@ -421,19 +458,37 @@ def classify_sheet(sheet_name: str) -> dict | None:
         return _identity("bb-defense", "BB", match.group(1), sheet_name)
     if match := VS_AGGRESSION_SHEET.match(sheet_name):
         return _identity(VS_AGGRESSION_FAMILIES[match.group(2)], match.group(1), match.group(3), sheet_name)
+    # Contra fish. As abas "X vY F" não dizem se o Hero enfrenta um open ou um 3bet: a família sai
+    # da ordem de ação. Quem age depois de Y enfrenta o open dele (3bet, ou defesa do BB); quem age
+    # antes de Y enfrenta o 3bet dele. A suíte confere a regra pelos rótulos de legenda de cada aba.
+    if match := FISH_VS_SHEET.match(sheet_name):
+        hero, villain = normalize_position(match.group(1)), normalize_position(match.group(2))
+        if SEAT_ORDER.index(hero) > SEAT_ORDER.index(villain):
+            family = "bb-defense" if hero == "BB" else "3bet"
+        else:
+            family = "vs-3bet"
+        return _identity(family, hero, villain, sheet_name, villain_type="fish")
+    if match := FISH_VS_AGGRESSION_SHEET.match(sheet_name):
+        return _identity(
+            VS_AGGRESSION_FAMILIES[match.group(2)], match.group(1), match.group(3), sheet_name, villain_type="fish"
+        )
+    if match := FISH_RFI_SHEET.match(sheet_name):
+        return _identity("rfi", match.group(1), None, sheet_name, villain_type="fish")
     return None
 
 
-def _identity(family: str, hero: str, villain_position: str | None, sheet_name: str) -> dict:
-    """Identidade de um spot contra regular. O id é estável e legível."""
+def _identity(
+    family: str, hero: str, villain_position: str | None, sheet_name: str, villain_type: str = "regular"
+) -> dict:
+    """Identidade de um spot. O id é estável e legível."""
     hero = normalize_position(hero)
     villain_position = normalize_position(villain_position) if villain_position else None
-    spot_id = f"{family}-{hero.lower()}" + (f"-vs-{villain_position.lower()}" if villain_position else "") + "-regular"
+    target = f"-vs-{villain_position.lower()}" if villain_position else ""
     return {
-        "id": spot_id,
+        "id": f"{family}-{hero.lower()}{target}-{villain_type}",
         "family": family,
         "hero": hero,
-        "villain": {"type": "regular", "position": villain_position},
+        "villain": {"type": villain_type, "position": villain_position},
         "sourceSheet": sheet_name,
     }
 
@@ -448,18 +503,39 @@ def convert(source: Path, imported_at: str) -> tuple[dict, list[str]]:
     drawings = DrawingReader(source)
     spots = []
     skipped = []
+    fish_identities = []
+    fish_sizings_by_hero: dict[str, dict] = {}
     try:
         for sheet_name in workbook.sheetnames:
             identity = classify_sheet(sheet_name)
             if identity is None:
                 skipped.append(sheet_name)
-                continue
-            sheet = workbook[sheet_name]
+            elif identity["villain"]["type"] == "fish":
+                fish_identities.append(identity)  # depois, quando os tamanhos de fish dos Heróis estiverem juntos
+            else:
+                sheet = workbook[sheet_name]
+                legend = read_legend(sheet)
+                spots.append(
+                    {
+                        **identity,
+                        "sizings": read_sizings(drawings, identity),
+                        "legend": list(legend.values()),
+                        "hands": read_hands(sheet, legend),
+                    }
+                )
+                table = fish_sizings_by_hero.setdefault(identity["hero"], {"vs3bet": {}, "vsOpen": {}})
+                merge_fish_sizings(table, read_fish_sizings(drawings, sheet_name), sheet_name)
+        for identity in fish_identities:
+            sheet = workbook[identity["sourceSheet"]]
             legend = read_legend(sheet)
+            table = fish_sizings_by_hero.get(identity["hero"], {"vs3bet": {}, "vsOpen": {}})
             spots.append(
                 {
                     **identity,
-                    "sizings": read_sizings(drawings, identity),
+                    "sizings": {
+                        kind: {p: table[kind][p] for p in POSITION_ORDER if p in table[kind]}
+                        for kind in ("vs3bet", "vsOpen")
+                    },
                     "legend": list(legend.values()),
                     "hands": read_hands(sheet, legend),
                 }
