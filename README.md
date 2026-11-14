@@ -15,6 +15,7 @@ Vite, Vue 3 (Composition API, `<script setup>`), TypeScript estrito, Pinia e Vit
 | `npm install` | Instala as dependências. |
 | `npm run dev` | Sobe o servidor de desenvolvimento. |
 | `npm run build` | Checa os tipos e gera o site estático. |
+| `npm run preview` | Serve o build de `npm run build` localmente. |
 | `npm run typecheck` | Só checa os tipos. |
 | `npm run validate:data` | Roda só a suíte de validação dos dados. |
 | `npm test` | Roda toda a suíte do Vitest. |

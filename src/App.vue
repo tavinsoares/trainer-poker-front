@@ -8,6 +8,14 @@
   </main>
 </template>
 
+<style>
+/* Reset mínimo do body: sem margem padrão, o fundo escuro cobre a página inteira. */
+body {
+  margin: 0;
+  background: #0b0f14;
+}
+</style>
+
 <style scoped>
 .app {
   min-height: 100vh;
