@@ -1,6 +1,6 @@
 // Tipos do domínio de spots (spec 2). Puro TypeScript: sem Vue, sem Pinia.
 
-import type { Action, Spot } from '../data/ranges-types.ts'
+import type { Action, Position, Spot } from '../data/ranges-types.ts'
 
 /** Ação que o aluno pode escolher: as canônicas, menos "fora do range", que nunca é pergunta. */
 export type AnswerableAction = Exclude<Action, 'out_of_range'>
@@ -16,10 +16,36 @@ export interface Card {
   suit: Suit
 }
 
-/** Botão oferecido ao aluno: a ação canônica e o nome de exibição. */
+/** Botão oferecido ao aluno: a ação canônica, o nome de exibição e, em raise e jam, o tamanho em bb. */
 export interface ActionOption {
   action: AnswerableAction
   label: string
+  size?: number
+  /** O tamanho não vem da planilha para este vilão: foi emprestado do spot equivalente contra regular. */
+  estimated?: boolean
+}
+
+/** Jogadas de apostas que aparecem na mesa. */
+export type BetAction = 'open' | '3bet' | '4bet' | 'jam'
+
+/** Uma aposta feita antes da decisão do Hero, com o total em bb (já contando o blind do SB e do BB). */
+export interface Bet {
+  position: Position
+  action: BetAction
+  size: number
+  estimated: boolean
+}
+
+/**
+ * Um dos seis assentos: o Hero, quem já foldou, quem agiu (com a última aposta) ou quem ainda
+ * não agiu (nas famílias em que a primeira decisão é do Hero).
+ */
+export interface Seat {
+  position: Position
+  state: 'hero' | 'folded' | 'acted' | 'waiting'
+  action?: BetAction
+  size?: number
+  estimated?: boolean
 }
 
 /** Resultado da avaliação de uma resposta: pontuação binária, sem limiares. */
@@ -37,7 +63,15 @@ export interface Question {
     /** As duas cartas, a mais alta primeiro. */
     cards: [Card, Card]
   }
-  /** Pote em bb quando o Hero decide. */
+  /** Stack efetivo, em bb. */
+  stack: number
+  /** Pote em bb quando o Hero decide, contando os blinds. */
   pot: number
+  /** Quanto o Hero paga para continuar, em bb. `null` no RFI, em que não há aposta a enfrentar. */
+  toCall: number | null
+  /** As apostas feitas até a vez do Hero, em ordem (inclusive as do próprio Hero). */
+  history: Bet[]
+  /** Os seis assentos, de UTG a BB. */
+  seats: Seat[]
   options: ActionOption[]
 }

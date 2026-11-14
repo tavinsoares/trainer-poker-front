@@ -1,4 +1,5 @@
 import type { Hand, RangesData } from '../data/ranges-types.ts'
+import { montarCena } from './cena.ts'
 import type { Card, Question, Rng, Suit } from './tipos.ts'
 
 const NAIPES: Suit[] = ['s', 'h', 'd', 'c']
@@ -39,7 +40,7 @@ function escolherCombinacao(maos: Hand[], rng: Rng): { mao: Hand; indice: number
 }
 
 export function sortearPergunta(dados: RangesData, rng: Rng): Question {
-  const elegiveis = dados.spots.filter((s) => s.family === 'rfi' && s.villain.type === 'regular')
+  const elegiveis = dados.spots.filter((s) => ['rfi', '3bet', 'bb-defense'].includes(s.family) && s.villain.type === 'regular')
   const spot = elegiveis[Math.floor(rng() * elegiveis.length)]
   if (!spot) throw new Error('não há spot para sortear')
 
@@ -58,10 +59,6 @@ export function sortearPergunta(dados: RangesData, rng: Rng): Question {
   return {
     spot: { id: spot.id, family: spot.family, hero: spot.hero, villain: spot.villain },
     hand: { name: mao.hand, cards: cartas },
-    pot: 1.5,
-    options: [
-      { action: 'fold', label: 'Fold' },
-      { action: 'raise', label: 'Open' },
-    ],
+    ...montarCena(dados, spot),
   }
 }

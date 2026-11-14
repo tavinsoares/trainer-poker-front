@@ -25,14 +25,21 @@ export const amostra = (n: number, semente: number, base: RangesData = dados) =>
 }
 
 /**
- * Uma pergunta para cada par (spot, mão) que o sorteio consegue produzir, achada por amostragem
- * com semente fixa (o sorteio de RFI alcança as 845 em 120 mil tentativas).
+ * A pergunta de um spot e uma mão específicos, forçada com um rng roteirizado: a primeira chamada
+ * escolhe o spot (o primeiro da lista restrita) e a segunda, a combinação (a primeira da mão, na
+ * ordem da matriz, entre as combinações das mãos que chegam ao spot). A lista restrita traz
+ * também o spot equivalente contra regular, que o sorteio usa para os tamanhos que faltam.
  */
-export const perguntasPorSpotEMao = (n = 120_000, semente = 7): Map<string, Question> => {
-  const porChave = new Map<string, Question>()
-  for (const pergunta of amostra(n, semente)) {
-    const chave = `${pergunta.spot.id}|${pergunta.hand.name}`
-    if (!porChave.has(chave)) porChave.set(chave, pergunta)
-  }
-  return porChave
+export const perguntaDe = (spotId: string, mao: string, base: RangesData = dados): Question => {
+  const spot = base.spots.find((s) => s.id === spotId)
+  if (!spot) throw new Error(`o spot ${spotId} não existe nos dados`)
+  const contraparte = base.spots.find((s) => s.id === spotId.replace(/-fish$/, '-regular') && s !== spot)
+  const sorteaveis = spot.hands.filter((h) => h.action !== 'out_of_range')
+  const total = sorteaveis.reduce((soma, h) => soma + h.combos, 0)
+  const antes = sorteaveis.slice(0, sorteaveis.findIndex((h) => h.hand === mao)).reduce((soma, h) => soma + h.combos, 0)
+  if (!sorteaveis.some((h) => h.hand === mao)) throw new Error(`${spotId}: a mão ${mao} não é sorteável`)
+  const roteiro = [0, (antes + 0.5) / total]
+  let chamada = 0
+  const rng = () => roteiro[Math.min(chamada++, roteiro.length - 1)]!
+  return sortearPergunta({ ...base, spots: [spot, ...(contraparte ? [contraparte] : [])] }, rng)
 }

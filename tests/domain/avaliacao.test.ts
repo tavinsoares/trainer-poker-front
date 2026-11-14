@@ -1,15 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { avaliar } from '../../src/domain/avaliacao.ts'
-import { dados, perguntasPorSpotEMao } from './auxiliares.ts'
+import { dados, perguntaDe } from './auxiliares.ts'
 
 // Seam 2 da spec 2: a avaliação (dados, pergunta e ação escolhida → veredito).
-// Roda contra o ranges.json real. As perguntas vêm do sorteio, achadas por amostragem.
-const perguntas = perguntasPorSpotEMao()
-const pergunta = (spot: string, mao: string) => {
-  const achada = perguntas.get(`${spot}|${mao}`)
-  if (!achada) throw new Error(`o sorteio não produziu ${mao} no spot ${spot}`)
-  return achada
-}
+// Roda contra o ranges.json real. As perguntas vêm do sorteio, com o rng roteirizado.
+const pergunta = perguntaDe
 
 describe('avaliação do RFI contra regular', () => {
   // Conferidos na planilha (aba RFI UTG): AA abre e K8s é fold.
@@ -34,11 +29,7 @@ describe('avaliação do RFI contra regular', () => {
     let conferidas = 0
     for (const spot of rfi) {
       for (const mao of spot.hands) {
-        const p = perguntas.get(`${spot.id}|${mao.hand}`)
-        if (!p) {
-          violacoes.push(`${spot.id}: o sorteio não produziu a mão ${mao.hand}`)
-          continue
-        }
+        const p = pergunta(spot.id, mao.hand)
         for (const { action } of p.options) {
           conferidas++
           const veredito = avaliar(dados, p, action)
@@ -50,6 +41,39 @@ describe('avaliação do RFI contra regular', () => {
     }
     expect(violacoes).toEqual([])
     expect(conferidas).toBe(845 * 2)
+  })
+
+  // Na aba 3B COvUTG, AA é 3bet (EV 15,71), 76s é fold e nenhuma mão é call (conferido na planilha).
+  it('no 3bet, call numa mão de 3bet é erro, e o 3bet em mão de fold também', () => {
+    expect(avaliar(dados, pergunta('3bet-co-vs-utg-regular', 'AA'), 'call')).toMatchObject({ correct: false, correctAction: 'raise' })
+    expect(avaliar(dados, pergunta('3bet-co-vs-utg-regular', 'AA'), 'raise')).toMatchObject({ correct: true })
+    expect(avaliar(dados, pergunta('3bet-co-vs-utg-regular', '76s'), 'raise')).toMatchObject({ correct: false, correctAction: 'fold' })
+  })
+
+  // Na defesa do BB, KQo contra o UTG é call (EV 0,47) e 76s é 3bet.
+  it('na defesa do BB, o call vale numa mão de call, e o fold nela é erro', () => {
+    expect(avaliar(dados, pergunta('bb-defense-bb-vs-utg-regular', 'KQo'), 'call')).toMatchObject({ correct: true })
+    expect(avaliar(dados, pergunta('bb-defense-bb-vs-utg-regular', 'KQo'), 'fold')).toMatchObject({ correct: false, correctAction: 'call' })
+    expect(avaliar(dados, pergunta('bb-defense-bb-vs-utg-regular', '76s'), 'raise')).toMatchObject({ correct: true })
+  })
+
+  it('nos 15 spots de 3bet e defesa do BB, só a ação da planilha é correta, em todas as mãos', () => {
+    const spots = dados.spots.filter((s) => ['3bet', 'bb-defense'].includes(s.family) && s.villain.type === 'regular')
+    const violacoes: string[] = []
+    let conferidas = 0
+    for (const spot of spots) {
+      for (const mao of spot.hands) {
+        const p = pergunta(spot.id, mao.hand)
+        for (const { action } of p.options) {
+          conferidas++
+          if (avaliar(dados, p, action).correct !== (action === mao.action)) {
+            violacoes.push(`${spot.id}: ${mao.hand} com ${action} deveria ser ${action === mao.action ? 'correto' : 'erro'}`)
+          }
+        }
+      }
+    }
+    expect(violacoes).toEqual([])
+    expect(conferidas).toBe(15 * 169 * 3) // fold, call e 3bet em cada mão
   })
 
   it('dá erro em qualquer outra ação, e ainda diz qual era a certa', () => {

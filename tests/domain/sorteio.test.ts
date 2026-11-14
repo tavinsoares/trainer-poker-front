@@ -17,11 +17,15 @@ const dadosComForaDoRange: RangesData = {
     })),
 }
 
+// Só os cinco RFI, na ordem do JSON: os testes de rng constante dependem da lista de spots, e
+// esta lista não muda quando outras famílias entram no sorteio.
+const soRfi: RangesData = { ...dados, spots: dados.spots.filter((s) => s.family === 'rfi' && s.villain.type === 'regular') }
+
 describe('sorteio do RFI contra regular', () => {
   // Valores de referência lidos no JSON por um script à parte: os cinco RFI contra regular
   // vêm na ordem UTG, HJ, CO, BTN, SB, e cada um tem 1326 combos (nenhuma mão fora do range).
   it('com rng 0 sorteia a primeira combinação do primeiro spot: AA de espadas e copas no UTG', () => {
-    const pergunta = sortearPergunta(dados, constante(0))
+    const pergunta = sortearPergunta(soRfi, constante(0))
     expect(pergunta.spot).toMatchObject({
       id: 'rfi-utg-regular',
       family: 'rfi',
@@ -38,7 +42,7 @@ describe('sorteio do RFI contra regular', () => {
   })
 
   it('com rng quase 1 sorteia a última combinação do último spot: 22 de ouros e paus no SB', () => {
-    const pergunta = sortearPergunta(dados, constante(0.99999))
+    const pergunta = sortearPergunta(soRfi, constante(0.99999))
     expect(pergunta.spot.id).toBe('rfi-sb-regular')
     expect(pergunta.hand).toEqual({
       name: '22',
@@ -52,7 +56,7 @@ describe('sorteio do RFI contra regular', () => {
   // 0,5 × 1326 combos = a combinação 663 do CO, que cai em A6o (fold), na 8ª das 12 combinações
   // (ordem: a carta mais alta em espadas, copas, ouros, paus, cada uma com as outras três).
   it('com rng 0,5 sorteia pelo peso dos combos: A6o de ouros e 6 de copas no CO', () => {
-    const pergunta = sortearPergunta(dados, constante(0.5))
+    const pergunta = sortearPergunta(soRfi, constante(0.5))
     expect(pergunta.spot.id).toBe('rfi-co-regular')
     expect(pergunta.hand).toEqual({
       name: 'A6o',
@@ -65,7 +69,7 @@ describe('sorteio do RFI contra regular', () => {
 
   // Quase 1: o último spot, a última mão, e a combinação 1324 de 1326 (a 5ª das 6 do par: copas e paus).
   it('com rng 0,999 sorteia o SB e a 22 de copas e paus, sem passar do fim', () => {
-    const pergunta = sortearPergunta(dados, constante(0.999))
+    const pergunta = sortearPergunta(soRfi, constante(0.999))
     expect(pergunta.spot.id).toBe('rfi-sb-regular')
     expect(pergunta.hand).toEqual({
       name: '22',
@@ -128,21 +132,20 @@ describe('sorteio do RFI contra regular', () => {
     expect(violacoes).toEqual([])
   })
 
-  it('descreve o RFI com pote de 1,5bb e os botões Fold e Open (raise)', () => {
-    for (const pergunta of amostra(50, 5)) {
+  it('descreve o RFI com pote de 1,5bb e os botões Fold e Open (raise, com o tamanho do open)', () => {
+    for (const pergunta of amostra(50, 5, soRfi)) {
       expect(pergunta.pot).toBe(1.5)
-      expect(pergunta.options).toEqual([
-        { action: 'fold', label: 'Fold' },
-        { action: 'raise', label: 'Open' },
-      ])
+      expect(pergunta.options.map((o) => [o.action, o.label])).toEqual([['fold', 'Fold'], ['raise', 'Open']])
     }
   })
 
-  it('só sorteia spots de RFI contra regular, os cinco, em todas as posições que abrem', () => {
-    const spots = new Set(amostra(2000, 6).map((p) => p.spot.id))
-    expect([...spots].sort()).toEqual(
-      ['rfi-btn-regular', 'rfi-co-regular', 'rfi-hj-regular', 'rfi-sb-regular', 'rfi-utg-regular'],
-    )
+  it('sorteia os spots de RFI, 3bet e defesa do BB contra regular (20 spots), e nada além', () => {
+    const spots = new Set(amostra(5000, 6).map((p) => p.spot.id))
+    const esperados = dados.spots
+      .filter((s) => ['rfi', '3bet', 'bb-defense'].includes(s.family) && s.villain.type === 'regular')
+      .map((s) => s.id)
+    expect(esperados).toHaveLength(20)
+    expect([...spots].sort()).toEqual([...esperados].sort())
   })
 
   it('nunca sorteia mão fora do range', () => {
