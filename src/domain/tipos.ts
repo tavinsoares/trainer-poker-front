@@ -63,6 +63,19 @@ export interface Verdict {
   correct: boolean
   correctAction: AnswerableAction
   chosenAction: AnswerableAction
+  /**
+   * EV da ação certa em bb, quando ela não é fold e a planilha traz o número. O fold vale zero
+   * por definição, então o EV que a planilha escreve numa mão de fold não é usado.
+   */
+  ev: number | null
+  /** EV deixado na mesa: fold errado numa mão de ação com EV positivo, contra regular. Igual a `ev`. */
+  evLeft: number | null
+  /**
+   * Mão de borda: contra regular, mão de ação sem EV na planilha (frequência provavelmente mista).
+   * A pontuação não muda por isso.
+   */
+  edgeHand: boolean
+  villainType: VillainType
 }
 
 export interface Question {
