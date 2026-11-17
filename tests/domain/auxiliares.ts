@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import type { RangesData } from '../../src/data/ranges-types.ts'
-import { criarSessao, type Dependencias, type Sessao } from '../../src/domain/sessao.ts'
+import { criarSessao, type Dependencias, type RegistroDeResposta, type Sessao } from '../../src/domain/sessao.ts'
 import { sortearPergunta } from '../../src/domain/sorteio.ts'
 import type { Filtros, Question } from '../../src/domain/tipos.ts'
 
@@ -65,6 +65,49 @@ export const sessaoDe = (spotId: string, mao: string): Sessao => ({
   estado: 'perguntando',
   veredito: null,
   pergunta: perguntaDe(spotId, mao),
+})
+
+/** Um `Storage` em memória (spec 5) que sabe falhar a pedido, como um navegador bloqueado ou cheio. */
+export const armazenamentoEmMemoria = (inicial: Record<string, string> = {}) => {
+  const itens = new Map(Object.entries(inicial))
+  const falhas = { aoLer: false, aoGravar: false }
+  return {
+    itens,
+    falhas,
+    getItem: (chave: string): string | null => {
+      if (falhas.aoLer) throw new Error('armazenamento bloqueado')
+      return itens.get(chave) ?? null
+    },
+    setItem: (chave: string, valor: string): void => {
+      if (falhas.aoGravar) throw new Error('cota excedida')
+      itens.set(chave, valor)
+    },
+    removeItem: (chave: string): void => {
+      itens.delete(chave)
+    },
+  }
+}
+
+/** Um registro de resposta válido (um acerto de A5s no BB contra o BTN), com campos trocáveis. */
+export const registroDeTeste = (parcial: Partial<RegistroDeResposta> = {}): RegistroDeResposta => ({
+  sessionId: 's1',
+  answeredAt: '2026-11-16T10:00:00.000Z',
+  spotId: 'bb-defense-bb-vs-btn-regular',
+  family: 'bb-defense',
+  hero: 'BB',
+  villainType: 'regular',
+  hand: 'A5s',
+  cards: [
+    { rank: 'A', suit: 's' },
+    { rank: '5', suit: 's' },
+  ],
+  chosenAction: 'raise',
+  correctAction: 'raise',
+  correct: true,
+  ev: 0.5,
+  evLeft: null,
+  edgeHand: false,
+  ...parcial,
 })
 
 /** O primeiro nome de mão que chega ao spot (não é fora do range). */

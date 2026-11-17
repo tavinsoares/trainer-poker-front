@@ -12,6 +12,8 @@ import {
   responder as responderNaSessao,
   resumo,
   teclar as teclarNaSessao,
+  treinar as treinarNaSessao,
+  type AlvoDoTreino,
   type Dependencias,
   type EventoDeTecla,
   type RegistroDeResposta,
@@ -56,6 +58,7 @@ export const useDrillStore = defineStore('drill', () => {
   const teclar = (evento: EventoDeTecla) => aplicar(teclarNaSessao(sessao.value, evento))
   const mudarFiltros = (mudanca: Partial<Filtros>) => aplicar(mudarFiltrosDaSessao(sessao.value, mudanca))
   const limparFiltros = () => aplicar(limparFiltrosDaSessao(sessao.value))
+  const treinar = (alvo: AlvoDoTreino) => aplicar(treinarNaSessao(sessao.value, alvo))
   const encerrar = () => aplicar(encerrarSessao(sessao.value))
   const novaSessao = () => aplicar(novaSessaoDe(sessao.value))
   const definirGancho = (gancho: AoRegistrar | null) => {
@@ -74,6 +77,7 @@ export const useDrillStore = defineStore('drill', () => {
     teclar,
     mudarFiltros,
     limparFiltros,
+    treinar,
     encerrar,
     novaSessao,
     definirGancho,

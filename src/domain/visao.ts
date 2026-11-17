@@ -1,4 +1,5 @@
 import type { Position, Spot, SpotFamily, VillainType } from '../data/ranges-types.ts'
+import { dataBr } from './formato.ts'
 import { numeroDaPergunta, spotDaPergunta, type Sessao } from './sessao.ts'
 import type { AnswerableAction, Bet, Card, Question, Seat, Suit } from './tipos.ts'
 
@@ -190,8 +191,6 @@ export interface VisaoDoFeedback {
 }
 
 const evEmBb = (n: number): string => `${n > 0 ? '+' : ''}${String(n).replace('.', ',')} bb`
-
-const dataBr = (iso: string): string => iso.split('-').reverse().join('/')
 
 /** O feedback da pergunta respondida. A sessão precisa estar em `respondida`. */
 export function visaoDoFeedback(sessao: Sessao): VisaoDoFeedback {

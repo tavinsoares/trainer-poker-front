@@ -1,11 +1,11 @@
 <script setup lang="ts">
-// Navegação: só o Drill existe na v1 (spec 4). Estudo, Leaks e Config entram nas specs seguintes
-// e aparecem desabilitados, sem roteador.
+// Navegação (spec 5): Drill, Leaks e Config são telas de verdade; Estudo ainda não existe e
+// aparece desabilitado, sem link. O roteador marca a tela atual com `aria-current`.
 const itens = [
-  { nome: 'Drill', ativo: true },
-  { nome: 'Estudo', ativo: false },
-  { nome: 'Leaks', ativo: false },
-  { nome: 'Config', ativo: false },
+  { nome: 'Drill', para: '/' },
+  { nome: 'Estudo', para: null },
+  { nome: 'Leaks', para: '/leaks' },
+  { nome: 'Config', para: '/config' },
 ]
 </script>
 
@@ -15,7 +15,9 @@ const itens = [
       <span class="app-header__brand">Trainer <br />Poker</span>
       <nav class="app-header__nav" aria-label="Telas">
         <template v-for="item in itens" :key="item.nome">
-          <span v-if="item.ativo" class="app-header__item app-header__item--active" aria-current="page">{{ item.nome }}</span>
+          <RouterLink v-if="item.para" :to="item.para" class="app-header__item" exact-active-class="app-header__item--active">
+            {{ item.nome }}
+          </RouterLink>
           <span v-else class="app-header__item app-header__item--disabled" aria-disabled="true" title="Em breve">{{ item.nome }}</span>
         </template>
       </nav>
@@ -57,6 +59,19 @@ const itens = [
   color: var(--text-muted);
   font-size: 14px;
   font-weight: 500;
+}
+
+a.app-header__item {
+  text-decoration: none;
+}
+
+a.app-header__item:hover {
+  color: var(--text);
+}
+
+a.app-header__item:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
 }
 
 .app-header__item--active {

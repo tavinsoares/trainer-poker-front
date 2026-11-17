@@ -149,6 +149,26 @@ export function mudarFiltros(sessao: Sessao, mudanca: Partial<Filtros>): Sessao 
   return sessao.estado === 'respondida' ? atualizada : sortear(atualizada)
 }
 
+/** O spot de uma linha dos leaks: o que "Treinar" usa para filtrar o drill. */
+export interface AlvoDoTreino {
+  vilao: VillainType
+  familia: SpotFamily
+  hero: Position
+}
+
+/**
+ * "Treinar" a partir dos leaks (spec 5): aplica o vilão, o tipo de spot e a posição do Hero do
+ * alvo e deixa uma pergunta nova aberta, qualquer que seja o estado. O filtro não escolhe a
+ * posição do vilão da ação anterior, então caem todos os spots daquele vilão, tipo e posição.
+ * Encerrada, começa uma sessão nova (id novo, contadores zerados) já com esse filtro; nos demais
+ * estados o id e os contadores se mantêm.
+ */
+export function treinar(sessao: Sessao, alvo: AlvoDoTreino): Sessao {
+  const filtros: Filtros = { vilao: alvo.vilao, familias: [alvo.familia], posicoes: [alvo.hero] }
+  if (sessao.estado === 'encerrada') return criarSessao(sessao.deps, filtros)
+  return sortear({ ...sessao, filtros })
+}
+
 /** Volta os filtros ao padrão (vilão Ambos, tipo de spot e posição vazios, que valem "todos"). */
 export const limparFiltros = (sessao: Sessao): Sessao => mudarFiltros(sessao, FILTROS_PADRAO)
 
