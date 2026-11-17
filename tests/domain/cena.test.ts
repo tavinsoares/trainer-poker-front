@@ -127,17 +127,38 @@ describe('cena de enfrentar agressão', () => {
     expect(seat(p, 'SB')).toEqual({ position: 'SB', state: 'folded' })
   })
 
-  it('vs jam, BTNvJAM BB: o BTN abriu 2,5bb e o BB deu jam de 100bb; pote de 103bb, 97,5bb a pagar, só fold e call', () => {
+  // O vs jam é: open do Hero, 3bet do vilão, 4bet do Hero e jam de 100bb do vilão. A planilha não traz
+  // o 4bet do Hero nessas abas: ele vem da posição do Hero (UTG/HJ 19, CO/SB 21, BTN 26), com +4bb
+  // quando o vilão é o BB (menos no BTN, que fica em 26), e é sempre estimado.
+  it('vs jam, BTNvJAM BB: open de 2,5bb, 3bet de 13bb, 4bet de ~26bb e jam de 100bb; pote de 126,5bb, 74bb a pagar, só fold e call', () => {
     const p = cena('vs-jam-btn-vs-bb-regular')
-    expect(p).toMatchObject({ pot: 103, toCall: 97.5 })
+    expect(p).toMatchObject({ pot: 126.5, toCall: 74 })
     expect(p.history).toEqual([
       { position: 'BTN', action: 'open', size: 2.5, estimated: false },
+      { position: 'BB', action: '3bet', size: 13, estimated: false },
+      { position: 'BTN', action: '4bet', size: 26, estimated: true },
       { position: 'BB', action: 'jam', size: 100, estimated: false },
     ])
     expect(p.options).toEqual([
       { action: 'fold', label: 'Fold' },
       { action: 'call', label: 'Call' },
     ])
+    expect(seat(p, 'BB')).toEqual({ position: 'BB', state: 'acted', action: 'jam', size: 100, estimated: false })
+  })
+
+  it.each([
+    // [spot, 4bet do Hero, pote, a pagar]: o pote soma o investido de cada assento (os blinds mortos entram).
+    ['vs-jam-utg-vs-bb-regular', 23, 123.5, 77], // UTG: 19 + 4 contra o BB
+    ['vs-jam-hj-vs-bb-regular', 23, 123.5, 77], // HJ: 19 + 4 contra o BB
+    ['vs-jam-utg-vs-hj-regular', 19, 120.5, 81], // UTG contra outro vilão: 19; os blinds (1,5bb) ficam no pote
+    ['vs-jam-co-vs-btn-regular', 21, 122.5, 79], // CO: 21
+    ['vs-jam-co-vs-bb-regular', 25, 125.5, 75], // CO: 21 + 4 contra o BB
+    ['vs-jam-sb-vs-bb-regular', 25, 125, 75], // SB: 21 + 4 contra o BB; o 4bet já inclui o blind do SB
+    ['vs-jam-btn-vs-sb-regular', 26, 127, 74], // BTN: 26, sem acréscimo; o BB deixou 1bb
+  ])('vs jam %s: 4bet do Hero de ~%sbb, pote de %sbb e %sbb a pagar', (spotId, quatroBet, pote, aPagar) => {
+    const p = cena(spotId)
+    expect(p.history.find((b) => b.action === '4bet')).toMatchObject({ position: p.spot.hero, size: quatroBet, estimated: true })
+    expect(p).toMatchObject({ pot: pote, toCall: aPagar })
   })
 
   // O jam só é oferecido no vs 3bet quando alguma mão do spot é jam: só o MPv3B CO. O SBv3B BB tem
@@ -235,7 +256,10 @@ describe('cena contra fish', () => {
           ...(rfi ? (p.toCall === null ? [] : ['RFI com valor a pagar']) : p.toCall !== null && p.toCall > 0 ? [] : ['sem valor a pagar']),
           ...(p.history.every((b) => Number.isFinite(b.size) && b.size > 0) ? [] : ['aposta sem tamanho']),
           ...(p.options.every((o) => (o.action === 'raise' || o.action === 'jam') === (o.size !== undefined)) ? [] : ['tamanho só no raise e no jam']),
-          ...(s.villain.type === 'regular' && JSON.stringify(p).includes('"estimated":true') ? ['estimado contra regular'] : []),
+          // Contra regular nada é estimado, salvo o 4bet do Hero no vs jam, que vem de uma regra e não da planilha.
+          ...(s.villain.type === 'regular' && p.history.some((b) => b.estimated && !(s.family === 'vs-jam' && b.action === '4bet'))
+            ? ['estimado contra regular']
+            : []),
         ].map((m) => `${s.id}: ${m} (mão ${h.hand})`)
       }),
     )

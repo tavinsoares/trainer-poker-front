@@ -44,15 +44,28 @@ describe('a visão da pergunta: exemplos conferidos contra a spec 2', () => {
     ])
   })
 
-  it('vs jam: pote 103bb, a pagar 97,5bb, só fold e call', () => {
+  it('vs jam: a história inteira no título, o 4bet estimado com "~", só fold e call', () => {
     const v = visao('vs-jam-btn-vs-bb-regular')
-    expect(v.titulo).toBe('Você abriu para 2,5bb no BTN. O BB dá jam de 100bb.')
-    expect(v.chips.map((c) => c.texto)).toEqual(['Pote: 103bb', 'A pagar: 97,5bb', 'Stack efetivo: 100bb'])
-    expect(v.botoes.map((b) => [b.nome, b.atalho])).toEqual([
-      ['Fold', 'F'],
-      ['Call', 'C'],
+    expect(v.titulo).toBe('Você abriu para 2,5bb no BTN. O BB dá 3bet para 13bb, você dá 4bet para ~26bb e o BB dá jam de 100bb.')
+    expect(v.chips.map((c) => c.texto)).toEqual(['Pote: ~126,5bb', 'A pagar: ~74bb', 'Stack efetivo: 100bb'])
+    expect(v.botoes.map((b) => [b.nome, b.atalho, b.subtitulo])).toEqual([
+      ['Fold', 'F', 'Abandona o pote'],
+      ['Call', 'C', 'Paga ~74bb'],
     ])
-    expect(assentos('vs-jam-btn-vs-bb-regular').at(-1)).toBe('BB:BB:jam 100bb')
+    expect(assentos('vs-jam-btn-vs-bb-regular')).toEqual([
+      'UTG:UTG:fold',
+      'HJ:HJ:fold',
+      'CO:CO:fold',
+      'BTN:BTN · você:100bb · ~26bb posto',
+      'SB:SB:fold',
+      'BB:BB:jam 100bb',
+    ])
+  })
+
+  it('vs jam do UTG contra o BB: o 4bet de ~23bb (19 + 4 contra o BB) aparece no título', () => {
+    expect(visao('vs-jam-utg-vs-bb-regular').titulo).toBe(
+      'Você abriu para 2bb no UTG. O BB dá 3bet para 12bb, você dá 4bet para ~23bb e o BB dá jam de 100bb.',
+    )
   })
 
   it('vs 4bet: a história inteira no título, e o botão de jam em vez de raise', () => {
@@ -314,6 +327,32 @@ describe('a visão do feedback', () => {
     const f = responderCom('bb-defense-bb-vs-btn-regular', 'A5s', 'fold')
     expect(f.pergunta.rotulo).toBe('SPOT 1 · DEFESA DO BB')
     expect(f.pergunta.mao.nome).toBe('A5s')
+  })
+
+  // O resultado diz qual é o spot (Hero x vilão - tipo); o drill não, para não entregar o tipo antes da resposta.
+  it.each([
+    ['bb-defense-bb-vs-btn-regular', 'SPOT 1 · BBxBTN - Defesa do BB'],
+    ['3bet-co-vs-utg-regular', 'SPOT 1 · COxUTG - 3bet'],
+    ['vs-3bet-utg-vs-bb-regular', 'SPOT 1 · UTGxBB - vs 3bet'],
+    ['vs-4bet-bb-vs-btn-regular', 'SPOT 1 · BBxBTN - vs 4bet'],
+    ['vs-jam-btn-vs-bb-regular', 'SPOT 1 · BTNxBB - vs jam'],
+    ['bb-defense-bb-vs-btn-fish', 'SPOT 1 · BBxBTN - Defesa do BB'],
+  ])('o rótulo do resultado de %s é "%s"', (spotId, rotulo) => {
+    expect(responderCom(spotId, primeiraMao(spotId), 'fold').rotulo).toBe(rotulo)
+  })
+
+  it('no RFI não há vilão: o rótulo do resultado é só o Hero e o tipo', () => {
+    expect(responderCom('rfi-utg-regular', 'AA', 'fold').rotulo).toBe('SPOT 1 · UTG - RFI')
+    expect(responderCom('rfi-btn-fish', primeiraMao('rfi-btn-fish'), 'fold').rotulo).toBe('SPOT 1 · BTN - RFI')
+  })
+
+  it('o rótulo do resultado acompanha o número do spot', () => {
+    const segunda = responder(proxima(responder(sessaoDe('rfi-utg-regular', 'AA'), 'raise')), 'fold')
+    expect(visaoDoFeedback(segunda).rotulo).toMatch(/^SPOT 2 · /)
+  })
+
+  it('o rótulo da pergunta, no drill, continua o de antes: número e família', () => {
+    expect(visao('vs-jam-btn-vs-bb-regular').rotulo).toBe('SPOT 1 · VS JAM')
   })
 
   it('para os 127 spots, uma resposta certa e uma errada não têm undefined, NaN nem texto vazio', () => {
