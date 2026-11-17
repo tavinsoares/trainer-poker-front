@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import type { RangesData } from '../../src/data/ranges-types.ts'
+import { criarSessao, type Dependencias, type Sessao } from '../../src/domain/sessao.ts'
 import { sortearPergunta } from '../../src/domain/sorteio.ts'
 import type { Filtros, Question } from '../../src/domain/tipos.ts'
 
@@ -50,4 +51,25 @@ export const perguntaDe = (spotId: string, mao: string, base: RangesData = dados
   let chamada = 0
   const rng = () => roteiro[Math.min(chamada++, roteiro.length - 1)]!
   return sortear({ ...base, spots: [spot, ...(contraparte ? [contraparte] : [])] }, rng, { vilao: spot.villain.type })
+}
+
+/** As dependências da sessão (spec 4): rng, relógio e gerador de id determinísticos. */
+export const depsDeSessao = (rng: () => number = prng(7), base: RangesData = dados): Dependencias => {
+  let n = 0
+  return { dados: base, rng, agora: () => `2026-11-16T10:00:${String(n).padStart(2, '0')}.000Z`, novoId: () => `sessao-${++n}` }
+}
+
+/** Uma sessão com a pergunta aberta de um spot e uma mão específicos. */
+export const sessaoDe = (spotId: string, mao: string): Sessao => ({
+  ...criarSessao(depsDeSessao()),
+  estado: 'perguntando',
+  veredito: null,
+  pergunta: perguntaDe(spotId, mao),
+})
+
+/** O primeiro nome de mão que chega ao spot (não é fora do range). */
+export const primeiraMao = (spotId: string): string => {
+  const mao = dados.spots.find((s) => s.id === spotId)?.hands.find((h) => h.action !== 'out_of_range')
+  if (!mao) throw new Error(`${spotId}: sem mão sorteável`)
+  return mao.hand
 }
