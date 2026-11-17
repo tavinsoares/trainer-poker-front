@@ -46,6 +46,19 @@ const aposta = (position: Position, action: Bet['action'], { size, estimated }: 
   estimated,
 })
 
+/** O 4bet do Hero que o vilão enfrenta com jam, por posição do Hero. As abas de vs jam não o trazem. */
+const QUATRO_BET_NO_VS_JAM: Partial<Record<Position, number>> = { UTG: 19, HJ: 19, CO: 21, SB: 21, BTN: 26 }
+/** Contra o BB o 4bet cresce 4bb, menos no BTN, que fica no tamanho base. */
+const ACRESCIMO_CONTRA_O_BB = 4
+
+/** O tamanho vem de uma regra, não da planilha: por isso é sempre estimado, também contra regular. */
+function quatroBetDoVsJam(hero: Position, vilao: Position): Tamanho {
+  const base = QUATRO_BET_NO_VS_JAM[hero]
+  if (base === undefined) throw new Error(`vs jam: sem 4bet para o Hero ${hero}`)
+  const acrescimo = vilao === 'BB' && hero !== 'BTN' ? ACRESCIMO_CONTRA_O_BB : 0
+  return { size: base + acrescimo, estimated: true }
+}
+
 interface Descricao {
   /** As apostas até a vez do Hero, em ordem. */
   history: Bet[]
@@ -95,7 +108,12 @@ function descrever(spot: Spot, medir: Medir): Descricao {
       }
     case 'vs-jam':
       return {
-        history: [openDoHero(), aposta(vilao, 'jam', { size: STACK, estimated: false })],
+        history: [
+          openDoHero(),
+          aposta(vilao, '3bet', medir(`3bet do ${vilao}`, (s) => s.vs3bet[vilao])),
+          aposta(hero, '4bet', quatroBetDoVsJam(hero, vilao)),
+          aposta(vilao, 'jam', { size: STACK, estimated: false }),
+        ],
         call: true,
         jam: false,
       }

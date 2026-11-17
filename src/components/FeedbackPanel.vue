@@ -25,7 +25,7 @@ onMounted(() => botaoProximo.value?.focus())
 <template>
   <section class="feedback-panel" aria-label="Feedback">
     <div class="feedback-panel__main">
-      <SpotHeader :rotulo="feedback.pergunta.rotulo" :vilao="feedback.pergunta.vilao" />
+      <SpotHeader :rotulo="feedback.rotulo" :vilao="feedback.pergunta.vilao" />
       <div class="feedback-panel__hand">
         <HandCards :cartas="feedback.mao.cartas" />
         <p class="feedback-panel__chosen">Você escolheu <strong>{{ feedback.escolhida }}</strong></p>

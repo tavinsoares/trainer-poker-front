@@ -97,7 +97,10 @@ function titulo(pergunta: Question): string {
         `e o ${vilao} dá 4bet para ${tamanho(history, '4bet')}.`
       )
     case 'vs-jam':
-      return `Você abriu para ${tamanho(history, 'open')} no ${hero}. O ${vilao} dá jam de ${tamanho(history, 'jam')}.`
+      return (
+        `Você abriu para ${tamanho(history, 'open')} no ${hero}. O ${vilao} dá 3bet para ${tamanho(history, '3bet')}, ` +
+        `você dá 4bet para ${tamanho(history, '4bet')} e o ${vilao} dá jam de ${tamanho(history, 'jam')}.`
+      )
   }
 }
 
@@ -174,6 +177,8 @@ export type BlocoDeEv =
 export interface VisaoDoFeedback {
   correta: boolean
   resultado: 'CORRETA' | 'ERRO'
+  /** O cabeçalho do resultado, com o nome do spot: "SPOT 15 · UTGxBB - vs 3bet" ("SPOT 1 · UTG - RFI" no RFI). */
+  rotulo: string
   /** A visão da pergunta (cabeçalho, mesa, mão): o feedback a mantém na tela. */
   pergunta: VisaoDaPergunta
   mao: VisaoDaPergunta['mao']
@@ -188,6 +193,12 @@ export interface VisaoDoFeedback {
   maoEmFoco: string
   notaDaMatriz: string
   procedencia: string
+}
+
+/** "UTGxBB - vs 3bet": o Hero, o vilão e o tipo de spot. Sem vilão (RFI), só "UTG - RFI". */
+function nomeDoSpotNoResultado({ hero, villain, family }: Pick<Spot, 'hero' | 'villain' | 'family'>): string {
+  const confronto = villain.position ? `${hero}x${villain.position}` : hero
+  return `${confronto} - ${ROTULO_DA_FAMILIA[family]}`
 }
 
 const evEmBb = (n: number): string => `${n > 0 ? '+' : ''}${String(n).replace('.', ',')} bb`
@@ -226,6 +237,7 @@ export function visaoDoFeedback(sessao: Sessao): VisaoDoFeedback {
   return {
     correta: veredito.correct,
     resultado: veredito.correct ? 'CORRETA' : 'ERRO',
+    rotulo: `SPOT ${visaoPergunta.numero} · ${nomeDoSpotNoResultado(pergunta.spot)}`,
     pergunta: visaoPergunta,
     mao: visaoPergunta.mao,
     escolhida: nome(veredito.chosenAction),
