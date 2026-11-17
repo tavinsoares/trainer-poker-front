@@ -1,4 +1,5 @@
 import type { RangesData } from '../data/ranges-types.ts'
+import { evDaMao } from './ev.ts'
 import { escreverFeedback } from './texto.ts'
 import type { AnswerableAction, Question, Verdict } from './tipos.ts'
 
@@ -11,7 +12,7 @@ export function avaliar(dados: RangesData, pergunta: Question, escolhida: Answer
   if (mao.action === 'out_of_range') {
     throw new Error(`a mão ${mao.hand} está fora do range do spot ${spot.id} e não pode ser pergunta`)
   }
-  const ev = mao.action === 'fold' ? null : mao.ev
+  const { ev, edgeHand } = evDaMao(spot, mao)
   const deixouNaMesa = escolhida === 'fold' && mao.action !== 'fold' && spot.villain.type === 'regular' && ev !== null && ev > 0
   const resultado = {
     correct: escolhida === mao.action,
@@ -19,7 +20,7 @@ export function avaliar(dados: RangesData, pergunta: Question, escolhida: Answer
     chosenAction: escolhida,
     ev,
     evLeft: deixouNaMesa ? ev : null,
-    edgeHand: spot.villain.type === 'regular' && mao.action !== 'fold' && mao.ev === null,
+    edgeHand,
     villainType: spot.villain.type,
   }
   return { ...resultado, ...escreverFeedback(pergunta, resultado) }

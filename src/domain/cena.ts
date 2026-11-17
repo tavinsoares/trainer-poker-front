@@ -1,4 +1,5 @@
 import type { Position, RangesData, Sizings, Spot } from '../data/ranges-types.ts'
+import { nomeDaAcao } from './nomes.ts'
 import type { ActionOption, Bet, Question, Seat } from './tipos.ts'
 
 // A cena de um spot (spec 2): quem agiu, com que tamanho, pote, valor a pagar e botões.
@@ -60,7 +61,7 @@ function descrever(spot: Spot, medir: Medir): Descricao {
   const hero = spot.hero
   const vilao = spot.villain.position
   if (family === 'rfi') {
-    return { history: [], call: false, raise: { label: 'Open', tamanho: medir('open', (s) => s.open) }, jam: false }
+    return { history: [], call: false, raise: { label: nomeDaAcao(family, 'raise'), tamanho: medir('open', (s) => s.open) }, jam: false }
   }
   if (!vilao) throw new Error(`${spot.id}: falta a posição do vilão`)
   const openDoVilao = () => aposta(vilao, 'open', medir(`open do ${vilao}`, (s) => s.vsOpen[vilao]))
@@ -72,14 +73,14 @@ function descrever(spot: Spot, medir: Medir): Descricao {
       return {
         history: [openDoVilao()],
         call: true,
-        raise: { label: '3bet', tamanho: medir('3bet do Hero', (s) => s.threeBet) },
+        raise: { label: nomeDaAcao(family, 'raise'), tamanho: medir('3bet do Hero', (s) => s.threeBet) },
         jam: false,
       }
     case 'vs-3bet':
       return {
         history: [openDoHero(), aposta(vilao, '3bet', medir(`3bet do ${vilao}`, (s) => s.vs3bet[vilao]))],
         call: true,
-        raise: { label: '4bet', tamanho: medir('4bet do Hero', (s) => s.fourBet) },
+        raise: { label: nomeDaAcao(family, 'raise'), tamanho: medir('4bet do Hero', (s) => s.fourBet) },
         jam: spot.hands.some((h) => h.action === 'jam'),
       }
     case 'vs-4bet':

@@ -1,0 +1,43 @@
+/* Tokens de docs/design/telas-v1.md (tema escuro). */
+:root {
+  --bg: #0b0f14;
+  --bg-header: #0f141b;
+  --surface: #131a23;
+  --surface-2: #1b2330;
+  --border: #232b38;
+  --border-strong: #2a3443;
+  --border-strong-2: #394457;
+  --text: #e6e9ee;
+  --text-muted: #a3aec2;
+  --text-faint: #7d889a;
+  --action-raise: #a78bfa;
+  --action-call: #5fd0b6;
+  --action-fold: #28314a;
+  --action-fold-label: #3a4663;
+  --action-fold-accent: #7d8fb8;
+  --action-jam: #6b46c1;
+  --result-correct: #5fd0b6;
+  --result-error: #f2555a;
+  --result-error-bg: #2e1519;
+  --villain-fish: #e6c25a;
+  --villain-fish-bg: #2b2614;
+  --villain-fish-border: #6b5a1f;
+  --selected-bg: #12302f;
+  --notice-bg: #1d1a12;
+  --notice-border: #4a3f1f;
+  --card-face: #f4f1ea;
+  --font: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
