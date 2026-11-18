@@ -1,4 +1,5 @@
 import type { Position, Spot, SpotFamily, VillainType } from '../data/ranges-types.ts'
+import { POSICOES } from './cena.ts'
 import { dataBr } from './formato.ts'
 import { numeroDaPergunta, spotDaPergunta, type Sessao } from './sessao.ts'
 import type { AnswerableAction, Bet, Card, Question, Seat, Suit } from './tipos.ts'
@@ -29,6 +30,16 @@ export interface VisaoBotao {
   subtitulo: string
 }
 
+/** O que o assento já pôs na mesa: a última aposta dele ou, sem aposta, o blind. */
+export interface VisaoFicha {
+  tipo: 'aposta' | 'blind'
+  /** "2,5bb", e "~2,5bb" quando o tamanho é estimado. */
+  texto: string
+}
+
+/** A posição do assento na mesa redonda: 0 é o Hero (embaixo, no centro) e os outros seguem em sentido horário. */
+export type SlotDaMesa = 0 | 1 | 2 | 3 | 4 | 5
+
 export interface VisaoAssento {
   position: Position
   estado: Seat['state']
@@ -36,6 +47,12 @@ export interface VisaoAssento {
   titulo: string
   /** O que o assento fez ("fold", "open 2bb", "aguardando") ou, no Hero, o stack e o investido. */
   detalhe: string
+  slot: SlotDaMesa
+  /** O botão do dealer fica sempre no BTN. */
+  dealer: boolean
+  ficha: VisaoFicha | null
+  /** Quem ainda vai agir ou já agiu mostra as cartas viradas para baixo; quem deu fold e o Hero (que vê as dele) não. */
+  cartasViradas: boolean
 }
 
 export interface VisaoCarta {
@@ -53,6 +70,8 @@ export interface VisaoDaPergunta {
   rotulo: string
   vilao: { tipo: VillainType; rotulo: string }
   titulo: string
+  /** O pote no centro da mesa, só o valor ("4bb"; "~10bb" quando estimado). */
+  pote: string
   chips: { id: 'pote' | 'a-pagar' | 'stack'; texto: string }[]
   assentos: VisaoAssento[]
   mao: { nome: string; cartas: [VisaoCarta, VisaoCarta] }
@@ -104,23 +123,38 @@ function titulo(pergunta: Question): string {
   }
 }
 
+const slotDe = (position: Position, hero: Position): SlotDaMesa =>
+  ((POSICOES.indexOf(position) - POSICOES.indexOf(hero) + POSICOES.length) % POSICOES.length) as SlotDaMesa
+
+/** O que o assento pôs na mesa, sem formato: o texto da ficha e o do "posto" do Hero saem daqui. */
+function investido(history: Bet[], position: Position): VisaoFicha | null {
+  const aposta = ultimaAposta(history, position)
+  if (aposta) return { tipo: 'aposta', texto: bb(aposta.size, aposta.estimated) }
+  const blind = BLINDS[position]
+  return blind ? { tipo: 'blind', texto: bb(blind) } : null
+}
+
 function assento(seat: Seat, pergunta: Question): VisaoAssento {
   const { position } = seat
+  const ficha = investido(pergunta.history, position)
+  const mesa = {
+    slot: slotDe(position, pergunta.spot.hero),
+    dealer: position === 'BTN',
+    ficha,
+    cartasViradas: seat.state === 'waiting' || seat.state === 'acted',
+  }
   switch (seat.state) {
     case 'hero': {
-      const aposta = ultimaAposta(pergunta.history, position)
-      const blind = BLINDS[position]
-      const investido = aposta ? bb(aposta.size, aposta.estimated) : blind ? bb(blind) : null
       const stack = bb(pergunta.stack)
-      return { position, estado: 'hero', titulo: `${position} · você`, detalhe: investido ? `${stack} · ${investido} posto` : stack }
+      return { position, estado: 'hero', titulo: `${position} · você`, detalhe: ficha ? `${stack} · ${ficha.texto} posto` : stack, ...mesa }
     }
     case 'acted':
       if (!seat.action || seat.size === undefined) throw new Error(`${pergunta.spot.id}: o assento ${position} agiu sem jogada`)
-      return { position, estado: 'acted', titulo: position, detalhe: `${seat.action} ${bb(seat.size, seat.estimated)}` }
+      return { position, estado: 'acted', titulo: position, detalhe: `${seat.action} ${bb(seat.size, seat.estimated)}`, ...mesa }
     case 'waiting':
-      return { position, estado: 'waiting', titulo: position, detalhe: 'aguardando' }
+      return { position, estado: 'waiting', titulo: position, detalhe: 'aguardando', ...mesa }
     case 'folded':
-      return { position, estado: 'folded', titulo: position, detalhe: 'fold' }
+      return { position, estado: 'folded', titulo: position, detalhe: 'fold', ...mesa }
   }
 }
 
@@ -144,7 +178,8 @@ export function visaoDaPergunta(sessao: Sessao): VisaoDaPergunta {
   if (!pergunta) throw new Error('a sessão não tem pergunta')
   const familia = ROTULO_DA_FAMILIA[pergunta.spot.family]
   const estimada = pergunta.history.some((b) => b.estimated)
-  const chips: VisaoDaPergunta['chips'] = [{ id: 'pote', texto: `Pote: ${bb(pergunta.pot, estimada)}` }]
+  const pote = bb(pergunta.pot, estimada)
+  const chips: VisaoDaPergunta['chips'] = [{ id: 'pote', texto: `Pote: ${pote}` }]
   if (pergunta.toCall !== null) chips.push({ id: 'a-pagar', texto: `A pagar: ${bb(pergunta.toCall, estimada)}` })
   chips.push({ id: 'stack', texto: `Stack efetivo: ${bb(pergunta.stack)}` })
   const [primeira, segunda] = pergunta.hand.cards
@@ -154,6 +189,7 @@ export function visaoDaPergunta(sessao: Sessao): VisaoDaPergunta {
     rotulo: `SPOT ${numeroDaPergunta(sessao)} · ${familia.toUpperCase()}`,
     vilao: { tipo: pergunta.spot.villain.type, rotulo: `Vilão: ${pergunta.spot.villain.type}` },
     titulo: titulo(pergunta),
+    pote,
     chips,
     assentos: pergunta.seats.map((s) => assento(s, pergunta)),
     mao: { nome: pergunta.hand.name, cartas: [carta(primeira), carta(segunda)] },

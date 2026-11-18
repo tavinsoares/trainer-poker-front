@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { VisaoAssento } from '../domain/visao.ts'
 
-// Um assento da mesa: o Hero em destaque, quem foldou apagado, quem agiu com a jogada.
+// O assento da mesa: o Hero em destaque, quem foldou apagado e sem cartas, e quem agiu ou ainda
+// vai agir com as cartas viradas para baixo. Quem o usa o posiciona (as cartas viradas saem por
+// trás do topo do assento).
 defineProps<{
   assento: VisaoAssento
 }>()
@@ -9,6 +11,10 @@ defineProps<{
 
 <template>
   <div class="seat" :class="`seat--${assento.estado}`">
+    <span v-if="assento.cartasViradas" class="seat__backs" aria-hidden="true">
+      <span class="seat__back"></span>
+      <span class="seat__back"></span>
+    </span>
     <span class="seat__name">{{ assento.titulo }}</span>
     <span class="seat__detail">{{ assento.detalhe }}</span>
   </div>
@@ -18,22 +24,24 @@ defineProps<{
 .seat {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 2px;
   min-width: 0;
-  padding: 10px 14px;
+  padding: 8px 10px;
   border: 1px solid var(--border-strong);
   border-radius: 12px;
   background: var(--surface-2);
+  text-align: center;
 }
 
 .seat__name {
-  font-size: 13px;
+  font-size: clamp(11px, 1.85cqw, 14px);
   font-weight: 700;
 }
 
 .seat__detail {
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: clamp(10px, 1.6cqw, 12px);
 }
 
 .seat--folded {
@@ -42,6 +50,7 @@ defineProps<{
 
 .seat--waiting {
   border-style: dashed;
+  border-color: var(--border-strong-2);
   background: transparent;
 }
 
@@ -49,8 +58,37 @@ defineProps<{
   border-color: var(--action-raise);
 }
 
+.seat--acted .seat__detail {
+  color: var(--action-raise);
+  font-weight: 600;
+}
+
 .seat--hero {
+  border-width: 2px;
   border-color: var(--action-call);
   background: var(--selected-bg);
+}
+
+.seat__backs {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: flex;
+  transform: translate(-50%, -78%);
+}
+
+.seat__back {
+  display: block;
+  width: clamp(18px, 2.9cqw, 22px);
+  aspect-ratio: 22 / 30;
+  border: 1px solid #5b6b86;
+  border-radius: 4px;
+  background: repeating-linear-gradient(45deg, var(--border-strong) 0 3px, #1f2733 3px 6px);
+  transform: rotate(-8deg);
+}
+
+.seat__back + .seat__back {
+  margin-left: -6px;
+  transform: rotate(8deg);
 }
 </style>

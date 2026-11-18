@@ -136,6 +136,79 @@ describe('a visão da pergunta: exemplos conferidos contra a spec 2', () => {
   })
 })
 
+// A mesa redonda: o Hero fica sempre no slot 0 (embaixo, no centro) e os outros giram em sentido
+// horário a partir dele (slot 1 embaixo à esquerda, 2 em cima à esquerda, 3 no alto, 4 em cima à
+// direita, 5 embaixo à direita). A visão entrega o slot, o botão do dealer, a ficha e as cartas viradas.
+describe('a mesa redonda', () => {
+  const seats = (spotId: string) => visao(spotId).assentos
+  const slots = (spotId: string) => seats(spotId).map((a) => `${a.position}:${a.slot}`)
+  const fichas = (spotId: string) => seats(spotId).flatMap((a) => (a.ficha ? [`${a.position}:${a.ficha.tipo}:${a.ficha.texto}`] : []))
+
+  it('Hero no BB: ele fica no slot 0 e a ordem horária segue UTG, HJ, CO, BTN, SB', () => {
+    expect(slots('bb-defense-bb-vs-btn-regular')).toEqual(['UTG:1', 'HJ:2', 'CO:3', 'BTN:4', 'SB:5', 'BB:0'])
+  })
+
+  it('o pote do centro da mesa é só o valor, com "~" quando estimado', () => {
+    expect(visao('bb-defense-bb-vs-btn-regular').pote).toBe('4bb')
+    expect(visao('rfi-utg-regular').pote).toBe('1,5bb')
+    expect(visao('vs-3bet-utg-vs-hj-fish').pote).toBe('~10bb')
+  })
+
+  it('Hero no UTG: a mesa gira, e o BTN fica no alto (slot 3)', () => {
+    expect(slots('rfi-utg-regular')).toEqual(['UTG:0', 'HJ:1', 'CO:2', 'BTN:3', 'SB:4', 'BB:5'])
+  })
+
+  it('Hero no BTN: o SB e o BB ficam à esquerda do Hero', () => {
+    expect(slots('vs-3bet-btn-vs-bb-regular')).toEqual(['UTG:3', 'HJ:4', 'CO:5', 'BTN:0', 'SB:1', 'BB:2'])
+  })
+
+  it('o botão do dealer está só no BTN, seja quem for o Hero', () => {
+    for (const id of ['bb-defense-bb-vs-btn-regular', 'rfi-utg-regular', 'vs-3bet-btn-vs-bb-regular', 'vs-jam-sb-vs-bb-regular']) {
+      expect(seats(id).filter((a) => a.dealer).map((a) => a.position)).toEqual(['BTN'])
+    }
+  })
+
+  it('fichas na defesa do BB: o open do BTN é aposta, e os blinds do SB (que deu fold) e do BB ficam postados', () => {
+    expect(fichas('bb-defense-bb-vs-btn-regular')).toEqual(['BTN:aposta:2,5bb', 'SB:blind:0,5bb', 'BB:blind:1bb'])
+  })
+
+  it('fichas no RFI do UTG: só os blinds, e o Hero não tem ficha', () => {
+    expect(fichas('rfi-utg-regular')).toEqual(['SB:blind:0,5bb', 'BB:blind:1bb'])
+  })
+
+  it('fichas no vs 3bet do BTN: o open do Hero, o blind morto do SB e o 3bet do BB; a última aposta de cada um', () => {
+    expect(fichas('vs-3bet-btn-vs-bb-regular')).toEqual(['BTN:aposta:2,5bb', 'SB:blind:0,5bb', 'BB:aposta:13bb'])
+  })
+
+  it('fichas no vs jam: a última aposta de cada um (4bet estimado do Hero e jam do vilão)', () => {
+    expect(fichas('vs-jam-btn-vs-bb-regular')).toEqual(['BTN:aposta:~26bb', 'SB:blind:0,5bb', 'BB:aposta:100bb'])
+  })
+
+  it('a ficha estimada contra fish leva "~"', () => {
+    expect(fichas('vs-3bet-utg-vs-hj-fish')).toContain('UTG:aposta:~2bb')
+  })
+
+  it('quem ainda vai agir ou já agiu tem as cartas viradas para baixo; quem deu fold e o Hero não', () => {
+    const viradas = (id: string) => seats(id).filter((a) => a.cartasViradas).map((a) => a.position)
+    expect(viradas('rfi-utg-regular')).toEqual(['HJ', 'CO', 'BTN', 'SB', 'BB']) // todos aguardando
+    expect(viradas('3bet-co-vs-utg-regular')).toEqual(['UTG', 'BTN', 'SB', 'BB']) // o UTG abriu; o HJ deu fold
+    expect(viradas('bb-defense-bb-vs-btn-regular')).toEqual(['BTN']) // só o BTN abriu; o resto deu fold
+    expect(viradas('vs-jam-btn-vs-bb-regular')).toEqual(['BB']) // o BB deu 3bet e jam; o SB deu fold
+  })
+
+  it('nos 127 spots: o Hero está no slot 0, cada slot de 0 a 5 aparece uma vez e há um botão do dealer, no BTN', () => {
+    const erros: string[] = []
+    for (const spot of dados.spots) {
+      const a = seats(spot.id)
+      if (a.find((x) => x.estado === 'hero')?.slot !== 0) erros.push(`${spot.id}: o Hero não está no slot 0`)
+      if (a.map((x) => x.slot).sort().join() !== '0,1,2,3,4,5') erros.push(`${spot.id}: slots repetidos ou faltando`)
+      if (a.filter((x) => x.dealer).map((x) => x.position).join() !== 'BTN') erros.push(`${spot.id}: botão do dealer fora do BTN`)
+      if (a.some((x) => x.cartasViradas !== (x.estado === 'waiting' || x.estado === 'acted'))) erros.push(`${spot.id}: cartas viradas erradas`)
+    }
+    expect(erros).toEqual([])
+  })
+})
+
 describe('a mão', () => {
   it('traz as duas cartas com naipe e cor: vermelho em copas e ouros', () => {
     const { mao } = visao('rfi-utg-regular', 'AKs')
