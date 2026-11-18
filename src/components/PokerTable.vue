@@ -1,69 +1,207 @@
 <script setup lang="ts">
-import type { VisaoAssento } from '../domain/visao.ts'
+import type { VisaoAssento, VisaoDaPergunta } from '../domain/visao.ts'
+import BetChip from './BetChip.vue'
+import HandCards from './HandCards.vue'
 import SeatCard from './SeatCard.vue'
 
-// A mesa com os seis assentos em sentido horário (UTG embaixo à esquerda, depois HJ, CO, BTN, SB e BB).
+// A mesa oval. O Hero fica sempre embaixo, no centro (slot 0), e os outros seguem em sentido
+// horário a partir dele; o slot vem da visão. Aqui só se desenha: cada slot tem a posição do
+// assento, da ficha e do botão do dealer (que fica sempre no BTN).
 defineProps<{
   assentos: VisaoAssento[]
-  /** "Pote: 3,5bb" (o chip do pote). */
+  /** O valor do pote no centro ("4bb"). */
   pote: string
+  /** As cartas do Hero, na frente do assento dele. */
+  mao: VisaoDaPergunta['mao']
 }>()
 </script>
 
 <template>
   <div class="poker-table" role="group" aria-label="Mesa">
-    <SeatCard v-for="assento in assentos" :key="assento.position" :assento="assento" class="poker-table__seat" :class="`poker-table__seat--${assento.position}`" />
-    <div class="poker-table__pot">{{ pote }}</div>
+    <div class="poker-table__rail" aria-hidden="true"></div>
+    <div class="poker-table__felt" aria-hidden="true"></div>
+    <div class="poker-table__pot">
+      <span class="poker-table__pot-label">POTE</span>
+      <strong class="poker-table__pot-value">{{ pote }}</strong>
+    </div>
+    <div class="poker-table__hand">
+      <HandCards :cartas="mao.cartas" leque />
+    </div>
+    <div v-for="assento in assentos" :key="assento.position" class="poker-table__slot" :class="`poker-table__slot--${assento.slot}`">
+      <SeatCard :assento="assento" class="poker-table__seat" :class="{ 'poker-table__seat--hero': assento.estado === 'hero' }" />
+      <BetChip v-if="assento.ficha" :ficha="assento.ficha" class="poker-table__chip" />
+      <span v-if="assento.dealer" class="poker-table__dealer" role="img" aria-label="Botão do dealer">D</span>
+    </div>
   </div>
 </template>
 
 <style scoped>
+/* O palco tem proporção 38:27 (até 760×540) e as medidas em cqw são relativas à largura dele,
+   então a mesa encolhe inteira. Os assentos ficam numa elipse em volta do feltro. */
 .poker-table {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-template-areas:
-    'hj co btn'
-    'pot pot pot'
-    'utg bb sb';
-  gap: 12px;
-  padding: 20px;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: var(--surface);
+  position: relative;
+  width: 100%;
+  max-width: 760px;
+  aspect-ratio: 38 / 27;
+  align-self: center;
+  container-type: inline-size;
 }
 
-.poker-table__seat--HJ {
-  grid-area: hj;
+.poker-table__rail,
+.poker-table__felt {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
 }
 
-.poker-table__seat--CO {
-  grid-area: co;
+.poker-table__rail {
+  width: 77.6%;
+  height: 70.4%;
+  border: 1px solid var(--border-strong);
+  background: linear-gradient(145deg, #1d2733, #0f161e);
 }
 
-.poker-table__seat--BTN {
-  grid-area: btn;
-}
-
-.poker-table__seat--UTG {
-  grid-area: utg;
-}
-
-.poker-table__seat--BB {
-  grid-area: bb;
-}
-
-.poker-table__seat--SB {
-  grid-area: sb;
+.poker-table__felt {
+  width: 71.1%;
+  height: 63%;
+  border: 1px solid #2a4650;
+  background: radial-gradient(ellipse at 50% 40%, #1a444b 0%, #10262c 100%);
 }
 
 .poker-table__pot {
-  grid-area: pot;
-  justify-self: center;
-  padding: 6px 18px;
-  border-radius: 999px;
-  background: var(--surface-2);
-  color: var(--text);
-  font-size: 15px;
-  font-weight: 700;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translate(-50%, -50%);
+}
+
+.poker-table__pot-label {
+  color: #8fb3ba;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+
+.poker-table__pot-value {
+  font-size: clamp(18px, 2.9cqw, 22px);
+}
+
+/* A mão do Hero: sobre a borda do feltro, logo acima do assento dele. */
+.poker-table__hand {
+  --card-w: clamp(40px, 7.4cqw, 56px);
+  position: absolute;
+  top: 76.9%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Cada slot é uma camada do tamanho do palco; assento, ficha e botão se posicionam nela. */
+.poker-table__slot {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.poker-table__seat,
+.poker-table__chip,
+.poker-table__dealer {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.poker-table__seat {
+  top: var(--seat-y);
+  left: var(--seat-x);
+  box-sizing: border-box;
+  width: 15.8cqw;
+}
+
+.poker-table__seat--hero {
+  width: 18.4cqw;
+}
+
+.poker-table__chip {
+  top: var(--chip-y);
+  left: var(--chip-x);
+}
+
+.poker-table__dealer {
+  top: var(--dealer-y);
+  left: var(--dealer-x);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 3.7cqw;
+  min-width: 24px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: var(--card-face);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 2px #c9c3b4;
+  color: #0b0f14;
+  font-size: clamp(11px, 1.7cqw, 13px);
+  font-weight: 800;
+}
+
+/* Slot 0 é o Hero (embaixo); 1 a 5 seguem em sentido horário: embaixo à esquerda, em cima à
+   esquerda, no alto, em cima à direita e embaixo à direita. */
+.poker-table__slot--0 {
+  --seat-x: 50%;
+  --seat-y: 89.8%;
+  --chip-x: 50%;
+  --chip-y: 65.9%;
+  --dealer-x: 39.5%;
+  --dealer-y: 78.7%;
+}
+
+.poker-table__slot--1 {
+  --seat-x: 15.8%;
+  --seat-y: 69.9%;
+  --chip-x: 36.3%;
+  --chip-y: 58%;
+  --dealer-x: 32.7%;
+  --dealer-y: 67.4%;
+}
+
+.poker-table__slot--2 {
+  --seat-x: 15.8%;
+  --seat-y: 30.1%;
+  --chip-x: 36.3%;
+  --chip-y: 42%;
+  --dealer-x: 26.4%;
+  --dealer-y: 43.6%;
+}
+
+.poker-table__slot--3 {
+  --seat-x: 50%;
+  --seat-y: 10.2%;
+  --chip-x: 50%;
+  --chip-y: 34.1%;
+  --dealer-x: 43.7%;
+  --dealer-y: 26.1%;
+}
+
+.poker-table__slot--4 {
+  --seat-x: 84.2%;
+  --seat-y: 30.1%;
+  --chip-x: 63.7%;
+  --chip-y: 42%;
+  --dealer-x: 67.3%;
+  --dealer-y: 32.6%;
+}
+
+.poker-table__slot--5 {
+  --seat-x: 84.2%;
+  --seat-y: 69.9%;
+  --chip-x: 63.7%;
+  --chip-y: 58%;
+  --dealer-x: 67.3%;
+  --dealer-y: 67.4%;
 }
 </style>
