@@ -46,6 +46,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', aoTeclar))
       :sequencia="sessao.sequencia"
       :filtros="sessao.filtros"
       :encerrada="sessao.estado === 'encerrada'"
+      :mesa="visaoFeedback?.pergunta ?? null"
       @encerrar="store.encerrar()"
       @mudar-filtros="store.mudarFiltros($event)"
     />

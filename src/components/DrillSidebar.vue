@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { Position, SpotFamily, VillainType } from '../data/ranges-types.ts'
 import type { Filtros } from '../domain/tipos.ts'
-import { ROTULO_DA_FAMILIA } from '../domain/visao.ts'
+import { ROTULO_DA_FAMILIA, type VisaoDaPergunta } from '../domain/visao.ts'
 import FilterChips from './FilterChips.vue'
+import PokerTable from './PokerTable.vue'
 import SessionSummary from './SessionSummary.vue'
 
-// A barra lateral do drill: a sessão, os filtros e o lembrete dos atalhos.
+// A barra lateral do drill: a sessão, os filtros e o lembrete dos atalhos. Na tela de resposta o
+// cartão dos filtros dá lugar ao snapshot da mesa da pergunta (`mesa`), congelado como estava.
 defineProps<{
   corretas: number
   erros: number
@@ -13,6 +15,8 @@ defineProps<{
   filtros: Filtros
   /** Com a sessão encerrada, só o resumo da coluna principal importa: o cartão some. */
   encerrada: boolean
+  /** A pergunta respondida: com ela, o cartão mostra a mesa dela no lugar dos filtros. */
+  mesa?: VisaoDaPergunta | null
 }>()
 
 const emit = defineEmits<{
@@ -33,7 +37,12 @@ const POSICOES = (['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'] as const).map((valor) =
   <aside class="drill-sidebar" aria-label="Sessão e filtros">
     <SessionSummary v-if="!encerrada" :corretas="corretas" :erros="erros" :sequencia="sequencia" @encerrar="emit('encerrar')" />
 
-    <section class="drill-sidebar__filters" aria-label="Filtros">
+    <section v-if="mesa" class="drill-sidebar__card" aria-label="Mesa da pergunta">
+      <h2 class="drill-sidebar__title">Mesa</h2>
+      <PokerTable :assentos="mesa.assentos" :pote="mesa.pote" :mao="mesa.mao" />
+    </section>
+
+    <section v-else class="drill-sidebar__card" aria-label="Filtros">
       <h2 class="drill-sidebar__title">Filtros</h2>
       <FilterChips
         titulo="Vilão"
@@ -70,7 +79,7 @@ const POSICOES = (['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'] as const).map((valor) =
   gap: 20px;
 }
 
-.drill-sidebar__filters {
+.drill-sidebar__card {
   display: flex;
   flex-direction: column;
   gap: 16px;

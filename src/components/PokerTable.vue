@@ -219,4 +219,38 @@ defineProps<{
   --dealer-x: 67.3%;
   --dealer-y: 67.4%;
 }
+
+/* Mesa estreita (o snapshot na barra lateral, telas muito pequenas): o que tem piso em px
+   (cartas, pote, fichas) encolhe e as fichas laterais se afastam do pote, para nada se cobrir. */
+@container (max-width: 320px) {
+  .poker-table__seat--hero {
+    --card-w: 28px;
+  }
+
+  .poker-table__pot {
+    top: 45%;
+  }
+
+  .poker-table__pot-label {
+    font-size: 10px;
+  }
+
+  .poker-table__pot-value {
+    font-size: 14px;
+  }
+
+  .poker-table__slot--0 {
+    --chip-y: 59%;
+  }
+
+  .poker-table__slot--1,
+  .poker-table__slot--2 {
+    --chip-x: 33%;
+  }
+
+  .poker-table__slot--4,
+  .poker-table__slot--5 {
+    --chip-x: 67%;
+  }
+}
 </style>
