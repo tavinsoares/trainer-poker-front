@@ -3,7 +3,8 @@ import type { VisaoAssento } from '../domain/visao.ts'
 
 // O assento da mesa: o Hero em destaque, quem foldou apagado e sem cartas, e quem agiu ou ainda
 // vai agir com as cartas viradas para baixo. Quem o usa o posiciona (as cartas viradas saem por
-// trás do topo do assento).
+// trás do topo do assento). O slot padrão é a mão do Hero, que também sai pelo topo, acima do
+// assento, qualquer que seja a altura dele.
 defineProps<{
   assento: VisaoAssento
 }>()
@@ -15,6 +16,7 @@ defineProps<{
       <span class="seat__back"></span>
       <span class="seat__back"></span>
     </span>
+    <span v-if="$slots.default" class="seat__hand"><slot /></span>
     <span class="seat__name">{{ assento.titulo }}</span>
     <span class="seat__detail">{{ assento.detalhe }}</span>
   </div>
@@ -67,6 +69,14 @@ defineProps<{
   border-width: 2px;
   border-color: var(--action-call);
   background: var(--selected-bg);
+}
+
+.seat__hand {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-bottom: -4px;
+  transform: translateX(-50%);
 }
 
 .seat__backs {

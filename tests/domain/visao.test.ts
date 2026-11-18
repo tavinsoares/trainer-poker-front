@@ -22,12 +22,12 @@ describe('a visão da pergunta: exemplos conferidos contra a spec 2', () => {
       { action: 'raise', nome: '3bet', atalho: 'R', subtitulo: 'Re-aumenta para 13bb' },
     ])
     expect(v.assentos.map((a) => `${a.position}:${a.titulo}:${a.detalhe}`)).toEqual([
-      'UTG:UTG:fold',
-      'HJ:HJ:fold',
-      'CO:CO:fold',
-      'BTN:BTN:open 2,5bb',
-      'SB:SB:fold',
-      'BB:BB · você:100bb · 1bb posto',
+      'UTG:UTG:100bb',
+      'HJ:HJ:100bb',
+      'CO:CO:100bb',
+      'BTN:BTN:97,5bb',
+      'SB:SB:99,5bb',
+      'BB:BB:99bb',
     ])
   })
 
@@ -35,12 +35,12 @@ describe('a visão da pergunta: exemplos conferidos contra a spec 2', () => {
     const v = visao('3bet-co-vs-utg-regular')
     expect(v.chips.map((c) => c.texto)).toEqual(['Pote: 3,5bb', 'A pagar: 2bb', 'Stack efetivo: 100bb'])
     expect(assentos('3bet-co-vs-utg-regular')).toEqual([
-      'UTG:UTG:open 2bb',
-      'HJ:HJ:fold',
-      'CO:CO · você:100bb',
-      'BTN:BTN:aguardando',
-      'SB:SB:aguardando',
-      'BB:BB:aguardando',
+      'UTG:UTG:98bb',
+      'HJ:HJ:100bb',
+      'CO:CO:100bb',
+      'BTN:BTN:100bb',
+      'SB:SB:99,5bb',
+      'BB:BB:99bb',
     ])
   })
 
@@ -53,12 +53,12 @@ describe('a visão da pergunta: exemplos conferidos contra a spec 2', () => {
       ['Call', 'C', 'Paga ~74bb'],
     ])
     expect(assentos('vs-jam-btn-vs-bb-regular')).toEqual([
-      'UTG:UTG:fold',
-      'HJ:HJ:fold',
-      'CO:CO:fold',
-      'BTN:BTN · você:100bb · ~26bb posto',
-      'SB:SB:fold',
-      'BB:BB:jam 100bb',
+      'UTG:UTG:100bb',
+      'HJ:HJ:100bb',
+      'CO:CO:100bb',
+      'BTN:BTN:~74bb',
+      'SB:SB:99,5bb',
+      'BB:BB:all-in',
     ])
   })
 
@@ -88,11 +88,11 @@ describe('a visão da pergunta: exemplos conferidos contra a spec 2', () => {
       { action: 'raise', nome: 'Open', atalho: 'R', subtitulo: 'Abre para 2bb' },
     ])
     expect(assentos('rfi-utg-regular').slice(1)).toEqual([
-      'HJ:HJ:aguardando',
-      'CO:CO:aguardando',
-      'BTN:BTN:aguardando',
-      'SB:SB:aguardando',
-      'BB:BB:aguardando',
+      'HJ:HJ:100bb',
+      'CO:CO:100bb',
+      'BTN:BTN:100bb',
+      'SB:SB:99,5bb',
+      'BB:BB:99bb',
     ])
   })
 
@@ -117,7 +117,7 @@ describe('a visão da pergunta: exemplos conferidos contra a spec 2', () => {
     expect(v.vilao).toEqual({ tipo: 'fish', rotulo: 'Vilão: fish' })
     expect(v.titulo).toBe('Você abriu para ~2bb no UTG. O HJ dá 3bet para ~6,5bb.')
     expect(v.chips.map((c) => c.texto)).toEqual(['Pote: ~10bb', 'A pagar: ~4,5bb', 'Stack efetivo: 100bb'])
-    expect(assentos('vs-3bet-utg-vs-hj-fish').slice(0, 2)).toEqual(['UTG:UTG · você:100bb · ~2bb posto', 'HJ:HJ:3bet ~6,5bb'])
+    expect(assentos('vs-3bet-utg-vs-hj-fish').slice(0, 2)).toEqual(['UTG:UTG:~98bb', 'HJ:HJ:~93,5bb'])
     expect(v.botoes.at(-1)?.subtitulo).toBe('Re-aumenta para ~19bb')
   })
 

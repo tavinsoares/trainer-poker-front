@@ -1,19 +1,20 @@
 <script setup lang="ts">
-import type { VisaoAssento, VisaoDaPergunta } from '../domain/visao.ts'
-import BetChip from './BetChip.vue'
-import HandCards from './HandCards.vue'
-import SeatCard from './SeatCard.vue'
+import type { VisaoAssento, VisaoDaPergunta } from "../domain/visao.ts";
+import BetChip from "./BetChip.vue";
+import HandCards from "./HandCards.vue";
+import SeatCard from "./SeatCard.vue";
 
 // A mesa oval. O Hero fica sempre embaixo, no centro (slot 0), e os outros seguem em sentido
 // horário a partir dele; o slot vem da visão. Aqui só se desenha: cada slot tem a posição do
-// assento, da ficha e do botão do dealer (que fica sempre no BTN).
+// assento, da ficha e do botão do dealer (que fica sempre no BTN). A mão do Hero sai pelo topo
+// do assento dele, então acompanha o assento e nunca fica por baixo dele.
 defineProps<{
-  assentos: VisaoAssento[]
+  assentos: VisaoAssento[];
   /** O valor do pote no centro ("4bb"). */
-  pote: string
+  pote: string;
   /** As cartas do Hero, na frente do assento dele. */
-  mao: VisaoDaPergunta['mao']
-}>()
+  mao: VisaoDaPergunta["mao"];
+}>();
 </script>
 
 <template>
@@ -24,13 +25,35 @@ defineProps<{
       <span class="poker-table__pot-label">POTE</span>
       <strong class="poker-table__pot-value">{{ pote }}</strong>
     </div>
-    <div class="poker-table__hand">
-      <HandCards :cartas="mao.cartas" leque />
-    </div>
-    <div v-for="assento in assentos" :key="assento.position" class="poker-table__slot" :class="`poker-table__slot--${assento.slot}`">
-      <SeatCard :assento="assento" class="poker-table__seat" :class="{ 'poker-table__seat--hero': assento.estado === 'hero' }" />
-      <BetChip v-if="assento.ficha" :ficha="assento.ficha" class="poker-table__chip" />
-      <span v-if="assento.dealer" class="poker-table__dealer" role="img" aria-label="Botão do dealer">D</span>
+    <div
+      v-for="assento in assentos"
+      :key="assento.position"
+      class="poker-table__slot"
+      :class="`poker-table__slot--${assento.slot}`"
+    >
+      <SeatCard
+        :assento="assento"
+        class="poker-table__seat"
+        :class="{ 'poker-table__seat--hero': assento.estado === 'hero' }"
+      >
+        <HandCards
+          v-if="assento.estado === 'hero'"
+          :cartas="mao.cartas"
+          leque
+        />
+      </SeatCard>
+      <BetChip
+        v-if="assento.ficha"
+        :ficha="assento.ficha"
+        class="poker-table__chip"
+      />
+      <span
+        v-if="assento.dealer"
+        class="poker-table__dealer"
+        role="img"
+        aria-label="Botão do dealer"
+        >D</span
+      >
     </div>
   </div>
 </template>
@@ -90,15 +113,6 @@ defineProps<{
   font-size: clamp(18px, 2.9cqw, 22px);
 }
 
-/* A mão do Hero: sobre a borda do feltro, logo acima do assento dele. */
-.poker-table__hand {
-  --card-w: clamp(40px, 7.4cqw, 56px);
-  position: absolute;
-  top: 76.9%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
 /* Cada slot é uma camada do tamanho do palco; assento, ficha e botão se posicionam nela. */
 .poker-table__slot {
   position: absolute;
@@ -121,6 +135,7 @@ defineProps<{
 }
 
 .poker-table__seat--hero {
+  --card-w: clamp(40px, 7.4cqw, 56px);
   width: 18.4cqw;
 }
 
@@ -153,7 +168,7 @@ defineProps<{
    esquerda, no alto, em cima à direita e embaixo à direita. */
 .poker-table__slot--0 {
   --seat-x: 50%;
-  --seat-y: 89.8%;
+  --seat-y: 95.8%;
   --chip-x: 50%;
   --chip-y: 65.9%;
   --dealer-x: 39.5%;

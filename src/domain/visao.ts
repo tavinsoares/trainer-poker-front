@@ -43,9 +43,9 @@ export type SlotDaMesa = 0 | 1 | 2 | 3 | 4 | 5
 export interface VisaoAssento {
   position: Position
   estado: Seat['state']
-  /** A posição, com "· você" no Hero. */
+  /** A posição ("BTN"), igual para o Hero e para os vilões: o estado do assento sai do estilo. */
   titulo: string
-  /** O que o assento fez ("fold", "open 2bb", "aguardando") ou, no Hero, o stack e o investido. */
+  /** O stack que sobrou depois do que o assento pôs na mesa ("97,5bb"; "~74bb" se estimado; "all-in" se zerou). */
   detalhe: string
   slot: SlotDaMesa
   /** O botão do dealer fica sempre no BTN. */
@@ -126,12 +126,19 @@ function titulo(pergunta: Question): string {
 const slotDe = (position: Position, hero: Position): SlotDaMesa =>
   ((POSICOES.indexOf(position) - POSICOES.indexOf(hero) + POSICOES.length) % POSICOES.length) as SlotDaMesa
 
-/** O que o assento pôs na mesa, sem formato: o texto da ficha e o do "posto" do Hero saem daqui. */
+/** O que o assento pôs na mesa: a última aposta dele ou, sem aposta, o blind. */
 function investido(history: Bet[], position: Position): VisaoFicha | null {
   const aposta = ultimaAposta(history, position)
   if (aposta) return { tipo: 'aposta', texto: bb(aposta.size, aposta.estimated) }
   const blind = BLINDS[position]
   return blind ? { tipo: 'blind', texto: bb(blind) } : null
+}
+
+/** O stack que sobrou ao assento: o stack inicial menos o que ele pôs na mesa ("all-in" quando zera). */
+function stackRestante(history: Bet[], position: Position, stack: number): string {
+  const aposta = ultimaAposta(history, position)
+  const resto = Math.round((stack - (aposta?.size ?? BLINDS[position] ?? 0)) * 100) / 100
+  return resto <= 0 ? 'all-in' : bb(resto, aposta?.estimated)
 }
 
 function assento(seat: Seat, pergunta: Question): VisaoAssento {
@@ -143,18 +150,15 @@ function assento(seat: Seat, pergunta: Question): VisaoAssento {
     ficha,
     cartasViradas: seat.state === 'waiting' || seat.state === 'acted',
   }
-  switch (seat.state) {
-    case 'hero': {
-      const stack = bb(pergunta.stack)
-      return { position, estado: 'hero', titulo: `${position} · você`, detalhe: ficha ? `${stack} · ${ficha.texto} posto` : stack, ...mesa }
-    }
-    case 'acted':
-      if (!seat.action || seat.size === undefined) throw new Error(`${pergunta.spot.id}: o assento ${position} agiu sem jogada`)
-      return { position, estado: 'acted', titulo: position, detalhe: `${seat.action} ${bb(seat.size, seat.estimated)}`, ...mesa }
-    case 'waiting':
-      return { position, estado: 'waiting', titulo: position, detalhe: 'aguardando', ...mesa }
-    case 'folded':
-      return { position, estado: 'folded', titulo: position, detalhe: 'fold', ...mesa }
+  if (seat.state === 'acted' && (!seat.action || seat.size === undefined)) {
+    throw new Error(`${pergunta.spot.id}: o assento ${position} agiu sem jogada`)
+  }
+  return {
+    position,
+    estado: seat.state,
+    titulo: position,
+    detalhe: stackRestante(pergunta.history, position, pergunta.stack),
+    ...mesa,
   }
 }
 
